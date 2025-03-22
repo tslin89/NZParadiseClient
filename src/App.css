@@ -13,6 +13,17 @@
   }
 }
 
+.team-logo-container{
+  padding: 10px;
+  margin-top: 5%;
+  text-align: center;
+  background-color: white!important;
+}
+.team-logo{
+  margin: 0 auto;
+  width: 300px;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
