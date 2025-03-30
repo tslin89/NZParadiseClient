@@ -1,23 +1,29 @@
-import React from 'react';
-//import react_logo from './logo.svg';
-import logo from './logo-main.png';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./pages/home";
+import Dashboard from "./pages/dashboard";
+import "./App.css";
+import logo from "./logo-main.png";
 
 function App() {
   return (
-
-    <div className="team-logo-container">
-<img src={logo} className="team-logo" alt="logo" />
-    </div>
-    // <div className="App">
-    //   
-    //   <header className="App-header">
-    //     <img src={react_logo} className="App-logo" alt="logo" />
-    //     <p>
-    //       We are chilling ..... 
-    //     </p>
-    //   </header>
-    // </div>
+    <Router>
+      <div className="container">
+        <header>
+          <img src={logo} alt="Logo" className="logo" />
+          <Navbar />
+        </header>
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Dashboard />} />
+            <Route path="/home" element={<Home />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 }
 
