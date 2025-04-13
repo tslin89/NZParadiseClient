@@ -1,13 +1,22 @@
-import { Typography } from "@mui/material";
-import React from "react";
+import React from 'react';
+import { Container, Typography, Paper } from '@mui/material';
+import SignUpForm from '../components/SignUpForm';
 
-const SignUp = () => {
-  return <div>
-    <Typography variant="h1" gutterBottom>
-      Sign Up
-    </Typography>
-    <Typography>Register new user</Typography>
-  </div>
+const SignUp: React.FC = () => {
+  const handleSubmitSuccess = () => {
+    console.log('Registration successful');
+  };
+
+  return (
+    <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h4" gutterBottom align="center">
+          User Registration
+        </Typography>
+        <SignUpForm onSubmitSuccess={handleSubmitSuccess} />
+      </Paper>
+    </Container>
+  );
 };
 
 export default SignUp;

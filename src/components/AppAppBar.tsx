@@ -11,9 +11,12 @@ import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import ColorModeIconDropdown from '.././theme/ColorModeIconDropdown.tsx';
+import LightModeIcon from '@mui/icons-material/LightModeRounded';
+import DarkModeIcon from '@mui/icons-material/DarkModeRounded';
+import ColorModeIconDropdown from '.././theme/ColorModeIconDropdown';
 import { Link } from "react-router-dom";
 import bannerLogo from "../assets/banner-logo.png";
+import { useColorScheme } from '@mui/material/styles';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -24,19 +27,24 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   borderBottomRightRadius: `calc(${theme.shape.borderRadius}px + 8px)`,
   backdropFilter: 'blur(24px)',
   border: '1px solid',
-  borderColor: (theme.vars || theme).palette.divider,
-  backgroundColor: theme.vars
-    ? `rgba(${theme.vars.palette.background.defaultChannel} / 0.4)`
+  borderColor: ((theme as any).vars || theme).palette.divider,
+  backgroundColor: (theme as any).vars
+    ? `rgba(${(theme as any).vars.palette.background.defaultChannel} / 0.4)`
     : alpha(theme.palette.background.default, 0.4),
-  boxShadow: (theme.vars || theme).shadows[1],
+  boxShadow: ((theme as any).vars || theme).shadows[1],
   padding: '8px 12px',
 }));
 
 export default function AppAppBar() {
   const [open, setOpen] = React.useState(false);
+  const { mode, setMode } = useColorScheme();
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
+  };
+
+  const toggleTheme = () => {
+    setMode(mode === 'light' ? 'dark' : 'light');
   };
 
   return (
@@ -89,13 +97,19 @@ export default function AppAppBar() {
             <Button color="primary" variant="contained" size="small" component={Link}  to="/signup" >
               Sign up
             </Button>
-            <ColorModeIconDropdown />
+            <IconButton onClick={toggleTheme} size="small" aria-label="Toggle theme">
+            {mode === 'light' ?  <LightModeIcon /> : <DarkModeIcon /> }
+            </IconButton>
+            {/* <ColorModeIconDropdown /> */}
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
-            <ColorModeIconDropdown size="medium" />
+            {/* <ColorModeIconDropdown size="medium" />*/}
+            <IconButton onClick={toggleTheme} size="small" aria-label="Toggle theme">
+              {mode === 'light' ?  <LightModeIcon /> : <DarkModeIcon /> }
+            </IconButton>
             <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
               <MenuIcon />
-            </IconButton>
+            </IconButton> 
             <Drawer
               anchor="top"
               open={open}

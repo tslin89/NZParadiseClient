@@ -1,7 +1,7 @@
 import { Button, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
-import PropertyList from "../components/PropertyList.tsx";
+import PropertyList from "../components/PropertyList";
 
 const MyListings = () => {
   return <div>

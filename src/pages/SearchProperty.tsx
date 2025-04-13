@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import React from "react";
-import PropertyList from "../components/PropertyList.tsx";
-import Search from "../components/PropertyFilter.tsx";
+import PropertyList from "../components/PropertyList";
+import Search from "../components/PropertyFilter";
 
 const SearchProperty = () => {
   return <div>

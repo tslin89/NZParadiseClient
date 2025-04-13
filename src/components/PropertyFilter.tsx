@@ -1,4 +1,4 @@
-import { Box, Chip, FormControl, InputAdornment, OutlinedInput } from "@mui/material";
+import { Box, Chip, FormControl, InputAdornment, OutlinedInput, Typography } from "@mui/material";
 import React from "react";
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 
@@ -26,6 +26,9 @@ export default function Search() {
             gap: 3,
             overflow: 'auto',
           }} >
+          <Typography gutterBottom align="center">
+            Hello World
+          </Typography>
           <Chip onClick={handleClick} size="medium" label="All categories" />
           <Chip
             onClick={handleClick}
