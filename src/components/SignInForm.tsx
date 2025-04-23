@@ -44,14 +44,6 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSubmitSuccess }) => {
         showMessage(resultObj.message || 'An error occurred', 'error');
       } else {
         // Store the JWT and user info
-        //test
-        debugger;
-        resultObj.data = { token: 'hello-world-123123'}
-        resultObj.data.user = {
-            firstName: "Thant Sin",
-            lastName: 'Lin'
-        }
-
         login(resultObj.data.token, resultObj.data.user);
         showMessage('Login successful', 'success');
         navigate('/');

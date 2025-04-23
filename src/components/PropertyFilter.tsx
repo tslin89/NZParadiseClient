@@ -27,7 +27,6 @@ export default function Search() {
             overflow: 'auto',
           }} >
           <Typography gutterBottom align="center">
-            Hello World
           </Typography>
           <Chip onClick={handleClick} size="medium" label="All categories" />
           <Chip

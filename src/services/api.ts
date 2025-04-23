@@ -1,5 +1,7 @@
-import { FormData } from '../types/formData';
+import { FormData, RegisterPropertyFormData } from '../types/formData';
 import SHA256 from 'crypto-js/sha256';
+
+const API_BASE_URL = 'https://0.0.0.0:88/api';
 
 const getAuthHeaders = (): Record<string, string> => {
   const token = localStorage.getItem('token');
@@ -8,10 +10,9 @@ const getAuthHeaders = (): Record<string, string> => {
 
 export const registerUser = async (formData: Omit<FormData, 'confirmPassword'>) => {
   try {
-    debugger;
-    let hashed = SHA256(formData.password).toString();
+    // hashedPwd = SHA256(formData.password).toString();
 
-    const response = await fetch('https://0.0.0.0:88/api/user/register', {
+    const response = await fetch(API_BASE_URL + '/user/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -41,7 +42,7 @@ export const registerUser = async (formData: Omit<FormData, 'confirmPassword'>) 
 
 export const signIn = async (formData: FormData) => {
   try {
-    const response = await fetch('https://0.0.0.0:88/api/user/signin', {
+    const response = await fetch(API_BASE_URL + '/user/signin', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -61,15 +62,9 @@ export const signIn = async (formData: FormData) => {
   }
 };
 
-export const registerProperty = async (data: {
-  title: string;
-  description: string;
-  price: number;
-  userID: number;
-  userType: number;
-}) => {
+export const registerProperty = async (data: RegisterPropertyFormData) => {
   try {
-    const response = await fetch('https://0.0.0.0:88/api/property/register', {
+    const response = await fetch(API_BASE_URL + '/property/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -79,10 +74,58 @@ export const registerProperty = async (data: {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to register property');
+      const errorText = await response.text();
+      throw new Error(
+        `Failed to register new property: ${response.status} ${response.statusText} - ${errorText}`
+      );
     }
     return await response.json();
   } catch (error) {
+    throw error;
+  }
+};
+
+export const getPropertyList = async (data: {
+  userID?: number;
+  description?: string;
+  bedRoom?: number;
+  bathRoom?: number;
+}) => {
+  try {
+    const queryParams = new URLSearchParams();
+    if (data.userID !== undefined) {
+      queryParams.append('UserID', data.userID.toString());
+    }
+    if (data.description !== undefined) {
+      queryParams.append('Description', data.description);
+    }
+    if (data.bedRoom !== undefined) {
+      queryParams.append('BedRoom', data.bedRoom.toString());
+    }
+    if (data.bathRoom !== undefined) {
+      queryParams.append('BathRoom', data.bathRoom.toString());
+    }
+
+    const url = `${API_BASE_URL}/property/getlist${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+    console.log('Fetching:', url);
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        // ...getAuthHeaders(),
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Failed to fetch property list: ${response.status} ${response.statusText} - ${errorText}`
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('getPropertyList error:', error);
     throw error;
   }
 };

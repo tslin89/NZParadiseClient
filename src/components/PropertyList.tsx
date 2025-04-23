@@ -21,8 +21,12 @@ import { styled } from '@mui/material/styles';
 import BedIcon from '@mui/icons-material/Bed';
 import BathtubIcon from '@mui/icons-material/Bathtub';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import { getPropertyList } from '../services/api';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+import { Property } from '../types/types';
 
-const cardData = [
+/*const cardData = [
   {
     img: 'https://picsum.photos/800/450?random=1',
     tag: 'Mansion',
@@ -40,7 +44,7 @@ const cardData = [
     tag: 'Condominium',
     title: 'Awesome Coastal Opportunity - Koutu',
     description:
-      '41 Koutu Terrace, Opononi, Far North, Northland', 
+      '41 Koutu Terrace, Opononi, Far North, Northland',
     authors: [{ name: 'Erica Johns', avatar: '/static/images/avatar/6.jpg' }],
     price: 3000,
   },
@@ -82,8 +86,12 @@ const cardData = [
     ],
     price: 3200
   },
-  
-];
+
+];*/
+
+interface DisplayProperty extends Property {
+  img: string; // extra fields for this form
+}
 
 const SyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -121,7 +129,7 @@ const StyledTypography = styled(Typography)({
   textOverflow: 'ellipsis',
 });
 
-function Features({ authors }: { authors: { name: string; avatar: string }[] }) {
+function Features({ property }: { property: Property }) {
   return (
     <Box
       sx={{
@@ -133,24 +141,22 @@ function Features({ authors }: { authors: { name: string; avatar: string }[] }) 
         paddingLeft: '16px',
       }}
     >
-      <Box
-        sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }}
-      >
+      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }}>
         <Typography variant="caption">
-        <BedIcon /> 2
+          <BedIcon /> {property.bedroom}
         </Typography>
         <Typography variant="caption">
-          <BathtubIcon/>2
+          <BathtubIcon /> {property.bathroom}
         </Typography>
         <Typography variant="caption">
-            <LocalFireDepartmentIcon />1
+          <LocalFireDepartmentIcon /> {property.parking}
         </Typography>
       </Box>
     </Box>
   );
 }
 
-function Author({ authors }: { authors: { name: string; avatar: string }[] }) {
+function Author({ property }: { property: Property }) {
   return (
     <Box
       sx={{
@@ -162,22 +168,52 @@ function Author({ authors }: { authors: { name: string; avatar: string }[] }) {
         padding: '16px',
       }}
     >
-      <Box
-        sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }}
-      >
+      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }}>
         <Typography variant="caption">
-          <b>S$ 32,000.00</b>
+          <b>S$ {property.price.toLocaleString()}</b>
+        </Typography>
+        <Typography variant="caption">
+          Listed by {property.user.firstName} {property.user.lastName}
         </Typography>
       </Box>
-      <Typography variant="caption">6th Apr, 2025</Typography>
+      <Typography variant="caption">
+        {new Date(property.createdDate).toLocaleDateString()}
+      </Typography>
     </Box>
   );
 }
 
 export default function PropertyList() {
-  const [focusedCardIndex, setFocusedCardIndex] = React.useState<number | null>(
-    null,
-  );
+  const [properties, setProperties] = React.useState<DisplayProperty[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [error, setError] = React.useState<string | null>(null);
+  const [focusedCardIndex, setFocusedCardIndex] = React.useState<number | null>(null);
+
+  React.useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await getPropertyList({
+          description: '', // Fetch all properties
+          // userID: 1, // Add for user-specific listings
+          // bedRoom: 2,
+          // bathRoom: 1,
+        });
+        const mappedProperties = response.data.map((item: Property) => ({
+          ...item,
+          img: `https://picsum.photos/800/450?random=${item.propertyID}`,
+        }));
+        setProperties(mappedProperties);
+      } catch (err: any) {
+        setError(err.message || 'Failed to load properties. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperties();
+  }, []); // Empty dependency array for initial fetch
 
   const handleFocus = (index: number) => {
     setFocusedCardIndex(index);
@@ -187,145 +223,69 @@ export default function PropertyList() {
     setFocusedCardIndex(null);
   };
 
-  // const handleClick = () => {
-  //   console.info('You clicked the filter chip.');
-  // };
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ py: 4 }}>
+        <Alert severity="error">{error}</Alert>
+      </Box>
+    );
+  }
+
+  if (properties.length === 0) {
+    return (
+      <Box sx={{ py: 4 }}>
+        <Typography>No properties found.</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-      
       <Grid container spacing={2} columns={12}>
-        <Grid size={{ xs: 12, md: 4 }}>
-          <SyledCard
-            variant="outlined"
-            onFocus={() => handleFocus(0)}
-            onBlur={handleBlur}
-            tabIndex={0}
-            className={focusedCardIndex === 0 ? 'Mui-focused' : ''}
-          >
-            <CardMedia
-              component="img"
-              alt="green iguana"
-              image={cardData[0].img}
-              sx={{
-                aspectRatio: '16 / 9',
-                borderBottom: '1px solid',
-                borderColor: 'divider',
-              }}
-            />
-            <SyledCardContent>
-              <Typography gutterBottom variant="caption" component="div">
-                {cardData[0].tag}
-              </Typography>
-              <Typography gutterBottom variant="h6" component="div">
-                {cardData[0].title}
-              </Typography>
-              <StyledTypography variant="body2" color="text.secondary" gutterBottom>
-                {cardData[0].description}
-              </StyledTypography>
-            </SyledCardContent>
-            <Features authors={cardData[0].authors} />
-            <Author authors={cardData[0].authors} />
-          </SyledCard>
-        </Grid>
-        <Grid size={{ xs: 12, md: 4 }}>
-          <SyledCard
-            variant="outlined"
-            onFocus={() => handleFocus(1)}
-            onBlur={handleBlur}
-            tabIndex={0}
-            className={focusedCardIndex === 1 ? 'Mui-focused' : ''}
-          >
-            <CardMedia
-              component="img"
-              alt="green iguana"
-              image={cardData[1].img}
-              aspect-ratio="16 / 9"
-              sx={{
-                borderBottom: '1px solid',
-                borderColor: 'divider',
-              }}
-            />
-            <SyledCardContent>
-              <Typography gutterBottom variant="caption" component="div">
-                {cardData[1].tag}
-              </Typography>
-              <Typography gutterBottom variant="h6" component="div">
-                {cardData[1].title}
-              </Typography>
-              <StyledTypography variant="body2" color="text.secondary" gutterBottom>
-                {cardData[1].description}
-              </StyledTypography>
-            </SyledCardContent>
-            <Features authors={cardData[0].authors} />
-            <Author authors={cardData[1].authors} />
-          </SyledCard>
-        </Grid>
-        <Grid size={{ xs: 12, md: 4 }}>
-          <SyledCard
-            variant="outlined"
-            onFocus={() => handleFocus(2)}
-            onBlur={handleBlur}
-            tabIndex={0}
-            className={focusedCardIndex === 2 ? 'Mui-focused' : ''}
-            sx={{ height: '100%' }}
-          >
-            <CardMedia
-              component="img"
-              alt="green iguana"
-              image={cardData[2].img}
-              sx={{
-                height: { sm: 'auto', md: '50%' },
-                aspectRatio: { sm: '16 / 9', md: '' },
-              }}
-            />
-            <SyledCardContent>
-              <Typography gutterBottom variant="caption" component="div">
-                {cardData[2].tag}
-              </Typography>
-              <Typography gutterBottom variant="h6" component="div">
-                {cardData[2].title}
-              </Typography>
-              <StyledTypography variant="body2" color="text.secondary" gutterBottom>
-                {cardData[2].description}
-              </StyledTypography>
-            </SyledCardContent>
-            <Features authors={cardData[0].authors} />
-            <Author authors={cardData[2].authors} />
-          </SyledCard>
-        </Grid>
-        <Grid size={{ xs: 12, md: 4 }}>
-          <SyledCard
-            variant="outlined"
-            onFocus={() => handleFocus(5)}
-            onBlur={handleBlur}
-            tabIndex={0}
-            className={focusedCardIndex === 5 ? 'Mui-focused' : ''}
-            sx={{ height: '100%' }} >
-            <CardMedia
-              component="img"
-              alt="green iguana"
-              image={cardData[5].img}
-              sx={{
-                height: { sm: 'auto', md: '50%' },
-                aspectRatio: { sm: '16 / 9', md: '' },
-              }}
-            />
-            <SyledCardContent>
-              <Typography gutterBottom variant="caption" component="div">
-                {cardData[5].tag}
-              </Typography>
-              <Typography gutterBottom variant="h6" component="div">
-                {cardData[5].title}
-              </Typography>
-              <StyledTypography variant="body2" color="text.secondary" gutterBottom>
-                {cardData[5].description}
-              </StyledTypography>
-            </SyledCardContent>
-            <Features authors={cardData[0].authors} />
-            <Author authors={cardData[5].authors} />
-          </SyledCard>
-        </Grid>
+        {properties.map((property, index) => (
+          <Grid size={{ xs: 12, md: 4 }} key={property.propertyID}>
+            <SyledCard
+              variant="outlined"
+              onFocus={() => handleFocus(index)}
+              onBlur={handleBlur}
+              tabIndex={0}
+              className={focusedCardIndex === index ? 'Mui-focused' : ''}
+              sx={{ height: '100%' }}
+            >
+              <CardMedia
+                component="img"
+                alt={property.description}
+                image={property.img}
+                sx={{
+                  aspectRatio: '16 / 9',
+                  borderBottom: '1px solid',
+                  borderColor: 'divider',
+                }}
+              />
+              <SyledCardContent>
+                <Typography gutterBottom variant="caption" component="div">
+                  {property.propertyType?.description || 'Unknown'}
+                </Typography>
+                <Typography gutterBottom variant="h6" component="div">
+                  {property.description}
+                </Typography>
+                <StyledTypography variant="body2" color="text.secondary" gutterBottom>
+                  {property.location}
+                </StyledTypography>
+              </SyledCardContent>
+              <Features property={property} />
+              <Author property={property} />
+            </SyledCard>
+          </Grid>
+        ))}
       </Grid>
     </Box>
   );
