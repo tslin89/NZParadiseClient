@@ -130,6 +130,29 @@ export const getPropertyList = async (data: {
   }
 };
 
+export const getPropertyMetadata = async () => {
+  try {
+    const response = await fetch(API_BASE_URL + '/property/metadata', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      } as HeadersInit,
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch property metadata');
+    }
+    const result = await response.json();
+    if (result.status === -1) {
+      throw new Error(result.message || 'Failed to fetch property metadata');
+    }
+    return result; // { transactionID, status, message, data: { propertyTypes, propertyFeatures } }
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Example protected API call
 // export const getMyListings = async () => {
 //   try {

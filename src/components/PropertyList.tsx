@@ -25,6 +25,7 @@ import { getPropertyList } from '../services/api';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import { Property } from '../types/types';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 
 /*const cardData = [
   {
@@ -149,7 +150,7 @@ function Features({ property }: { property: Property }) {
           <BathtubIcon /> {property.bathroom}
         </Typography>
         <Typography variant="caption">
-          <LocalFireDepartmentIcon /> {property.parking}
+          <DirectionsCarIcon /> {property.parking}
         </Typography>
       </Box>
     </Box>

@@ -16,12 +16,15 @@ import Footer from './components/Footer';
 import { SnackbarProvider } from './components/SnackbarContext';
 import { AuthProvider } from './components/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 export default function Blog(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props}>
       <SnackbarProvider>
         <AuthProvider>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
           <CssBaseline enableColorScheme />
           <Router>
             <AppAppBar />
@@ -50,6 +53,7 @@ export default function Blog(props: { disableCustomTheme?: boolean }) {
               <Footer />
             </Container>
           </Router>
+          </LocalizationProvider>
         </AuthProvider>
       </SnackbarProvider>
     </AppTheme>
