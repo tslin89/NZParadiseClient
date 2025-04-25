@@ -1,17 +1,14 @@
-import { Typography } from "@mui/material";
-import React from "react";
-import PropertyList from "../components/PropertyList";
-import Search from "../components/PropertyFilter";
+import React from 'react';
+import PropertyList from '../components/PropertyList';
+import { PropertyFilter } from '../components/PropertyFilter';
 
 const SearchProperty = () => {
-  return <div>
-    <Typography variant="h1" gutterBottom>
-      Search Properties
-    </Typography>
-    <Search />
-    <br/><br/>
-    <PropertyList />
-  </div>
+  return (
+    <div>
+      <PropertyFilter />
+      <PropertyList useContextFilter={true} />
+    </div>
+  );
 };
 
 export default SearchProperty;
