@@ -130,6 +130,28 @@ export const getPropertyList = async (data: PropertyFilterData) => {
   }
 };
 
+export const getPropertyDetails = async (propertyID: number) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/property/get/${propertyID}`, {
+      method: 'GET',
+      headers: {
+        ...getAuthHeaders()
+      }
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Failed to register new property: ${response.status} ${response.statusText} - ${errorText}`
+      );
+    }
+    return await response.json();
+  }
+  catch (error) {
+    throw error;
+  }
+}
+
 export const getPropertyMetadata = async () => {
   try {
     const response = await fetch(API_BASE_URL + '/property/metadata', {
