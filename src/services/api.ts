@@ -81,6 +81,29 @@ export const registerProperty = async (data: RegisterPropertyFormData) => {
   }
 };
 
+export const updateProperty = async (data: RegisterPropertyFormData) => {
+  try {
+    const response = await fetch(API_BASE_URL + '/property/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Failed to update this property: ${response.status} ${response.statusText} - ${errorText}`
+      );
+    }
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getPropertyList = async (data: PropertyFilterData) => {
   try {
     const queryParams = new URLSearchParams();

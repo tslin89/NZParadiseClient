@@ -1,3 +1,4 @@
+// src/components/PropertyList.tsx
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -11,10 +12,13 @@ import BathtubIcon from '@mui/icons-material/Bathtub';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
+import EditIcon from '@mui/icons-material/Edit';
+import IconButton from '@mui/material/IconButton';
 import { Property } from '../types/types';
 import { getPropertyList } from '../services/api';
 import { PropertyFilterData } from '../types/formData';
 import { PropertyContext } from '../components/PropertyContext';
+import { useNavigate } from 'react-router-dom';
 
 interface DisplayProperty extends Property {
   img: string;
@@ -31,6 +35,7 @@ const SyledCard = styled(Card)(({ theme }) => ({
   padding: 0,
   height: '100%',
   backgroundColor: ((theme as any).vars || theme).palette.background.paper,
+  position: 'relative',
   '&:hover': {
     backgroundColor: 'transparent',
     cursor: 'pointer',
@@ -121,6 +126,7 @@ export default function PropertyList({ userID = null, useContextFilter = true }:
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string | null>(null);
   const [focusedCardIndex, setFocusedCardIndex] = React.useState<number | null>(null);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     if (!useContextFilter) {
@@ -136,7 +142,7 @@ export default function PropertyList({ userID = null, useContextFilter = true }:
             bathRoom: 0,
             parking: 0,
             userID,
-            area: 0
+            area: 0,
           };
           const response = await getPropertyList(filterData);
           setLocalProperties(response.data || []);
@@ -200,12 +206,26 @@ export default function PropertyList({ userID = null, useContextFilter = true }:
           <Grid size={{ xs: 12, md: 4 }} key={property.propertyID}>
             <SyledCard
               variant="outlined"
+              onClick={() => navigate(`/property/${property.propertyID}`)}
               onFocus={() => handleFocus(index)}
               onBlur={handleBlur}
               tabIndex={0}
               className={focusedCardIndex === index ? 'Mui-focused' : ''}
               sx={{ height: '100%' }}
             >
+              {userID && (
+                <IconButton
+                  aria-label="edit"
+                  size="small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/edit-property/${property.propertyID}`);
+                  }}
+                  sx={{ position: 'absolute', top: 8, right: 8 }}
+                >
+                  <EditIcon fontSize="small" />
+                </IconButton>
+              )}
               <CardMedia
                 component="img"
                 alt={property.description}

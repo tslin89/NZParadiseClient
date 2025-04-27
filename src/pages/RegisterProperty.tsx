@@ -8,12 +8,16 @@ import { registerProperty } from '../services/api'; // Assume this API function 
 import RegisterPropertyForm from '../components/RegisterPropertyForm';
 
 const RegisterProperty: React.FC = () => {
+  const navigate = useNavigate();
   const handleSubmitSuccess = () => {
 
   };
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+      <Button variant="text" size="small" onClick={() => navigate('/mylistings')}>
+        ⬅️ Back to My Listings
+      </Button>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h1" gutterBottom sx={{ pb: 1 }}>
           Register Property
