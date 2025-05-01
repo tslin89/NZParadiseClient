@@ -83,32 +83,16 @@ export const PropertyFilter: React.FC = () => {
 
   return (
     <Paper elevation={3} sx={{ p: 4, mt: 4, mb: 4 }}>
-      <Typography variant="h1" gutterBottom sx={{ pb: 1 }}>
+      {/* <Typography variant="h1" gutterBottom sx={{ pb: 1 }}>
         Property Filter
-      </Typography>
+      </Typography> */}
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
       <Grid container spacing={2}>
-        <Grid size={{ xs: 12, sm: 6 }}>
-          <Controller
-            name="description"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                variant="outlined"
-                label="Description"
-                value={field.value || ''}
-                onChange={(e) => field.onChange(e.target.value || '')}
-              />
-            )}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6 }}>
+      <Grid size={{ xs: 12, sm: 3, md: 3}}>
           <FormControl fullWidth>
             <InputLabel>Property Type</InputLabel>
             <Controller
@@ -131,23 +115,7 @@ export const PropertyFilter: React.FC = () => {
             />
           </FormControl>
         </Grid>
-        <Grid size={{ xs: 12, sm: 6 }}>
-          <Controller
-            name="location"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                variant="outlined"
-                label="Location"
-                value={field.value || ''}
-                onChange={(e) => field.onChange(e.target.value || '')}
-              />
-            )}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6 }}>
+        <Grid size={{ xs: 12, sm: 3, md: 3}}>
           <Controller
             name="bedRoom"
             control={control}
@@ -165,7 +133,7 @@ export const PropertyFilter: React.FC = () => {
             )}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6 }}>
+        <Grid size={{ xs: 12, sm: 3, md: 3}}>
           <Controller
             name="bathRoom"
             control={control}
@@ -183,7 +151,7 @@ export const PropertyFilter: React.FC = () => {
             )}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6 }}>
+        <Grid size={{ xs: 12, sm: 3, md: 3}}>
           <Controller
             name="parking"
             control={control}
@@ -201,7 +169,40 @@ export const PropertyFilter: React.FC = () => {
             )}
           />
         </Grid>
-        <Grid size={{ xs: 12 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 6 }}>
+          <Controller
+            name="description"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                variant="outlined"
+                label="Description"
+                value={field.value || ''}
+                onChange={(e) => field.onChange(e.target.value || '')}
+              />
+            )}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 6 }}>
+          <Controller
+            name="location"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                variant="outlined"
+                label="Location"
+                value={field.value || ''}
+                onChange={(e) => field.onChange(e.target.value || '')}
+              />
+            )}
+          />
+        </Grid>
+        
+        <Grid size={{ xs: 12}}>
           <Button
             variant="outlined"
             color="primary"

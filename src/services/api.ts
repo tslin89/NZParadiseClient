@@ -1,14 +1,36 @@
-import { FormData, RegisterPropertyFormData, PropertyFilterData } from '../types/formData';
+import { UserData, RegisterPropertyFormData, PropertyFilterData } from '../types/formData';
 import SHA256 from 'crypto-js/sha256';
 
-const API_BASE_URL = 'https://0.0.0.0:88/api';
+//const API_BASE_URL = 'https://0.0.0.0:88/api';
+const API_BASE_URL = 'http://0.0.0.0:99/api';
 
-const getAuthHeaders = (): Record<string, string> => {
+export const getAuthHeaders = (): HeadersInit => {
   const token = localStorage.getItem('token');
-  return token ? { Authorization: `Bearer ${token}` } : {};
+
+  if (!token) return {};
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const isExpired = Date.now() >= payload.exp * 1000;
+
+    if (isExpired) {
+      console.warn('JWT expired, logging out');
+      localStorage.removeItem('token');
+      window.location.href = '/signin';
+      return {};
+    }
+
+    return {
+      Authorization: `Bearer ${token}`,
+    };
+  } catch {
+    localStorage.removeItem('token');
+    window.location.href = '/signin';
+    return {};
+  }
 };
 
-export const registerUser = async (formData: Omit<FormData, 'confirmPassword'>) => {
+export const registerUser = async (formData: Omit<UserData, 'confirmPassword'>) => {
   try {
     const response = await fetch(API_BASE_URL + '/user/register', {
       method: 'POST',
@@ -36,7 +58,7 @@ export const registerUser = async (formData: Omit<FormData, 'confirmPassword'>) 
   }
 };
 
-export const signIn = async (formData: FormData) => {
+export const signIn = async (formData: UserData) => {
   try {
     const response = await fetch(API_BASE_URL + '/user/signin', {
       method: 'POST',
@@ -69,6 +91,12 @@ export const registerProperty = async (data: RegisterPropertyFormData) => {
       body: JSON.stringify(data),
     });
 
+    if (response.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/signin';
+      throw new Error('Session expired. Redirecting...');
+    }
+
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(
@@ -91,6 +119,12 @@ export const updateProperty = async (data: RegisterPropertyFormData) => {
       },
       body: JSON.stringify(data),
     });
+
+    if (response.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/signin';
+      throw new Error('Session expired. Redirecting...');
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -139,6 +173,12 @@ export const getPropertyList = async (data: PropertyFilterData) => {
       },
     });
 
+    if (response.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/signin';
+      throw new Error('Session expired. Redirecting...');
+    }
+
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(
@@ -161,6 +201,12 @@ export const getPropertyDetails = async (propertyID: number) => {
         ...getAuthHeaders()
       }
     });
+
+    if (response.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/signin';
+      throw new Error('Session expired. Redirecting...');
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -185,6 +231,12 @@ export const getPropertyMetadata = async () => {
       } as HeadersInit,
     });
 
+    if (response.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/signin';
+      throw new Error('Session expired. Redirecting...');
+    }
+
     if (!response.ok) {
       throw new Error('Failed to fetch property metadata');
     }
@@ -196,4 +248,25 @@ export const getPropertyMetadata = async () => {
   } catch (error) {
     throw error;
   }
+};
+
+export const uploadPropertyImages = async (propertyID: number, files: File[]) => {
+  const formData = new FormData();
+  files.forEach(file => formData.append('files', file));
+  formData.append('parentID', propertyID.toString());
+  formData.append('parentType', 'Property');
+
+  const response = await fetch(`${API_BASE_URL}/attachment/upload-multiple`, {
+    method: 'POST',
+    headers: {
+      ...getAuthHeaders(),
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error('Image upload failed');
+  }
+
+  return await response.json();
 };

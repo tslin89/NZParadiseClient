@@ -13,6 +13,9 @@ import {
   SelectChangeEvent,
   CircularProgress,
   Typography,
+  ImageList,
+  ImageListItem,
+  IconButton,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useForm, Controller } from 'react-hook-form';
@@ -24,6 +27,8 @@ import { useAuth } from '../components/AuthContext';
 import { format } from 'date-fns';
 import GoogleAutocomplete from './GoogleAutocomplete';
 import LocationMapPreview from './LocationMapPreview';
+import { uploadPropertyImages } from '../services/api';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface RegisterPropertyFormProps {
   onSubmitSuccess: () => void;
@@ -40,6 +45,8 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
   const [propertyFeatures, setPropertyFeatures] = useState<PropertyFeature[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isFetchingProperty, setIsFetchingProperty] = useState(mode === 'edit');
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   const {
     register,
@@ -80,6 +87,25 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
     };
     fetchMetadata();
   }, [showMessage]);
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    const fileArray = Array.from(files);
+    setSelectedImages([...selectedImages, ...fileArray]);
+
+    const previews = fileArray.map(file => URL.createObjectURL(file));
+    setImagePreviews(prev => [...prev, ...previews]);
+  };
+
+  const removeImage = (index: number) => {
+    const updatedFiles = [...selectedImages];
+    const updatedPreviews = [...imagePreviews];
+    updatedFiles.splice(index, 1);
+    updatedPreviews.splice(index, 1);
+    setSelectedImages(updatedFiles);
+    setImagePreviews(updatedPreviews);
+  };
 
   useEffect(() => {
     const fetchPropertyDetails = async () => {
@@ -125,6 +151,11 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
       if (resultObj.status === -1) {
         showMessage(resultObj.message || 'An error occurred', 'error');
       } else {
+
+        if (selectedImages.length > 0 && resultObj.data?.propertyID) {
+          await uploadPropertyImages(resultObj.data.propertyID, selectedImages);
+        }
+
         showMessage(mode === 'edit' ? 'Property Updated Successfully' : 'New Property Registered', 'success');
         navigate('/mylistings');
         onSubmitSuccess();
@@ -146,9 +177,39 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
 
   return (
     <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-      
+
       <Grid container spacing={2}>
-      <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+        <Grid size={{ xs: 12 }}>
+          <Button variant="outlined" component="label">
+            Upload Images
+            <input
+              type="file"
+              hidden
+              multiple
+              accept="image/*"
+              onChange={handleImageSelect}
+            />
+          </Button>
+        </Grid>
+
+        {imagePreviews.length > 0 && (
+          <Grid size={{ xs: 12 }}>
+            <Typography variant="subtitle2" sx={{ mt: 2 }}>
+              Image Preview
+            </Typography>
+            <ImageList cols={4} rowHeight={140}>
+              {imagePreviews.map((src, index) => (
+                <ImageListItem key={index}>
+                  <img src={src} alt={`preview-${index}`} loading="lazy" />
+                  <IconButton size="small" onClick={() => removeImage(index)}>
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                </ImageListItem>
+              ))}
+            </ImageList>
+          </Grid>
+        )}
+        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
           <TextField
             fullWidth
             variant="outlined"
