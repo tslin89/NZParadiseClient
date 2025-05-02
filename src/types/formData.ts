@@ -27,8 +27,17 @@ export interface FormData {
     bathRoom: number;
     parking: number;
     area: number;
+    PropertyFeatureIDs: string; // Comma-separated string, e.g., "1,2,3"
+    availableDate: string | null; // Changed to string | null
     propertyTypeID: number;
-    PropertyFeatureIDs: string;
-    availableDate: string | null;
-    userID: number;
+  }
+
+  export interface PropertyType {
+    propertyTypeID: number;
+    description: string;
+  }
+  
+  export interface PropertyFeature {
+    propertyFeatureID: number;
+    description: string;
   }

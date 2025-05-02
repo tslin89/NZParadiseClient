@@ -60,7 +60,6 @@ export default function Blog(props: { disableCustomTheme?: boolean }) {
                         />
                         <Route path="/edit-property/:id" element={<PrivateRoute element={<EditProperty />} />} />
                         <Route path="/property/:id" element={<PropertyDetails />} />
-
                       </Routes>
                     </main>
                     <Footer />
