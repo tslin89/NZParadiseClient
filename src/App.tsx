@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import AppTheme from './theme/AppTheme';
@@ -18,42 +18,52 @@ import { AuthProvider } from './components/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { PropertyProvider } from './components/PropertyContext';
+import { LoadScript } from '@react-google-maps/api';
+
+const libraries: ("places")[] = ["places"];
+const google_map_api_key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '';
 
 export default function Blog(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props}>
       <SnackbarProvider>
         <AuthProvider>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <CssBaseline enableColorScheme />
-          <Router>
-            <AppAppBar />
-            <Container
-              maxWidth="lg"
-              component="main"
-              sx={{ display: 'flex', flexDirection: 'column', my: 16, gap: 4 }}>
-              <main>
-                <Routes>
-                  <Route path="/" element={<SearchProperty />} />
-                  <Route path="/signup" element={<SignUp />} />
-                  <Route path="/signin" element={<SignIn />} />
-                  <Route
-                    path="/mylistings"
-                    element={<PrivateRoute element={<MyListings />} />}
-                  />
-                  <Route path="/wishlist" element={<Wishlists />} />
-                  <Route path="/messages" element={<MessageCenter />} />
-                  <Route path="/register-property" element={<RegisterProperty />} />
-                  <Route
-                    path="/profile"
-                    element={<PrivateRoute element={<Profile />} />}
-                  />
-                </Routes>
-              </main>
-              <Footer />
-            </Container>
-          </Router>
-          </LocalizationProvider>
+          <PropertyProvider>
+            <LoadScript googleMapsApiKey={google_map_api_key} libraries={libraries}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <CssBaseline enableColorScheme />
+                <Router>
+                  <AppAppBar />
+                  <Container
+                    maxWidth="lg"
+                    component="main"
+                    sx={{ display: 'flex', flexDirection: 'column', my: 16, gap: 4 }}
+                  >
+                    <main>
+                      <Routes>
+                        <Route path="/" element={<SearchProperty />} />
+                        <Route path="/signup" element={<SignUp />} />
+                        <Route path="/signin" element={<SignIn />} />
+                        <Route
+                          path="/mylistings"
+                          element={<PrivateRoute element={<MyListings />} />}
+                        />
+                        <Route path="/wishlist" element={<Wishlists />} />
+                        <Route path="/messages" element={<MessageCenter />} />
+                        <Route path="/register-property" element={<RegisterProperty />} />
+                        <Route
+                          path="/profile"
+                          element={<PrivateRoute element={<Profile />} />}
+                        />
+                      </Routes>
+                    </main>
+                    <Footer />
+                  </Container>
+                </Router>
+              </LocalizationProvider>
+            </LoadScript>
+          </PropertyProvider>
         </AuthProvider>
       </SnackbarProvider>
     </AppTheme>
