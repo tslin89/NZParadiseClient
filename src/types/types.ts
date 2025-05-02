@@ -1,0 +1,49 @@
+
+export interface ApiResponse {
+    transactionID: string; // UUID as string
+    status: number; // e.g., 1
+    message: string; // e.g., "Found 6"
+    data: Property[]; // Array of properties
+  }
+  
+  // Property object
+  export interface Property {
+    propertyID: number;
+    userID: number;
+    propertyTypeID: number;
+    description: string;
+    price: number; // Decimal
+    location: string;
+    bedRoom: number;
+    bathRoom: number;
+    parking: number;
+    area: number; // Decimal
+    propertyFeatureIDs: string; // Comma-separated string, e.g., "1,2,3"
+    availableFromDate: string | null; // Nullable datetime
+    status: number; // e.g., 0
+    createdDate: string; // Datetime as ISO string
+    modifiedDate: string | null; // Nullable datetime
+    user: User; // Nested object
+    propertyType: PropertyType | null; // Nested object
+  }
+  
+  // User object
+  export interface User {
+    userID: number;
+    userTypeID: number;
+    firstName: string;
+    lastName: string;
+    agencyName: string;
+    phoneNo: string;
+    password: string; // Note: Consider omitting sensitive data in production
+    gender: number; // e.g., 1 (consider enum or union like 0 | 1)
+    email: string;
+    createdDate: string; // Datetime as ISO string
+    modifiedDate: string | null; // Nullable datetime
+  }
+  
+  // PropertyType object
+  export interface PropertyType {
+    propertyTypeID: number;
+    description: string; // e.g., "Condominium"
+  }
