@@ -1,7 +1,5 @@
-import { FormData, RegisterPropertyFormData } from '../types/formData';
+import { FormData } from '../types/formData';
 import SHA256 from 'crypto-js/sha256';
-
-const API_BASE_URL = 'https://0.0.0.0:88/api';
 
 const getAuthHeaders = (): Record<string, string> => {
   const token = localStorage.getItem('token');
@@ -10,9 +8,10 @@ const getAuthHeaders = (): Record<string, string> => {
 
 export const registerUser = async (formData: Omit<FormData, 'confirmPassword'>) => {
   try {
-    // hashedPwd = SHA256(formData.password).toString();
+    debugger;
+    let hashed = SHA256(formData.password).toString();
 
-    const response = await fetch(API_BASE_URL + '/user/register', {
+    const response = await fetch('https://0.0.0.0:88/api/user/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -40,9 +39,37 @@ export const registerUser = async (formData: Omit<FormData, 'confirmPassword'>) 
   }
 };
 
-export const registerProperty = async (data: RegisterPropertyFormData) => {
+export const signIn = async (formData: FormData) => {
   try {
-    const response = await fetch(API_BASE_URL + '/property/register', {
+    const response = await fetch('https://0.0.0.0:88/api/user/signin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: formData.email,
+        password: SHA256(formData.password).toString(),
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Login failed');
+    }
+    return await response.json(); // Returns { status, message, data: { token, user } }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const registerProperty = async (data: {
+  title: string;
+  description: string;
+  price: number;
+  userID: number;
+  userType: number;
+}) => {
+  try {
+    const response = await fetch('https://0.0.0.0:88/api/property/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -52,10 +79,7 @@ export const registerProperty = async (data: RegisterPropertyFormData) => {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(
-        `Failed to register new property: ${response.status} ${response.statusText} - ${errorText}`
-      );
+      throw new Error('Failed to register property');
     }
     return await response.json();
   } catch (error) {
@@ -63,25 +87,22 @@ export const registerProperty = async (data: RegisterPropertyFormData) => {
   }
 };
 
-export const getPropertyMetadata = async () => {
-  try {
-    const response = await fetch(API_BASE_URL + '/property/metadata', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        ...getAuthHeaders(),
-      } as HeadersInit,
-    });
+// Example protected API call
+// export const getMyListings = async () => {
+//   try {
+//     const response = await fetch('https://0.0.0.0:88/api/listings/mylistings', {
+//       method: 'GET',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         ...getAuthHeaders(),
+//       },
+//     });
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch property metadata');
-    }
-    const result = await response.json();
-    if (result.status === -1) {
-      throw new Error(result.message || 'Failed to fetch property metadata');
-    }
-    return result; // { transactionID, status, message, data: { propertyTypes, propertyFeatures } }
-  } catch (error) {
-    throw error;
-  }
-};
+//     if (!response.ok) {
+//       throw new Error('Failed to fetch listings');
+//     }
+//     return await response.json();
+//   } catch (error) {
+//     throw error;
+//   }
+// };

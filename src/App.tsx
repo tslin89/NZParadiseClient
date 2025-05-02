@@ -20,6 +20,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { PropertyProvider } from './components/PropertyContext';
 import { LoadScript } from '@react-google-maps/api';
+import EditProperty from './pages/EditProperty';
+import PropertyDetails from './pages/PropertyDetails';
 
 const libraries: ("places")[] = ["places"];
 const google_map_api_key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '';
@@ -56,6 +58,8 @@ export default function Blog(props: { disableCustomTheme?: boolean }) {
                           path="/profile"
                           element={<PrivateRoute element={<Profile />} />}
                         />
+                        <Route path="/edit-property/:id" element={<PrivateRoute element={<EditProperty />} />} />
+                        <Route path="/property/:id" element={<PropertyDetails />} />
                       </Routes>
                     </main>
                     <Footer />
