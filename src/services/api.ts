@@ -87,22 +87,57 @@ export const registerProperty = async (data: {
   }
 };
 
-// Example protected API call
-// export const getMyListings = async () => {
-//   try {
-//     const response = await fetch('https://0.0.0.0:88/api/listings/mylistings', {
-//       method: 'GET',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         ...getAuthHeaders(),
-//       },
-//     });
+export const getPropertyList = async (data: PropertyFilterData) => {
+  try {
+    const queryParams = new URLSearchParams();
+    if (data.userID !== undefined && data.userID !== null) {
+      queryParams.append('UserID', data.userID.toString());
+    }
+    if (data.description) {
+      queryParams.append('Description', data.description);
+    }
+    if (data.bedRoom) {
+      queryParams.append('BedRoom', data.bedRoom.toString());
+    }
+    if (data.bathRoom) {
+      queryParams.append('BathRoom', data.bathRoom.toString());
+    }
+    if (data.propertyTypeID) {
+      queryParams.append('PropertyTypeID', data.propertyTypeID.toString());
+    }
+    if (data.location) {
+      queryParams.append('Location', data.location);
+    }
+    if (data.parking) {
+      queryParams.append('Parking', data.parking.toString());
+    }
 
-//     if (!response.ok) {
-//       throw new Error('Failed to fetch listings');
-//     }
-//     return await response.json();
-//   } catch (error) {
-//     throw error;
-//   }
-// };
+    const url = `${API_BASE_URL}/property/getlist${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+    console.log('Fetching:', url);
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...getAuthHeaders(),
+      },
+    });
+
+    if (response.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/signin';
+      throw new Error('Session expired. Redirecting...');
+    }
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Failed to fetch property list: ${response.status} ${response.statusText} - ${errorText}`
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('getPropertyList error:', error);
+    throw error;
+  }
+};
