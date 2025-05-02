@@ -14,8 +14,8 @@ export interface ApiResponse {
     description: string;
     price: number; // Decimal
     location: string;
-    bedroom: number;
-    bathroom: number;
+    bedRoom: number;
+    bathRoom: number;
     parking: number;
     area: number; // Decimal
     propertyFeatureIDs: string; // Comma-separated string, e.g., "1,2,3"
