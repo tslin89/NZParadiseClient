@@ -1,13 +1,31 @@
-import { Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from 'react';
+import { Container, Typography, Paper, TextField, Button, Grid, Box } from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from '../components/SnackbarContext';
+import { useAuth } from '../components/AuthContext';
+import { registerProperty } from '../services/api'; // Assume this API function exists
+import RegisterPropertyForm from '../components/RegisterPropertyForm';
 
-const RegisterProperty = () => {
-  return <div>
-    <Typography variant="h1" gutterBottom>
-      Register Property
-    </Typography>
-    <Typography>Register your property here</Typography>
-  </div>
+const RegisterProperty: React.FC = () => {
+  const navigate = useNavigate();
+  const handleSubmitSuccess = () => {
+
+  };
+
+  return (
+    <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+      <Button variant="text" size="small" onClick={() => navigate('/mylistings')}>
+        ⬅️ Back to My Listings
+      </Button>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h1" gutterBottom sx={{ pb: 1 }}>
+          Register Property
+        </Typography>
+        <RegisterPropertyForm onSubmitSuccess={handleSubmitSuccess} />
+      </Paper>
+    </Container>
+  );
 };
 
 export default RegisterProperty;
