@@ -19,6 +19,8 @@ import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from '../components/SnackbarContext';
 import { useAuth } from '../components/AuthContext';
 import { format } from 'date-fns';
+import GoogleAutocomplete from './GoogleAutocomplete';
+import LocationMapPreview from './LocationMapPreview';
 
 interface RegisterPropertyFormProps {
   onSubmitSuccess: () => void;
@@ -39,6 +41,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
     control,
     formState: { errors },
     setError,
+    watch
   } = useForm<RegisterPropertyFormData>({
     defaultValues: {
       description: '',
@@ -107,7 +110,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
   return (
     <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
       <Grid container spacing={2}>
-       <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
           <TextField
             fullWidth
             variant="outlined"
@@ -118,7 +121,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             helperText={errors.description?.message}
           />
         </Grid>
-       <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
           <TextField
             fullWidth
             variant="outlined"
@@ -133,18 +136,27 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             helperText={errors.price?.message}
           />
         </Grid>
-       <Grid size={{ xs: 12, md: 6, sm: 12 }}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            label="Location"
-            required
-            {...register('location', { required: 'Location is required' })}
-            error={!!errors.location}
-            helperText={errors.location?.message}
+        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+          <Controller
+            name="location"
+            control={control}
+            rules={{ required: 'Location is required' }}
+            render={({ field }) => (
+              <GoogleAutocomplete
+                value={field.value || ''}
+                onChange={field.onChange}
+                label="Location"
+                required
+                error={!!errors.location}
+                helperText={errors.location?.message}
+              />
+            )}
           />
+          {watch('location') && (
+            <LocationMapPreview address={watch('location')}/>
+)}
         </Grid>
-       <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
           <TextField
             fullWidth
             variant="outlined"
@@ -159,7 +171,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             helperText={errors.bedRoom?.message}
           />
         </Grid>
-       <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
           <TextField
             fullWidth
             variant="outlined"
@@ -174,7 +186,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             helperText={errors.bathRoom?.message}
           />
         </Grid>
-       <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
           <TextField
             fullWidth
             variant="outlined"
@@ -189,7 +201,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             helperText={errors.parking?.message}
           />
         </Grid>
-       <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
           <TextField
             fullWidth
             variant="outlined"
@@ -204,7 +216,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             helperText={errors.area?.message}
           />
         </Grid>
-       <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
           <FormControl fullWidth error={!!errors.PropertyFeatureIDs} required>
             <InputLabel>Features</InputLabel>
             <Controller
@@ -244,7 +256,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             )}
           </FormControl>
         </Grid>
-       <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
           <Controller
             name="availableDate"
             control={control}
@@ -265,7 +277,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             )}
           />
         </Grid>
-       <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
           <FormControl fullWidth error={!!errors.propertyTypeID} required>
             <InputLabel>Property Type</InputLabel>
             <Controller
