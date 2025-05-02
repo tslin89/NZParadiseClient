@@ -13,10 +13,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import LightModeIcon from '@mui/icons-material/LightModeRounded';
 import DarkModeIcon from '@mui/icons-material/DarkModeRounded';
-import ColorModeIconDropdown from '.././theme/ColorModeIconDropdown';
-import { Link } from "react-router-dom";
-import bannerLogo from "../assets/banner-logo.png";
+import Avatar from '@mui/material/Avatar';
+import Menu from '@mui/material/Menu';
+import Typography from '@mui/material/Typography';
+import { Link, useNavigate } from 'react-router-dom';
+import bannerLogo from '../assets/banner-logo.png';
 import { useColorScheme } from '@mui/material/styles';
+import { useAuth } from '../components/AuthContext';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -37,7 +40,10 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 
 export default function AppAppBar() {
   const [open, setOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const { mode, setMode } = useColorScheme();
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -45,6 +51,25 @@ export default function AppAppBar() {
 
   const toggleTheme = () => {
     setMode(mode === 'light' ? 'dark' : 'light');
+  };
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+    handleMenuClose();
+  };
+
+  const handleProfile = () => {
+    navigate('/profile');
+    handleMenuClose();
   };
 
   return (
@@ -62,26 +87,29 @@ export default function AppAppBar() {
         <StyledToolbar variant="dense" disableGutters>
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
             <Link to="/">
-            <img
-              src={bannerLogo} 
-              alt="Site Logo"
-              style={{ height: 50, marginRight: 16 }} 
-              
-            />
+              <img
+                src={bannerLogo}
+                alt="Site Logo"
+                style={{ height: 50, marginRight: 16 }}
+              />
             </Link>
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Button variant="text" color="info" size="small" component={Link} to="/" >
+              <Button variant="text" color="info" size="small" component={Link} to="/">
                 Search Properties
               </Button>
-              <Button variant="text" color="info" size="small" component={Link} to="/mylistings">
-                My Listings
-              </Button>
-              <Button variant="text" color="info" size="small" component={Link} to="/wishlist">
-                Wishlists
-              </Button>
-              <Button variant="text" color="info" size="small" component={Link} to="/messages">
-                Message Center
-              </Button>
+              {isAuthenticated && (
+                <>
+                  <Button variant="text" color="info" size="small" component={Link} to="/mylistings">
+                    My Listings
+                  </Button>
+                  <Button variant="text" color="info" size="small" component={Link} to="/wishlist">
+                    Wishlists
+                  </Button>
+                  <Button variant="text" color="info" size="small" component={Link} to="/messages">
+                    Message Center
+                  </Button>
+                </>
+              )}
             </Box>
           </Box>
           <Box
@@ -91,25 +119,52 @@ export default function AppAppBar() {
               alignItems: 'center',
             }}
           >
-            <Button color="primary" variant="text" size="small" component={Link}  to="/signin">
-              Sign in
-            </Button>
-            <Button color="primary" variant="contained" size="small" component={Link}  to="/signup" >
-              Sign up
-            </Button>
+            {!isAuthenticated ? (
+              <>
+                <Button color="primary" variant="text" size="small" component={Link} to="/signin">
+                  Sign in
+                </Button>
+                <Button color="primary" variant="contained" size="small" component={Link} to="/signup">
+                  Sign up
+                </Button>
+              </>
+            ) : (
+              <>
+                <Box
+                  sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+                  onClick={handleMenuOpen}
+                >
+                  <Avatar
+                    sx={{ width: 32, height: 32, mr: 1 }}
+                    alt={`${user?.firstName} ${user?.lastName}`}
+                  >
+                    {user?.firstName?.[0]}
+                  </Avatar>
+                  <Typography variant="body2" sx={{ color: 'text.primary'}}>{`${user?.firstName} ${user?.lastName}`}</Typography>
+                </Box>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                >
+                  <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </Menu>
+              </>
+            )}
             <IconButton onClick={toggleTheme} size="small" aria-label="Toggle theme">
-            {mode === 'light' ?  <LightModeIcon /> : <DarkModeIcon /> }
+              {mode === 'light' ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
-            {/* <ColorModeIconDropdown /> */}
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
-            {/* <ColorModeIconDropdown size="medium" />*/}
             <IconButton onClick={toggleTheme} size="small" aria-label="Toggle theme">
-              {mode === 'light' ?  <LightModeIcon /> : <DarkModeIcon /> }
+              {mode === 'light' ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
             <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
               <MenuIcon />
-            </IconButton> 
+            </IconButton>
             <Drawer
               anchor="top"
               open={open}
@@ -132,20 +187,31 @@ export default function AppAppBar() {
                   </IconButton>
                 </Box>
                 <MenuItem component={Link} to="/">Search Properties</MenuItem>
-                <MenuItem component={Link} to="/mylistings">My Listings</MenuItem>
-                <MenuItem component={Link} to="/wishlist">Wishlists</MenuItem>
-                <MenuItem component={Link} to="/messages">Message Center</MenuItem>
-                <Divider sx={{ my: 3 }} />
-                <MenuItem>
-                  <Button color="primary" variant="contained" fullWidth component={Link}  to="/signup">
-                    Sign up
-                  </Button>
-                </MenuItem>
-                <MenuItem>
-                  <Button color="primary" variant="outlined" fullWidth component={Link}  to="/signin">
-                    Sign in
-                  </Button>
-                </MenuItem>
+                {isAuthenticated && (
+                  <>
+                    <MenuItem component={Link} to="/mylistings">My Listings</MenuItem>
+                    <MenuItem component={Link} to="/wishlist">Wishlists</MenuItem>
+                    <MenuItem component={Link} to="/messages">Message Center</MenuItem>
+                    <Divider sx={{ my: 1 }} />
+                    <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  </>
+                )}
+                {!isAuthenticated && (
+                  <>
+                    <Divider sx={{ my: 3 }} />
+                    <MenuItem>
+                      <Button color="primary" variant="contained" fullWidth component={Link} to="/signup">
+                        Sign up
+                      </Button>
+                    </MenuItem>
+                    <MenuItem>
+                      <Button color="primary" variant="outlined" fullWidth component={Link} to="/signin">
+                        Sign in
+                      </Button>
+                    </MenuItem>
+                  </>
+                )}
               </Box>
             </Drawer>
           </Box>

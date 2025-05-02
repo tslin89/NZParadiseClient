@@ -11,34 +11,46 @@ import Wishlists from './pages/Wishlists';
 import MyListings from './pages/MyListings';
 import RegisterProperty from './pages/RegisterProperty';
 import SearchProperty from './pages/SearchProperty';
+import Profile from './pages/Profile';
 import Footer from './components/Footer';
 import { SnackbarProvider } from './components/SnackbarContext';
+import { AuthProvider } from './components/AuthContext';
+import PrivateRoute from './components/PrivateRoute';
 
 export default function Blog(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props}>
       <SnackbarProvider>
-        <CssBaseline enableColorScheme />
-        <Router>
-          <AppAppBar />
-          <Container
-            maxWidth="lg"
-            component="main"
-            sx={{ display: 'flex', flexDirection: 'column', my: 16, gap: 4 }}>
-            <main>
-              <Routes>
-                <Route path="/" element={<SearchProperty />} />
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/signin" element={<SignIn />} />
-                <Route path="/mylistings" element={<MyListings />} />
-                <Route path="/wishlist" element={<Wishlists />} />
-                <Route path="/messages" element={<MessageCenter />} />
-                <Route path="/register-property" element={<RegisterProperty />} />
-              </Routes>
-            </main>
-            <Footer />
-          </Container>
-        </Router>
+        <AuthProvider>
+          <CssBaseline enableColorScheme />
+          <Router>
+            <AppAppBar />
+            <Container
+              maxWidth="lg"
+              component="main"
+              sx={{ display: 'flex', flexDirection: 'column', my: 16, gap: 4 }}>
+              <main>
+                <Routes>
+                  <Route path="/" element={<SearchProperty />} />
+                  <Route path="/signup" element={<SignUp />} />
+                  <Route path="/signin" element={<SignIn />} />
+                  <Route
+                    path="/mylistings"
+                    element={<PrivateRoute element={<MyListings />} />}
+                  />
+                  <Route path="/wishlist" element={<Wishlists />} />
+                  <Route path="/messages" element={<MessageCenter />} />
+                  <Route path="/register-property" element={<RegisterProperty />} />
+                  <Route
+                    path="/profile"
+                    element={<PrivateRoute element={<Profile />} />}
+                  />
+                </Routes>
+              </main>
+              <Footer />
+            </Container>
+          </Router>
+        </AuthProvider>
       </SnackbarProvider>
     </AppTheme>
   );
