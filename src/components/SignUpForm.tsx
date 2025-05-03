@@ -11,7 +11,7 @@ import {
 import { useForm, Controller } from 'react-hook-form';
 import PasswordStrength from './PasswordStrength'
 import { registerUser } from '../services/api';
-import { FormData } from '../types/formData';
+import { UserData } from '../types/formData';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from '../components/SnackbarContext';
 
@@ -29,7 +29,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmitSuccess }) => {
     control,
     formState: { errors },
     setError,
-  } = useForm<FormData>({
+  } = useForm<UserData>({
     defaultValues: {
       firstName: '',
       lastName: '',
@@ -46,7 +46,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmitSuccess }) => {
   const password = watch('password'); // Watch password for strength and confirmPassword validation
   const { showMessage } = useSnackbar();
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: UserData) => {
     if (data.password !== data.confirmPassword) {
       setError('confirmPassword', { type: 'manual', message: 'Passwords do not match' });
       return;

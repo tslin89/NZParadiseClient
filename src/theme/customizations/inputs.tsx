@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { alpha, Theme, Components } from '@mui/material/styles';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
+import { selectClasses } from '@mui/material/Select';
 import { svgIconClasses } from '@mui/material/SvgIcon';
 import { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
 import { toggleButtonClasses } from '@mui/material/ToggleButton';
 import CheckBoxOutlineBlankRoundedIcon from '@mui/icons-material/CheckBoxOutlineBlankRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
-import { gray, brand } from '../themePrimitives.ts';
+import { gray, brand } from '../themePrimitives';
+import { formLabelClasses } from '@mui/material/FormLabel';
 
 /* eslint-disable import/prefer-default-export */
 export const inputsCustomizations: Components<Theme> = {
@@ -31,7 +33,7 @@ export const inputsCustomizations: Components<Theme> = {
     styleOverrides: {
       root: ({ theme }) => ({
         boxShadow: 'none',
-        borderRadius: (theme.vars || theme).shape.borderRadius,
+        borderRadius: ((theme as any).vars || theme).shape.borderRadius,
         textTransform: 'none',
         variants: [
           {
@@ -113,7 +115,7 @@ export const inputsCustomizations: Components<Theme> = {
               variant: 'outlined',
             },
             style: {
-              color: (theme.vars || theme).palette.text.primary,
+              color: ((theme as any).vars || theme).palette.text.primary,
               border: '1px solid',
               borderColor: gray[200],
               backgroundColor: alpha(gray[50], 0.3),
@@ -225,11 +227,11 @@ export const inputsCustomizations: Components<Theme> = {
     styleOverrides: {
       root: ({ theme }) => ({
         boxShadow: 'none',
-        borderRadius: (theme.vars || theme).shape.borderRadius,
+        borderRadius: ((theme as any).vars || theme).shape.borderRadius,
         textTransform: 'none',
         fontWeight: theme.typography.fontWeightMedium,
         letterSpacing: 0,
-        color: (theme.vars || theme).palette.text.primary,
+        color: ((theme as any).vars || theme).palette.text.primary,
         border: '1px solid ',
         borderColor: gray[200],
         backgroundColor: alpha(gray[50], 0.3),
@@ -363,10 +365,11 @@ export const inputsCustomizations: Components<Theme> = {
       }),
     },
   },
+
   MuiInputBase: {
     styleOverrides: {
       root: {
-        border: 'none',
+        border: 'none'
       },
       input: {
         '&::placeholder': {
@@ -376,70 +379,112 @@ export const inputsCustomizations: Components<Theme> = {
       },
     },
   },
-  MuiOutlinedInput: {
-    styleOverrides: {
-      input: {
-        padding: 0,
-      },
-      root: ({ theme }) => ({
-        padding: '8px 12px',
-        color: (theme.vars || theme).palette.text.primary,
-        borderRadius: (theme.vars || theme).shape.borderRadius,
-        border: `1px solid ${(theme.vars || theme).palette.divider}`,
-        backgroundColor: (theme.vars || theme).palette.background.default,
-        transition: 'border 120ms ease-in',
-        '&:hover': {
-          borderColor: gray[400],
-        },
-        [`&.${outlinedInputClasses.focused}`]: {
-          outline: `3px solid ${alpha(brand[500], 0.5)}`,
-          borderColor: brand[400],
-        },
-        ...theme.applyStyles('dark', {
-          '&:hover': {
-            borderColor: gray[500],
-          },
-        }),
-        variants: [
-          {
-            props: {
-              size: 'small',
-            },
-            style: {
-              height: '2.25rem',
-            },
-          },
-          {
-            props: {
-              size: 'medium',
-            },
-            style: {
-              height: '2.5rem',
-            },
-          },
-        ],
-      }),
-      notchedOutline: {
-        border: 'none',
-      },
-    },
-  },
   MuiInputAdornment: {
     styleOverrides: {
       root: ({ theme }) => ({
-        color: (theme.vars || theme).palette.grey[500],
+        color: ((theme as any).vars || theme).palette.grey[500],
         ...theme.applyStyles('dark', {
-          color: (theme.vars || theme).palette.grey[400],
+          color: ((theme as any).vars || theme).palette.grey[400],
         }),
       }),
     },
   },
+
+  MuiSelect: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        borderRadius: ((theme as any).vars || theme).shape.borderRadius,
+        backgroundColor: ((theme as any).vars || theme).palette.background.paper, // Fixed from 'red'
+        transition: 'border 120ms ease-in',
+        [`&.${selectClasses.outlined}`]: {
+          border: `1px solid ${((theme as any).vars || theme).palette.divider}`,
+          '&:hover': { borderColor: gray[400] },
+          [`&.${selectClasses.focused}`]: {
+            outline: `3px solid ${alpha(brand[500], 0.5)}`,
+            borderColor: brand[400],
+          },
+        },
+        ...theme.applyStyles('dark', {
+          [`&.${selectClasses.outlined}`]: {
+            '&:hover': { borderColor: gray[500] },
+          },
+        }),
+      }),
+      icon: ({ theme }) => ({
+        color: ((theme as any).vars || theme).palette.text.secondary,
+        ...theme.applyStyles('dark', {
+          color: ((theme as any).vars || theme).palette.text.secondary,
+        }),
+      }),
+    },
+  },
+
+  MuiOutlinedInput: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        backgroundColor: ((theme as any).vars || theme).palette.background.paper,
+         backgroundImage: 'var(--Paper-overlay) !important',
+      }),
+      //notchedOutline: { border: 'none' },
+    },
+  },
+
+  // MuiOutlinedInput: {
+  //   styleOverrides: {
+  //     root: ({ theme }) => ({
+  //       color: ((theme as any).vars || theme).palette.text.primary,
+  //       borderRadius: ((theme as any).vars || theme).shape.borderRadius,
+  //       border: `1px solid ${((theme as any).vars || theme).palette.divider}`,
+  //       backgroundColor: ((theme as any).vars || theme).palette.background.paper,
+  //       transition: 'border 120ms ease-in',
+  //       '&:hover': { borderColor: gray[400] },
+  //       [`&.${outlinedInputClasses.focused}`]: {
+  //         outline: `3px solid ${alpha(brand[500], 0.5)}`,
+  //         borderColor: brand[400],
+  //       },
+  //       ...theme.applyStyles('dark', {
+  //         '&:hover': { borderColor: gray[500] },
+  //       }),
+  //       variants: [
+  //         { props: { size: 'small' }, style: { height: '2.25rem' } },
+  //         { props: { size: 'medium' }, style: { height: '2.5rem' } },
+  //       ],
+  //     }),
+  //     input: { padding: '8px 12px' },
+  //     notchedOutline: { border: 'none' },
+  //   },
+  // },
+
   MuiFormLabel: {
     styleOverrides: {
       root: ({ theme }) => ({
         typography: theme.typography.caption,
+        color: ((theme as any).vars || theme).palette.text.secondary,
         marginBottom: 8,
+        [`&.${formLabelClasses.filled}, &.${formLabelClasses.focused}`]: {
+          transform: 'translate(12px, -6px) scale(0.75)',
+          backgroundColor: ((theme as any).vars || theme).palette.background.paper, // Changed to paper
+          backgroundImage: 'var(--Paper-overlay) !important',
+          padding: '0 4px',
+          color: ((theme as any).vars || theme).palette.text.secondary,
+        },
+        ...theme.applyStyles('dark', {
+          color: ((theme as any).vars || theme).palette.text.secondary,
+          [`&.${formLabelClasses.filled}, &.${formLabelClasses.focused}`]: {
+            backgroundColor: ((theme as any).vars || theme).palette.background.paper, // Changed to paper
+            backgroundImage: 'var(--Paper-overlay) !important'
+          },
+        }),
       }),
     },
   },
+
+  // MuiFormLabel: {
+  //   styleOverrides: {
+  //     root: ({ theme }) => ({
+  //       typography: theme.typography.caption,
+  //       marginBottom: 8,
+  //     }),
+  //   },
+  // },
 };

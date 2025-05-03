@@ -213,7 +213,7 @@ export default function PropertyList({ userID = null, useContextFilter = true }:
               className={focusedCardIndex === index ? 'Mui-focused' : ''}
               sx={{ height: '100%' }}
             >
-              {userID && (
+              {userID && userID == property.userID && (
                 <IconButton
                   aria-label="edit"
                   size="small"

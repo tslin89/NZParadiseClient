@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { signIn } from '../services/api';
-import { FormData } from '../types/formData';
+import { UserData } from '../types/formData';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from '../components/SnackbarContext';
 import { useAuth } from '../components/AuthContext';
@@ -26,7 +26,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSubmitSuccess }) => {
     handleSubmit,
     formState: { errors },
     setError,
-  } = useForm<FormData>({
+  } = useForm<UserData>({
     defaultValues: {
       email: '',
       password: '',
@@ -35,7 +35,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSubmitSuccess }) => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: UserData) => {
     setIsSubmitting(true);
     try {
       const resultObj = await signIn(data);

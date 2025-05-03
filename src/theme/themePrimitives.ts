@@ -323,8 +323,8 @@ export const colorSchemes = {
       },
       divider: alpha(gray[700], 0.6),
       background: {
-        default: gray[900],
-        paper: 'hsl(220, 30%, 7%)',
+        default: '#1a1f2b', //gray[900], 
+        paper: '#1a1f2b', //'hsl(220, 30%, 7%)' //'#1a1f2b',
       },
       text: {
         primary: 'hsl(0, 0%, 100%)',
@@ -382,7 +382,7 @@ export const typography = {
   },
   body2: {
     fontSize: defaultTheme.typography.pxToRem(14),
-    fontWeight: 400,
+    fontWeight: 400
   },
   caption: {
     fontSize: defaultTheme.typography.pxToRem(12),
