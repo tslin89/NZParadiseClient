@@ -15,10 +15,13 @@ import Alert from '@mui/material/Alert';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import { Property } from '../types/types';
-import { getPropertyList } from '../services/api';
+import { getPropertyList, toggleWishlist } from '../services/api';
 import { PropertyFilterData } from '../types/formData';
 import { PropertyContext } from '../components/PropertyContext';
 import { useNavigate } from 'react-router-dom';
+import { StarBorder, StarRate } from '@mui/icons-material';
+import { useSnackbar } from '../components/SnackbarContext';
+import { useAuth } from './AuthContext';
 
 interface DisplayProperty extends Property {
   img: string;
@@ -121,12 +124,14 @@ function Author({ property }: { property: Property }) {
 }
 
 export default function PropertyList({ userID = null, useContextFilter = true }: PropertyListProps) {
-  const { properties: contextProperties } = React.useContext(PropertyContext);
+  const { properties: contextProperties, setProperties: setContextProperties } = React.useContext(PropertyContext);
   const [localProperties, setLocalProperties] = React.useState<Property[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string | null>(null);
   const [focusedCardIndex, setFocusedCardIndex] = React.useState<number | null>(null);
   const navigate = useNavigate();
+  const { showMessage } = useSnackbar();
+  const { user } = useAuth();
 
   React.useEffect(() => {
     if (!useContextFilter) {
@@ -168,6 +173,36 @@ export default function PropertyList({ userID = null, useContextFilter = true }:
 
   const handleBlur = () => {
     setFocusedCardIndex(null);
+  };
+
+  const handleToggleWishlist = async (e: React.MouseEvent, property: Property) => {
+    e.stopPropagation();
+    const newState = !property.isInWishlist;
+
+    try {
+      const success = await toggleWishlist(property.propertyID, user?.userID || -1, newState);
+
+      const updatedList = properties.map((p) =>
+        p.propertyID === property.propertyID
+          ? { ...p, isInWishlist: newState }
+          : p
+      );
+
+      if (useContextFilter) {
+        // Update the context properties
+        setContextProperties(updatedList);
+      } else {
+        // Update local properties
+        setLocalProperties(updatedList);
+      }
+
+      showMessage(
+        newState ? 'Added to wishlist' : 'Removed from wishlist',
+        'success'
+      );
+    } catch (err) {
+      showMessage('Failed to update wishlist', 'error');
+    }
   };
 
   if (loading) {
@@ -226,6 +261,18 @@ export default function PropertyList({ userID = null, useContextFilter = true }:
                   <EditIcon fontSize="small" />
                 </IconButton>
               )}
+
+              {!userID && (
+                <IconButton
+                  aria-label="isInWishlist"
+                  size="small"
+                  onClick={(e) => handleToggleWishlist(e, property)}
+                  sx={{ position: 'absolute', top: 8, right: 8 }}
+                >
+                  {property.isInWishlist ? <StarRate color="primary" /> : <StarBorder />}
+                </IconButton>
+              )}
+
               <CardMedia
                 component="img"
                 alt={property.description}
