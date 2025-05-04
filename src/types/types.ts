@@ -48,3 +48,18 @@ export interface ApiResponse {
     propertyTypeID: number;
     description: string; // e.g., "Condominium"
   }
+
+  export interface Message {
+    messageDetails: string;
+    date: string;
+    user: {
+      email: string;
+      firstName: string;
+      lastName: string;
+    };
+  }
+  
+  export interface MessageGroup {
+    property: Property;
+    messages: Message[];
+  }

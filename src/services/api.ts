@@ -1,5 +1,6 @@
 import { UserData, RegisterPropertyFormData, PropertyFilterData } from '../types/formData';
 import SHA256 from 'crypto-js/sha256';
+import { MessageGroup } from '../types/types';
 
 //const API_BASE_URL = 'https://0.0.0.0:88/api';
 const API_BASE_URL = 'http://0.0.0.0:99/api';
@@ -302,4 +303,182 @@ export const uploadPropertyImages = async (propertyID: number, files: File[]) =>
   }
 
   return await response.json();
+};
+
+export const getMessageList = async (userID: number): Promise<{ data: MessageGroup[] }> => {
+  return {
+    data: [
+      {
+        property: {
+          propertyID: 18,
+          userID: 14,
+          propertyTypeID: 1,
+          description: "Modern Apartment in Auckland",
+          price: 4200,
+          location: "123 Queen Street, Auckland, NZ",
+          bedRoom: 2,
+          bathRoom: 1,
+          parking: 1,
+          area: 75.0,
+          propertyFeatureIDs: "1,2,5",
+          availableFromDate: "2025-05-10T00:00:00Z",
+          status: 1,
+          createdDate: "2025-05-01T12:00:00Z",
+          modifiedDate: null,
+          user: {
+            userID: 14,
+            userTypeID: 1,
+            firstName: "Robin",
+            lastName: "Hood",
+            agencyName: "NZ Property Co.",
+            phoneNo: "0987654321",
+            password: "",
+            gender: 1,
+            email: "robin@example.com",
+            createdDate: "2025-04-01T09:00:00Z",
+            modifiedDate: null,
+          },
+          propertyType: {
+            propertyTypeID: 1,
+            description: "Apartment",
+          },
+          isInWishlist: null
+        },
+        messages: [
+          {
+            user: {
+              firstName: "Alice",
+              lastName: "Ng",
+              email: "alice@example.com",
+            },
+            messageDetails: "'The quick brown fox jumps over the lazy dog' is an English-language pangram – a sentence that contains all the letters of the alphabet. The phrase is commonly used for touch-typing practice, testing typewriters and computer keyboards, displaying examples of fonts, and other applications involving text where the use of all letters in the alphabet is desired.",
+            date: "2025-05-04T10:23:00Z",
+          },
+          {
+            user: {
+              firstName: "John",
+              lastName: "Doe",
+              email: "john@example.com",
+            },
+            messageDetails: "Can I visit next weekend?",
+            date: "2025-05-05T11:12:00Z",
+          },
+        ],
+      },
+      {
+        property: {
+          propertyID: 24,
+          userID: 14,
+          propertyTypeID: 2,
+          description: "Spacious Condo in Mount Eden",
+          price: 5200,
+          location: "88 Dominion Road, Mount Eden, Auckland",
+          bedRoom: 3,
+          bathRoom: 2,
+          parking: 2,
+          area: 110.0,
+          propertyFeatureIDs: "3,4,6",
+          availableFromDate: "2025-06-01T00:00:00Z",
+          status: 1,
+          createdDate: "2025-04-20T15:30:00Z",
+          modifiedDate: null,
+          user: {
+            userID: 14,
+            userTypeID: 1,
+            firstName: "Robin",
+            lastName: "Hood",
+            agencyName: "NZ Property Co.",
+            phoneNo: "0987654321",
+            password: "",
+            gender: 1,
+            email: "robin@example.com",
+            createdDate: "2025-04-01T09:00:00Z",
+            modifiedDate: null,
+          },
+          propertyType: {
+            propertyTypeID: 2,
+            description: "Condominium",
+          },
+          isInWishlist: null
+        },
+        messages: [
+          {
+            user: {
+              firstName: "Emily",
+              lastName: "Tan",
+              email: "emily@example.com",
+            },
+            messageDetails: "Can I bring a pet? I have a small dog.",
+            date: "2025-05-06T08:45:00Z",
+          },
+          {
+            user: {
+              firstName: "Mark",
+              lastName: "Lee",
+              email: "mark@example.com",
+            },
+            messageDetails: "Is the rent negotiable for long-term stay?",
+            date: "2025-05-07T14:10:00Z",
+          },
+          {
+            user: {
+              firstName: "Sophia",
+              lastName: "Kaur",
+              email: "sophia@example.com",
+            },
+            messageDetails: "Can I schedule a virtual tour?",
+            date: "2025-05-08T17:55:00Z",
+          },
+        ],
+      },
+      {
+        property: {
+          propertyID: 23,
+          userID: 14,
+          propertyTypeID: 3,
+          description: "Cozy Studio in Wellington CBD",
+          price: 3000,
+          location: "456 Lambton Quay, Wellington",
+          bedRoom: 1,
+          bathRoom: 1,
+          parking: 0,
+          area: 50.0,
+          propertyFeatureIDs: "1,7",
+          availableFromDate: "2025-05-15T00:00:00Z",
+          status: 1,
+          createdDate: "2025-04-25T09:00:00Z",
+          modifiedDate: null,
+          user: {
+            userID: 14,
+            userTypeID: 1,
+            firstName: "Robin",
+            lastName: "Hood",
+            agencyName: "NZ Property Co.",
+            phoneNo: "0987654321",
+            password: "",
+            gender: 1,
+            email: "robin@example.com",
+            createdDate: "2025-04-01T09:00:00Z",
+            modifiedDate: null,
+          },
+          propertyType: {
+            propertyTypeID: 3,
+            description: "Studio",
+          },
+          isInWishlist: null
+        },
+        messages: [
+          {
+            user: {
+              firstName: "David",
+              lastName: "Chen",
+              email: "david@example.com",
+            },
+            messageDetails: "I'm a student—any discount for 6-month lease?",
+            date: "2025-05-09T12:30:00Z",
+          },
+        ],
+      },
+    ],
+  };
 };
