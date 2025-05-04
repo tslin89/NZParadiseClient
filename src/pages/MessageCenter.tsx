@@ -1,13 +1,17 @@
-import { Typography } from "@mui/material";
-import React from "react";
+import { Typography, Box } from '@mui/material';
+import React from 'react';
+import MessageList from '../components/MessageList';
 
 const MessageCenter = () => {
-  return <div>
-    <Typography variant="h1" gutterBottom>
-      Message Center
-    </Typography>
-    <Typography>View property enquiry messages</Typography>
-  </div>
+  return (
+    <Box>
+      <Typography variant="h4" gutterBottom>
+        Message Center
+      </Typography>
+      <Typography gutterBottom>View property enquiry messages</Typography>
+      <MessageList />
+    </Box>
+  );
 };
 
 export default MessageCenter;
