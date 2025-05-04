@@ -193,6 +193,39 @@ export const getPropertyList = async (data: PropertyFilterData) => {
   }
 };
 
+export const toggleWishlist = async (propertyID: number, userID: number, addToWishlist: boolean): Promise<boolean> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/property/toggleWishlist`, {
+      method: 'POST',
+      // headers: {
+      //   'Content-Type': 'application/json',
+      //   Authorization: `Bearer ${localStorage.getItem('token')}`,
+      // },
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
+      body: JSON.stringify({
+        propertyID,
+        userID,
+        addToWishlist,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(await response.text());
+    }
+
+    const result = await response.json();
+    return result.data;
+
+  } catch (err) {
+    console.error('toggleWishlist error:', err);
+    throw err;
+  }
+};
+
+
 export const getPropertyDetails = async (propertyID: number) => {
   try {
     const response = await fetch(`${API_BASE_URL}/property/get/${propertyID}`, {

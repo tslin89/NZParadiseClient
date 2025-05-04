@@ -25,6 +25,7 @@ export interface ApiResponse {
     modifiedDate: string | null; // Nullable datetime
     user: User; // Nested object
     propertyType: PropertyType | null; // Nested object
+    isInWishlist: boolean | null;
   }
   
   // User object
