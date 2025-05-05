@@ -2,7 +2,7 @@ import { Typography, Box } from '@mui/material';
 import React from 'react';
 import MessageList from '../components/MessageList';
 
-const MessageCenter = () => {
+const MyInbox = () => {
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
@@ -14,4 +14,4 @@ const MessageCenter = () => {
   );
 };
 
-export default MessageCenter;
+export default MyInbox;

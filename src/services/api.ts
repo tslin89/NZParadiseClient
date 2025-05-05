@@ -1,6 +1,7 @@
 import { UserData, RegisterPropertyFormData, PropertyFilterData } from '../types/formData';
 import SHA256 from 'crypto-js/sha256';
 import { MessageGroup } from '../types/types';
+import { PropertyListModeEnum } from '../types/enums';
 
 //const API_BASE_URL = 'https://0.0.0.0:88/api';
 const API_BASE_URL = 'http://0.0.0.0:99/api';
@@ -140,8 +141,11 @@ export const updateProperty = async (data: RegisterPropertyFormData) => {
 };
 
 export const getPropertyList = async (data: PropertyFilterData) => {
+
+  console.log('getPropertyList', data)
   try {
     const queryParams = new URLSearchParams();
+    queryParams.append("mode", data.mode || PropertyListModeEnum.Search);
     if (data.userID !== undefined && data.userID !== null) {
       queryParams.append('UserID', data.userID.toString());
     }
@@ -163,6 +167,7 @@ export const getPropertyList = async (data: PropertyFilterData) => {
     if (data.parking) {
       queryParams.append('Parking', data.parking.toString());
     }
+    
 
     const url = `${API_BASE_URL}/property/getlist${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
     console.log('Fetching:', url);
