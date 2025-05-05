@@ -38,8 +38,8 @@ export default function Blog(props: { disableCustomTheme?: boolean }) {
                     path="/mylistings"
                     element={<PrivateRoute element={<MyListings />} />}
                   />
-                  <Route path="/wishlist" element={<Wishlists />} />
-                  <Route path="/messages" element={<MessageCenter />} />
+                  <Route path="/wishlist" element={<PrivateRoute element={<Wishlists />} />} />
+                  <Route path="/inbox" element={<MessageCenter />} />
                   <Route path="/register-property" element={<RegisterProperty />} />
                   <Route
                     path="/profile"

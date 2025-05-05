@@ -19,9 +19,10 @@ import { getPropertyList, toggleWishlist } from '../services/api';
 import { PropertyFilterData } from '../types/formData';
 import { PropertyContext } from '../components/PropertyContext';
 import { useNavigate } from 'react-router-dom';
-import { StarBorder, StarRate } from '@mui/icons-material';
+import { Favorite, FavoriteBorder, StarBorder, StarRate } from '@mui/icons-material';
 import { useSnackbar } from '../components/SnackbarContext';
 import { useAuth } from './AuthContext';
+import { PropertyListModeEnum } from '../types/enums';
 
 interface DisplayProperty extends Property {
   img: string;
@@ -30,6 +31,7 @@ interface DisplayProperty extends Property {
 interface PropertyListProps {
   userID?: number | null;
   useContextFilter?: boolean;
+  mode: PropertyListModeEnum
 }
 
 const SyledCard = styled(Card)(({ theme }) => ({
@@ -123,7 +125,7 @@ function Author({ property }: { property: Property }) {
   );
 }
 
-export default function PropertyList({ userID = null, useContextFilter = true }: PropertyListProps) {
+export default function PropertyList({ mode, useContextFilter = true }: PropertyListProps) {
   const { properties: contextProperties, setProperties: setContextProperties } = React.useContext(PropertyContext);
   const [localProperties, setLocalProperties] = React.useState<Property[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -132,6 +134,7 @@ export default function PropertyList({ userID = null, useContextFilter = true }:
   const navigate = useNavigate();
   const { showMessage } = useSnackbar();
   const { user } = useAuth();
+  const userID = user?.userID || null;
 
   React.useEffect(() => {
     if (!useContextFilter) {
@@ -148,6 +151,7 @@ export default function PropertyList({ userID = null, useContextFilter = true }:
             parking: 0,
             userID,
             area: 0,
+            mode: mode
           };
           const response = await getPropertyList(filterData);
           setLocalProperties(response.data || []);
@@ -178,16 +182,23 @@ export default function PropertyList({ userID = null, useContextFilter = true }:
   const handleToggleWishlist = async (e: React.MouseEvent, property: Property) => {
     e.stopPropagation();
     const newState = !property.isInWishlist;
-
+  
     try {
       const success = await toggleWishlist(property.propertyID, user?.userID || -1, newState);
-
-      const updatedList = properties.map((p) =>
-        p.propertyID === property.propertyID
-          ? { ...p, isInWishlist: newState }
-          : p
-      );
-
+  
+      let updatedList: Property[];
+      if (mode === PropertyListModeEnum.Wishlist && !newState) {
+        // In Wishlist view, remove the property from the list if it was removed from the wishlist
+        updatedList = properties.filter((p) => p.propertyID !== property.propertyID);
+      } else {
+        // Otherwise, update the isInWishlist status
+        updatedList = properties.map((p) =>
+          p.propertyID === property.propertyID
+            ? { ...p, isInWishlist: newState }
+            : p
+        );
+      }
+  
       if (useContextFilter) {
         // Update the context properties
         setContextProperties(updatedList);
@@ -195,7 +206,7 @@ export default function PropertyList({ userID = null, useContextFilter = true }:
         // Update local properties
         setLocalProperties(updatedList);
       }
-
+  
       showMessage(
         newState ? 'Added to wishlist' : 'Removed from wishlist',
         'success'
@@ -248,30 +259,31 @@ export default function PropertyList({ userID = null, useContextFilter = true }:
               className={focusedCardIndex === index ? 'Mui-focused' : ''}
               sx={{ height: '100%' }}
             >
-              {userID && userID == property.userID && (
-                <IconButton
-                  aria-label="edit"
-                  size="small"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/edit-property/${property.propertyID}`);
-                  }}
-                  sx={{ position: 'absolute', top: 8, right: 8 }}
-                >
-                  <EditIcon fontSize="small" />
-                </IconButton>
-              )}
 
-              {!userID && (
-                <IconButton
-                  aria-label="isInWishlist"
-                  size="small"
-                  onClick={(e) => handleToggleWishlist(e, property)}
-                  sx={{ position: 'absolute', top: 8, right: 8 }}
-                >
-                  {property.isInWishlist ? <StarRate color="primary" /> : <StarBorder />}
-                </IconButton>
-              )}
+              <Box sx={{ position: 'absolute', top: 8, right: 8, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                {userID && (mode === PropertyListModeEnum.Search || mode === PropertyListModeEnum.Wishlist) && userID !== property.userID && (
+                  <IconButton
+                    aria-label="isInWishlist"
+                    size="small"
+                    onClick={(e) => handleToggleWishlist(e, property)}
+                  >
+                    {property.isInWishlist ? <Favorite color="primary" /> : <FavoriteBorder />}
+                  </IconButton>
+                )}
+
+                {userID && userID === property.userID && (
+                  <IconButton
+                    aria-label="edit"
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/edit-property/${property.propertyID}`);
+                    }}
+                  >
+                    <EditIcon fontSize="small" />
+                  </IconButton>
+                )}
+              </Box>
 
               <CardMedia
                 component="img"

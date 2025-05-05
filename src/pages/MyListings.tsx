@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropertyList from '../components/PropertyList';
 import { useAuth } from '../components/AuthContext';
+import { PropertyListModeEnum } from '../types/enums';
 
 const MyListings = () => {
   const { user } = useAuth();
@@ -18,7 +19,7 @@ const MyListings = () => {
       </Button>
       <br />
       <br />
-      <PropertyList userID={userID} useContextFilter={false} />
+      <PropertyList mode={PropertyListModeEnum.MyListings} userID={userID} useContextFilter={false} />
     </div>
   );
 };

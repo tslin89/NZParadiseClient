@@ -6,7 +6,7 @@ import AppTheme from './theme/AppTheme';
 import AppAppBar from './components/AppAppBar';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
-import MessageCenter from './pages/MessageCenter';
+import MessageCenter from './pages/MyInbox';
 import Wishlists from './pages/Wishlists';
 import MyListings from './pages/MyListings';
 import RegisterProperty from './pages/RegisterProperty';

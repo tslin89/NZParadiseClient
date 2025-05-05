@@ -1,3 +1,5 @@
+import { PropertyListModeEnum } from "./enums";
+
 export interface UserData {
   firstName: string;
   lastName: string;
@@ -51,4 +53,5 @@ export interface PropertyFilterData {
   location: string | null;
   area: number | null;
   parking: number | null;
+  mode: PropertyListModeEnum;
 }
