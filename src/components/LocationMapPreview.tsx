@@ -11,15 +11,15 @@ const LocationMapPreview: React.FC<LocationMapPreviewProps> = ({ address }) => {
 
   const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '';
   const encodedAddress = encodeURIComponent(address);
-  const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${encodedAddress}&zoom=18&size=600x300&markers=color:red%7C${encodedAddress}&key=${apiKey}`;
+  const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${encodedAddress}&zoom=16&size=800x300&markers=color:red%7C${encodedAddress}&key=${apiKey}`;
 
   return (
     <Box sx={{ mt: 2, textAlign: 'center' }}>
-      <Typography variant="subtitle1" sx={{ mb: 1 }}>Location Preview</Typography>
+      {/* <Typography variant="subtitle1" sx={{ mb: 1 }}>Location Preview</Typography> */}
       <img
         src={mapUrl}
         alt="Map Preview"
-        style={{ width: '100%', maxWidth: '600px', height: 'auto', borderRadius: '8px' }}
+        style={{ width: '100%', maxWidth: '800px', height: 'auto', borderRadius: '8px' }}
       />
     </Box>
   );
