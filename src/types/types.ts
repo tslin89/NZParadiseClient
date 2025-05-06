@@ -26,6 +26,7 @@ export interface ApiResponse {
     user: User; // Nested object
     propertyType: PropertyType | null; // Nested object
     isInWishlist: boolean | null;
+    attachments: Attachment[] | null;
   }
   
   // User object
@@ -62,4 +63,9 @@ export interface ApiResponse {
   export interface MessageGroup {
     property: Property;
     messages: Message[];
+  }
+
+  export interface Attachment {
+    attachmentID: number;
+    filePath: string;
   }

@@ -332,6 +332,7 @@ export const getMessageList = async (userID: number): Promise<{ data: MessageGro
           status: 1,
           createdDate: "2025-05-01T12:00:00Z",
           modifiedDate: null,
+          attachments: null,
           user: {
             userID: 14,
             userTypeID: 1,
@@ -389,6 +390,7 @@ export const getMessageList = async (userID: number): Promise<{ data: MessageGro
           status: 1,
           createdDate: "2025-04-20T15:30:00Z",
           modifiedDate: null,
+          attachments: null,
           user: {
             userID: 14,
             userTypeID: 1,
@@ -455,6 +457,7 @@ export const getMessageList = async (userID: number): Promise<{ data: MessageGro
           status: 1,
           createdDate: "2025-04-25T09:00:00Z",
           modifiedDate: null,
+          attachments: null,
           user: {
             userID: 14,
             userTypeID: 1,

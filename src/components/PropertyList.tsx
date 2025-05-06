@@ -23,6 +23,7 @@ import { Favorite, FavoriteBorder, StarBorder, StarRate } from '@mui/icons-mater
 import { useSnackbar } from '../components/SnackbarContext';
 import { useAuth } from './AuthContext';
 import { PropertyListModeEnum } from '../types/enums';
+import emptyImage from '../assets/empty-image.png';
 
 interface DisplayProperty extends Property {
   img: string;
@@ -242,7 +243,8 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
 
   const displayProperties: DisplayProperty[] = properties.map((item: Property) => ({
     ...item,
-    img: `https://picsum.photos/800/450?random=${item.propertyID}`,
+    //img: `https://picsum.photos/800/450?random=${item.propertyID}`,
+    img: item.attachments && item.attachments.length > 0? item.attachments[0].filePath: emptyImage//'https://www.lexus.co.nz/content/dam/lexus-v3-new-zealand/discover-lexus/future-concept-cars/lf-zc-concept.jpg'
   }));
 
   return (
