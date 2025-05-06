@@ -82,15 +82,37 @@ export const signIn = async (formData: UserData) => {
   }
 };
 
-export const registerProperty = async (data: RegisterPropertyFormData) => {
+
+// export const uploadPropertyImages = async (propertyID: number, files: File[]) => {
+//   const formData = new FormData();
+//   files.forEach(file => formData.append('files', file));
+//   formData.append('parentID', propertyID.toString());
+//   formData.append('parentType', 'Property');
+
+//   const response = await fetch(`${API_BASE_URL}/attachment/upload-multiple`, {
+//     method: 'POST',
+//     headers: {
+//       ...getAuthHeaders(),
+//     },
+//     body: formData,
+//   });
+
+//   if (!response.ok) {
+//     throw new Error('Image upload failed');
+//   }
+
+//   return await response.json();
+//   return true;
+// };
+
+export const registerProperty = async (data: FormData) => {
   try {
     const response = await fetch(API_BASE_URL + '/property/register', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         ...getAuthHeaders(),
       },
-      body: JSON.stringify(data),
+      body: data
     });
 
     if (response.status === 401) {
@@ -111,15 +133,15 @@ export const registerProperty = async (data: RegisterPropertyFormData) => {
   }
 };
 
-export const updateProperty = async (data: RegisterPropertyFormData) => {
+export const updateProperty = async (data: FormData) => {
   try {
+
     const response = await fetch(API_BASE_URL + '/property/update', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         ...getAuthHeaders(),
       },
-      body: JSON.stringify(data),
+      body: data
     });
 
     if (response.status === 401) {
@@ -289,26 +311,6 @@ export const getPropertyMetadata = async () => {
   }
 };
 
-export const uploadPropertyImages = async (propertyID: number, files: File[]) => {
-  const formData = new FormData();
-  files.forEach(file => formData.append('files', file));
-  formData.append('parentID', propertyID.toString());
-  formData.append('parentType', 'Property');
-
-  const response = await fetch(`${API_BASE_URL}/attachment/upload-multiple`, {
-    method: 'POST',
-    headers: {
-      ...getAuthHeaders(),
-    },
-    body: formData,
-  });
-
-  if (!response.ok) {
-    throw new Error('Image upload failed');
-  }
-
-  return await response.json();
-};
 
 export const getMessageList = async (userID: number): Promise<{ data: MessageGroup[] }> => {
   return {

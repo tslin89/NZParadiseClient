@@ -16,6 +16,7 @@ import {
   ImageList,
   ImageListItem,
   IconButton,
+  FormHelperText,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useForm, Controller } from 'react-hook-form';
@@ -27,7 +28,7 @@ import { useAuth } from '../components/AuthContext';
 import { format } from 'date-fns';
 import GoogleAutocomplete from './GoogleAutocomplete';
 import LocationMapPreview from './LocationMapPreview';
-import { uploadPropertyImages } from '../services/api';
+//import { uploadPropertyImages } from '../services/api';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 interface RegisterPropertyFormProps {
@@ -35,6 +36,14 @@ interface RegisterPropertyFormProps {
   mode?: 'create' | 'edit';
   propertyID?: number;
 }
+
+type DisplayImage = {
+  url: string;
+  isUploaded: boolean; // true for previously uploaded
+  file?: File;         // only used for new uploads
+  id?: number;         // used to track uploaded image for removal
+};
+
 
 const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuccess, mode = 'create', propertyID }) => {
   const navigate = useNavigate();
@@ -47,6 +56,10 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
   const [isFetchingProperty, setIsFetchingProperty] = useState(mode === 'edit');
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [existingAttachments, setExistingAttachments] = useState<{ attachmentID: number; filePath: string }[]>([]);
+  const [removedAttachmentIDs, setRemovedAttachmentIDs] = useState<number[]>([]);
+  const [images, setImages] = useState<DisplayImage[]>([]);
+  const [removedImageIDs, setRemovedImageIDs] = useState<number[]>([]);
 
   const {
     register,
@@ -61,12 +74,12 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
       description: '',
       price: 0,
       location: '',
-      bedRoom: 0,
-      bathRoom: 0,
+      bedroom: 0,
+      bathroom: 0,
       parking: 0,
       area: 0,
-      PropertyFeatureIDs: '',
-      availableDate: null,
+      propertyFeatureIDs: '',
+      availableFromDate: null,
       propertyTypeID: 0,
     },
   });
@@ -91,20 +104,43 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
-    const fileArray = Array.from(files);
-    setSelectedImages([...selectedImages, ...fileArray]);
 
-    const previews = fileArray.map(file => URL.createObjectURL(file));
-    setImagePreviews(prev => [...prev, ...previews]);
+    const newImages: DisplayImage[] = Array.from(files).map((file) => ({
+      url: URL.createObjectURL(file),
+      isUploaded: false,
+      file,
+    }));
+
+    setImages((prev) => [...prev, ...newImages]);
+  };
+
+  // const handleRemoveImage = (index: number) => {
+  //   const image = images[index];
+  //   if (image.isUploaded && image.id) {
+  //     setRemovedImageIDs((prev) => [...prev, image.id]);
+  //   }
+
+  //   const updated = [...images];
+  //   updated.splice(index, 1);
+  //   setImages(updated);
+  // };
+
+  const removeExistingAttachment = (attachmentID: number) => {
+    setExistingAttachments(prev => prev.filter(att => att.attachmentID !== attachmentID));
+    setRemovedAttachmentIDs(prev => [...prev, attachmentID]);
   };
 
   const removeImage = (index: number) => {
-    const updatedFiles = [...selectedImages];
-    const updatedPreviews = [...imagePreviews];
-    updatedFiles.splice(index, 1);
-    updatedPreviews.splice(index, 1);
-    setSelectedImages(updatedFiles);
-    setImagePreviews(updatedPreviews);
+    const image = images[index];
+
+    // Check that ID is a number before adding to removedImageIDs
+    if (image.isUploaded && typeof image.id === 'number') {
+      setRemovedImageIDs((prev) => [...prev, image.id as number]);
+    }
+
+    const updated = [...images];
+    updated.splice(index, 1);
+    setImages(updated);
   };
 
   useEffect(() => {
@@ -114,11 +150,26 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
         try {
           const response = await getPropertyDetails(propertyID);
           if (response && response.data) {
-            reset({
+            const propertyData = {
               ...response.data,
-              availableDate: response.data.availableDate ? format(new Date(response.data.availableDate), 'yyyy-MM-dd') : null,
-              PropertyFeatureIDs: (response.data.propertyFeatures || []).map((f: any) => f.propertyFeatureID).join(',')
-            });
+              availableDate: response.data.availableDate
+                ? format(new Date(response.data.availableDate), 'yyyy-MM-dd')
+                : null,
+              PropertyFeatureIDs: (response.data.propertyFeatures || [])
+                .map((f: any) => f.propertyFeatureID.toString()) // Ensure IDs are strings
+                .join(','), // Store as comma-separated string
+            };
+
+            console.log('Form data being reset:', propertyData); // Debug log
+            reset(propertyData);
+
+            const existingImages: DisplayImage[] = (response.data.attachments || []).map((att: any) => ({
+              url: att.filePath,
+              isUploaded: true,
+              id: att.attachmentID,
+            }));
+
+            setImages(existingImages);
           }
         } catch (error) {
           console.error('Failed to load property details', error);
@@ -143,18 +194,43 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
         ...data,
         userID: user.userID,
         userType: user.userType,
-        PropertyFeatureIDs: data.PropertyFeatureIDs,
-        availableDate: data.availableDate,
+        PropertyFeatureIDs: data.propertyFeatureIDs,
+        availableDate: data.availableFromDate,
       };
-      const resultObj = mode === 'edit' ? await updateProperty(payload) : await registerProperty(payload);
+
+      const formData = new FormData();
+      for (const [key, value] of Object.entries(data)) {
+        formData.append(key, value?.toString() ?? '');
+      }
+
+      // selectedImages.forEach((file) => {
+      //   formData.append('files', file);
+      // });
+
+      images
+        .filter((img) => !img.isUploaded && img.file)
+        .forEach((img) => {
+          formData.append('files', img.file!);
+        });
+
+      // removedAttachmentIDs.forEach((id) => {
+      //   formData.append('removedFileIDs', id.toString());
+      // });
+
+      removedImageIDs.forEach((id) => {
+        formData.append('removedFileIDs', id.toString());
+      });
+
+      //const resultObj = mode === 'edit' ? await updateProperty(payload, selectedImages, removedAttachmentIDs) : await registerProperty(payload, selectedImages);
+      const resultObj = mode === 'edit' ? await updateProperty(formData) : await registerProperty(formData);
 
       if (resultObj.status === -1) {
         showMessage(resultObj.message || 'An error occurred', 'error');
       } else {
 
-        if (selectedImages.length > 0 && resultObj.data?.propertyID) {
-          await uploadPropertyImages(resultObj.data.propertyID, selectedImages);
-        }
+        // if (selectedImages.length > 0 && resultObj.data?.propertyID) {
+        //   await uploadPropertyImages(resultObj.data.propertyID, selectedImages);
+        // }
 
         showMessage(mode === 'edit' ? 'Property Updated Successfully' : 'New Property Registered', 'success');
         navigate('/mylistings');
@@ -181,7 +257,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
       <Grid container spacing={2}>
         <Grid size={{ xs: 12 }}>
           <Button variant="outlined" component="label">
-            Upload Images
+            Select Images
             <input
               type="file"
               hidden
@@ -191,17 +267,24 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             />
           </Button>
         </Grid>
-
-        {imagePreviews.length > 0 && (
+        {images.length > 0 && (
           <Grid size={{ xs: 12 }}>
             <Typography variant="subtitle2" sx={{ mt: 2 }}>
-              Image Preview
+              Images
             </Typography>
             <ImageList cols={4} rowHeight={140}>
-              {imagePreviews.map((src, index) => (
+              {images.map((img, index) => (
                 <ImageListItem key={index}>
-                  <img src={src} alt={`preview-${index}`} loading="lazy" />
-                  <IconButton size="small" onClick={() => removeImage(index)}>
+                  <img src={img.url} alt={`image-${index}`} loading="lazy" />
+                  <IconButton
+                    size="small"
+                    onClick={() => {
+                      if (img.isUploaded && img.id) {
+                        setRemovedImageIDs(prev => [...prev, img.id!]);
+                      }
+                      setImages(prev => prev.filter((_, i) => i !== index));
+                    }}
+                  >
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </ImageListItem>
@@ -262,9 +345,9 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             label="Bedrooms"
             type="number"
             required
-            {...register('bedRoom', { required: 'Bedrooms are required', min: { value: 0, message: 'Cannot be negative' } })}
-            error={!!errors.bedRoom}
-            helperText={errors.bedRoom?.message}
+            {...register('bedroom', { required: 'Bedrooms are required', min: { value: 0, message: 'Cannot be negative' } })}
+            error={!!errors.bedroom}
+            helperText={errors.bedroom?.message}
           />
         </Grid>
 
@@ -275,9 +358,9 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             label="Bathrooms"
             type="number"
             required
-            {...register('bathRoom', { required: 'Bathrooms are required', min: { value: 0, message: 'Cannot be negative' } })}
-            error={!!errors.bathRoom}
-            helperText={errors.bathRoom?.message}
+            {...register('bathroom', { required: 'Bathrooms are required', min: { value: 0, message: 'Cannot be negative' } })}
+            error={!!errors.bathroom}
+            helperText={errors.bathroom?.message}
           />
         </Grid>
 
@@ -308,24 +391,25 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
         </Grid>
 
         <Grid size={{ xs: 12, md: 6, sm: 12 }}>
-          <FormControl fullWidth error={!!errors.PropertyFeatureIDs} required>
+          <FormControl fullWidth error={!!errors.propertyFeatureIDs} required>
             <InputLabel>Features</InputLabel>
             <Controller
-              name="PropertyFeatureIDs"
+              name="propertyFeatureIDs"
               control={control}
               rules={{ required: 'At least one feature is required' }}
               render={({ field }) => (
                 <Select
-                  {...field}
                   multiple
-                  value={field.value ? field.value.split(',') : []}
-                  onChange={(e: SelectChangeEvent<string[]>) => {
-                    field.onChange(Array.isArray(e.target.value) ? e.target.value.join(',') : '');
+                  value={field.value ? field.value.split(',').filter(Boolean) : []} // Ensure value is an array
+                  onChange={(e) => {
+                    const value = Array.isArray(e.target.value) ? e.target.value.join(',') : '';
+                    field.onChange(value); // Update form state as comma-separated string
+                    console.log('Selected values:', e.target.value); // Debug log
                   }}
                   renderValue={(selected) => (
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                       {selected.map((value) => {
-                        const feature = propertyFeatures.find(f => f.propertyFeatureID.toString() === value);
+                        const feature = propertyFeatures.find((f) => f.propertyFeatureID.toString() === value);
                         return <Chip key={value} label={feature?.description || value} />;
                       })}
                     </Box>
@@ -339,19 +423,22 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
                 </Select>
               )}
             />
+            {!!errors.propertyFeatureIDs && (
+              <FormHelperText>{errors.propertyFeatureIDs.message}</FormHelperText>
+            )}
           </FormControl>
         </Grid>
 
         <Grid size={{ xs: 12, md: 6, sm: 12 }}>
           <Controller
-            name="availableDate"
+            name="availableFromDate"
             control={control}
             render={({ field }) => (
               <DatePicker
                 label="Available Date"
                 value={field.value ? new Date(field.value) : null}
                 onChange={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : null)}
-                slotProps={{ textField: { fullWidth: true, variant: 'outlined', error: !!errors.availableDate, helperText: errors.availableDate?.message } }}
+                slotProps={{ textField: { fullWidth: true, variant: 'outlined', error: !!errors.availableFromDate, helperText: errors.availableFromDate?.message } }}
               />
             )}
           />
@@ -361,7 +448,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
           <FormControl fullWidth error={!!errors.propertyTypeID} required>
             <InputLabel>Property Type</InputLabel>
             <Controller
-              name="propertyTypeID"
+              name="propertyType.propertyTypeID"
               control={control}
               rules={{ required: 'Property Type is required', validate: value => value !== 0 || 'Please select a property type' }}
               render={({ field }) => (
