@@ -25,13 +25,16 @@ export interface RegisterPropertyFormData {
   description: string;
   price: number;
   location: string;
-  bedRoom: number;
-  bathRoom: number;
+  bedroom: number;
+  bathroom: number;
   parking: number;
   area: number;
-  PropertyFeatureIDs: string; // Comma-separated string, e.g., "1,2,3"
-  availableDate: string | null; // Changed to string | null
+  propertyFeatureIDs: string; // Comma-separated string, e.g., "1,2,3"
+  availableFromDate: string | null; // Changed to string | null
   propertyTypeID: number;
+  propertyType: {
+    propertyTypeID: number;
+  }
 }
 
 export interface PropertyType {

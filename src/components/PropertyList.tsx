@@ -261,7 +261,7 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
             >
 
               <Box sx={{ position: 'absolute', top: 8, right: 8, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                {userID && (mode === PropertyListModeEnum.Search || mode === PropertyListModeEnum.Wishlist) && userID !== property.userID && (
+                {userID && (mode === PropertyListModeEnum.Search || mode === PropertyListModeEnum.Wishlist) && userID !== property.user?.userID && (
                   <IconButton
                     aria-label="isInWishlist"
                     size="small"
@@ -271,7 +271,7 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
                   </IconButton>
                 )}
 
-                {userID && userID === property.userID && (
+                {userID && userID === property?.user.userID && (
                   <IconButton
                     aria-label="edit"
                     size="small"
