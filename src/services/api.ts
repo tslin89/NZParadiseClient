@@ -189,7 +189,7 @@ export const getPropertyList = async (data: PropertyFilterData) => {
     if (data.parking) {
       queryParams.append('Parking', data.parking.toString());
     }
-    
+
 
     const url = `${API_BASE_URL}/property/getlist${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
     console.log('Fetching:', url);
@@ -253,8 +253,8 @@ export const toggleWishlist = async (propertyID: number, userID: number, addToWi
   }
 };
 
-
 export const getPropertyDetails = async (propertyID: number) => {
+
   try {
     const response = await fetch(`${API_BASE_URL}/property/get/${propertyID}`, {
       method: 'GET',
@@ -311,6 +311,35 @@ export const getPropertyMetadata = async () => {
   }
 };
 
+export const submitMessage = async (userID: number, propertyID: number, messageDesc: string): Promise<boolean> => {
+  try {
+
+    const response = await fetch(`${API_BASE_URL}/message/sendMessage`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
+      body: JSON.stringify({
+        propertyID,
+        fromUserID: userID,
+        messageDesc,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(await response.text());
+    }
+
+    const result = await response.json();
+    return result.data;
+
+  } catch (err) {
+    console.error('Message submission error:', err);
+    throw err;
+  }
+  return true;
+}
 
 export const getMessageList = async (userID: number): Promise<{ data: MessageGroup[] }> => {
   return {

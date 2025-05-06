@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Container, Typography, Box, Grid, Chip, CircularProgress, Alert, Paper, Button, Stack, List, ListItem, ListItemText, ImageList, ImageListItem, Divider, TextField } from '@mui/material';
-import { getPropertyDetails, getPropertyMetadata } from '../services/api';
+import { getPropertyDetails, getPropertyMetadata, submitMessage } from '../services/api';
 import LocationMapPreview from '../components/LocationMapPreview';
 import { PropertyFeature } from '../types/formData';
 import { useSnackbar } from '../components/SnackbarContext';
@@ -20,8 +20,28 @@ const PropertyDetails: React.FC = () => {
     //const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const { user } = useAuth();
+    const [message, setMessage] = useState('');
 
     const { showMessage } = useSnackbar();
+
+    const handleSendMessage = async () => {
+        if (!user || !property) return;
+
+        if (!message.trim()) {
+            showMessage('Please enter a message.', 'warning');
+            return;
+          }
+
+        try {
+            const success = await submitMessage(user.userID, property.propertyID, message);
+            if (success) {
+                showMessage('Message sent successfully. Apartment owner will contact you via email.', 'success');
+                setMessage('');
+            }
+        } catch (error) {
+            showMessage('Failed to send message at this time. Please try again later.', 'error');
+        }
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -161,15 +181,25 @@ const PropertyDetails: React.FC = () => {
                 )}
             </Paper>
 
-            {/* {user && user.userID > -1 && (
+            {user && user.userID != property.user.userID && (
                 <Paper elevation={3} sx={{ p: 4, mt: 2 }}>
                     <Typography variant="h6" gutterBottom>
                         Contact Property Manager\Owner
                     </Typography>
-                    <TextField id="outlined-basic" variant="outlined" sx={{ width: '100%' }} multiline rows={3} />
-                    <Button variant="outlined" sx={{ mt: 2 }}>Send</Button>
+                    <TextField
+                        id="outlined-basic"
+                        variant="outlined"
+                        sx={{ width: '100%' }}
+                        multiline rows={3}
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)} />
+                    <Button
+                        variant="outlined"
+                        sx={{ mt: 2 }}
+                        onClick={handleSendMessage}
+                    >Send</Button>
                 </Paper>
-            )} */}
+            )}
 
             {lightboxIndex !== null && (
                 <Lightbox
