@@ -14,7 +14,11 @@ const MyListings = () => {
       <Typography variant="h1" gutterBottom>
         My Listings
       </Typography>
-      <Button variant="contained" size="small" component={Link} to="/register-property">
+      <Button
+        variant="outlined"
+        component={Link}
+        color="primary"
+        to="/register-property">
         Add new listing
       </Button>
       <br />
