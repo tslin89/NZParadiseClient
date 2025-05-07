@@ -106,7 +106,7 @@ export default function AppAppBar() {
                     Wishlists
                   </Button>
                   <Button variant="text" color="info" size="small" component={Link} to="/messages">
-                    Message Center
+                    Inbox
                   </Button>
                 </>
               )}
@@ -191,7 +191,7 @@ export default function AppAppBar() {
                   <>
                     <MenuItem component={Link} to="/mylistings">My Listings</MenuItem>
                     <MenuItem component={Link} to="/wishlist">Wishlists</MenuItem>
-                    <MenuItem component={Link} to="/messages">Message Center</MenuItem>
+                    <MenuItem component={Link} to="/messages">Inbox</MenuItem>
                     <Divider sx={{ my: 1 }} />
                     <MenuItem onClick={handleProfile}>Profile</MenuItem>
                     <MenuItem onClick={handleLogout}>Logout</MenuItem>
