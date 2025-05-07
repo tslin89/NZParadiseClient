@@ -147,7 +147,7 @@ const PropertyDetails: React.FC = () => {
 
 
                 {/* Image Section */}
-                <Box sx={{ width: '100%' }}>
+                <Box sx={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
                     {/* First image (full-width) */}
                     {property.attachments.length > 0 && (
                         <ImageList variant="standard" cols={1}>
@@ -167,26 +167,33 @@ const PropertyDetails: React.FC = () => {
                     {property.attachments.length > 1 && (
                         <Box
                             sx={{
-                                width: '100%',
+                                width: '100%', // Full parent width
+                                maxWidth: '100%', // Prevent exceeding parent
                                 display: 'flex',
-                                flexWrap: 'nowrap',
-                                gap: 1,
+                                flexWrap: 'wrap', // Wrap thumbnails to next line
+                                gap: 1, // Space between thumbnails
                                 py: 1,
+                                overflowX: 'hidden', // Prevent horizontal overflow
+                                // Responsive thumbnail sizes
+                                '& > *': {
+                                    width: { xs: 70, sm: 80, md: 100 }, // Smaller on xs (<600px), medium on sm (600-960px), default on md (960px+)
+                                    height: { xs: 70, sm: 80, md: 100 }, // Square thumbnails
+                                    minWidth: { xs: 70, sm: 80, md: 100 }, // Ensure minimum size
+                                },
                             }}
                         >
-                            {property.attachments.slice(1, 5).map((img: any, idx: number) => {
-                                const isLastVisible = idx === 3 && property.attachments.length > 5; // Last visible thumbnail if more than 4
-                                const remainingCount = property.attachments.length - 5; // Count of hidden images
+                            {property.attachments.slice(1, 8).map((img: any, idx: number) => {
+                                const isLastVisible = idx === 6 && property.attachments.length > 7; // Last visible thumbnail if more than 4
+                                const remainingCount = property.attachments.length - 7; // Count of hidden images
 
                                 return (
                                     <Box
                                         key={img.attachmentID}
                                         sx={{
                                             position: 'relative', // For overlay positioning
-                                            flex: '0 0 auto',
-                                            width: 180,
-                                            height: 100,
-                                            minWidth: 100,
+                                            flex: '0 0 auto', // Prevent shrinking/growing
+                                            borderRadius: 1, // Rounded corners
+                                            overflow: 'hidden', // Ensure image doesn't overflow
                                         }}
                                     >
                                         <img
@@ -195,11 +202,11 @@ const PropertyDetails: React.FC = () => {
                                             style={{
                                                 width: '100%',
                                                 height: '100%',
-                                                objectFit: 'cover',
-                                                borderRadius: 8,
+                                                objectFit: 'cover', // Scale image properly
+                                                borderRadius: 1, // Match parent
                                                 cursor: 'pointer',
                                                 ...(isLastVisible && {
-                                                    filter: 'brightness(0.6)', // Dim the last thumbnail to highlight the overlay
+                                                    filter: 'brightness(0.6)', // Dim for overlay
                                                 }),
                                             }}
                                             loading="lazy"
@@ -217,10 +224,10 @@ const PropertyDetails: React.FC = () => {
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
                                                     backgroundColor: 'rgba(0, 0, 0, 0.4)', // Semi-transparent overlay
-                                                    borderRadius: 0,
+                                                    borderRadius: 1, // Match thumbnail
                                                     cursor: 'pointer',
                                                 }}
-                                                onClick={() => setLightboxIndex(4)} // Start lightbox from the 4th thumbnail (index 3 + 1)
+                                                onClick={() => setLightboxIndex(4)} // Start lightbox from 4th thumbnail
                                             >
                                                 <Typography
                                                     variant="body2"
@@ -319,7 +326,7 @@ const PropertyDetails: React.FC = () => {
                                     primary={
                                         <>
                                             <Typography component="span" variant="body2" color="text.secondary">Area:&nbsp;</Typography>
-                                            <Typography component="span" variant="body1" fontWeight="bold">${property.area} sqft</Typography>
+                                            <Typography component="span" variant="body1" fontWeight="bold">{property.area} sqft</Typography>
                                         </>
                                     }
                                 />
