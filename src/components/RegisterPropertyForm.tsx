@@ -25,11 +25,13 @@ import { RegisterPropertyFormData, PropertyType, PropertyFeature } from '../type
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from '../components/SnackbarContext';
 import { useAuth } from '../components/AuthContext';
-import { format } from 'date-fns';
+import { format, max } from 'date-fns';
 import GoogleAutocomplete from './GoogleAutocomplete';
 import LocationMapPreview from './LocationMapPreview';
 //import { uploadPropertyImages } from '../services/api';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Lightbox from 'yet-another-react-lightbox';
+import { BEDROOM_OPTIONS, BATHROOM_OPTIONS, PARKING_OPTIONS } from '../config/propertyOptions';
 
 interface RegisterPropertyFormProps {
   onSubmitSuccess: () => void;
@@ -60,6 +62,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
   const [removedAttachmentIDs, setRemovedAttachmentIDs] = useState<number[]>([]);
   const [images, setImages] = useState<DisplayImage[]>([]);
   const [removedImageIDs, setRemovedImageIDs] = useState<number[]>([]);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const {
     register,
@@ -255,48 +258,17 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
     <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
 
       <Grid container spacing={2}>
-        <Grid size={{ xs: 12 }}>
-          <Button variant="outlined" component="label">
-            Select Images
-            <input
-              type="file"
-              hidden
-              multiple
-              accept="image/*"
-              onChange={handleImageSelect}
-            />
-          </Button>
-        </Grid>
-        {images.length > 0 && (
-          <Grid size={{ xs: 12 }}>
-            <Typography variant="subtitle2" sx={{ mt: 2 }}>
-              Images
-            </Typography>
-            <ImageList cols={4} rowHeight={140}>
-              {images.map((img, index) => (
-                <ImageListItem key={index}>
-                  <img src={img.url} alt={`image-${index}`} loading="lazy" />
-                  <IconButton
-                    size="small"
-                    onClick={() => {
-                      if (img.isUploaded && img.id) {
-                        setRemovedImageIDs(prev => [...prev, img.id!]);
-                      }
-                      setImages(prev => prev.filter((_, i) => i !== index));
-                    }}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </ImageListItem>
-              ))}
-            </ImageList>
-          </Grid>
-        )}
-        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+
+        <Grid size={{ xs: 12, md: 12, sm: 12 }}>
           <TextField
             fullWidth
             variant="outlined"
             label="Description"
+            multiline
+            slotProps={{
+              htmlInput: { maxLength: 300 },
+            }}
+            rows={3}
             required
             {...register('description', { required: 'Property Description is required' })}
             error={!!errors.description}
@@ -305,89 +277,28 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
         </Grid>
 
         <Grid size={{ xs: 12, md: 6, sm: 12 }}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            label="Price"
-            type="number"
-            required
-            {...register('price', { required: 'Price is required', min: { value: 0, message: 'Price cannot be negative' } })}
-            error={!!errors.price}
-            helperText={errors.price?.message}
-          />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
-          <Controller
-            name="location"
-            control={control}
-            rules={{ required: 'Location is required' }}
-            render={({ field }) => (
-              <GoogleAutocomplete
-                value={field.value || ''}
-                onChange={field.onChange}
-                label="Location"
-                required
-                error={!!errors.location}
-                helperText={errors.location?.message}
-              />
-            )}
-          />
-          {watch('location') && (
-            <LocationMapPreview address={watch('location')} />
-          )}
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            label="Bedrooms"
-            type="number"
-            required
-            {...register('bedroom', { required: 'Bedrooms are required', min: { value: 0, message: 'Cannot be negative' } })}
-            error={!!errors.bedroom}
-            helperText={errors.bedroom?.message}
-          />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            label="Bathrooms"
-            type="number"
-            required
-            {...register('bathroom', { required: 'Bathrooms are required', min: { value: 0, message: 'Cannot be negative' } })}
-            error={!!errors.bathroom}
-            helperText={errors.bathroom?.message}
-          />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            label="Parking Spaces"
-            type="number"
-            required
-            {...register('parking', { required: 'Parking spaces are required', min: { value: 0, message: 'Cannot be negative' } })}
-            error={!!errors.parking}
-            helperText={errors.parking?.message}
-          />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            label="Area (sq ft)"
-            type="number"
-            required
-            {...register('area', { required: 'Area is required', min: { value: 0, message: 'Cannot be negative' } })}
-            error={!!errors.area}
-            helperText={errors.area?.message}
-          />
+          <FormControl fullWidth error={!!errors.propertyTypeID} required>
+            <InputLabel>Property Type</InputLabel>
+            <Controller
+              name="propertyType.propertyTypeID"
+              control={control}
+              rules={{ required: 'Property Type is required', validate: value => value !== 0 || 'Please select a property type' }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  value={field.value || 0}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                >
+                  <MenuItem value={0} disabled>Select Property Type</MenuItem>
+                  {propertyTypes.map((type) => (
+                    <MenuItem key={type.propertyTypeID} value={type.propertyTypeID}>
+                      {type.description}
+                    </MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </FormControl>
         </Grid>
 
         <Grid size={{ xs: 12, md: 6, sm: 12 }}>
@@ -430,6 +341,132 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
         </Grid>
 
         <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Price"
+            type="number"
+            required
+            {...register('price', { required: 'Price is required', min: { value: 0, message: 'Price cannot be negative' } })}
+            error={!!errors.price}
+            helperText={errors.price?.message}
+          />
+        </Grid>
+
+
+
+        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+          {/* <TextField
+            fullWidth
+            variant="outlined"
+            label="Bedrooms"
+            type="number"
+            required
+            {...register('bedroom', { required: 'Bedrooms are required', min: { value: 0, message: 'Cannot be negative' } })}
+            error={!!errors.bedroom}
+            helperText={errors.bedroom?.message}
+          /> */}
+          <FormControl fullWidth error={!!errors.bedroom} required>
+            <InputLabel>Bedrooms</InputLabel>
+            <Controller
+              name="bedroom"
+              control={control}
+              rules={{ required: 'Bedrooms are required' }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  value={field.value || ''}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                >
+                  {BEDROOM_OPTIONS.map((n) => (
+                    <MenuItem key={n} value={n}>{n}</MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </FormControl>
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+          {/* <TextField
+            fullWidth
+            variant="outlined"
+            label="Bathrooms"
+            type="number"
+            required
+            {...register('bathroom', { required: 'Bathrooms are required', min: { value: 0, message: 'Cannot be negative' } })}
+            error={!!errors.bathroom}
+            helperText={errors.bathroom?.message}
+          /> */}
+          <FormControl fullWidth error={!!errors.bathroom} required>
+            <InputLabel>Bathrooms</InputLabel>
+            <Controller
+              name="bathroom"
+              control={control}
+              rules={{ required: 'Bathrooms are required' }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  value={field.value || ''}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                >
+                  {BATHROOM_OPTIONS.map((n) => (
+                    <MenuItem key={n} value={n}>{n}</MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </FormControl>
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+          {/* <TextField
+            fullWidth
+            variant="outlined"
+            label="Parking Spaces"
+            type="number"
+            required
+            {...register('parking', { required: 'Parking spaces are required', min: { value: 0, message: 'Cannot be negative' } })}
+            error={!!errors.parking}
+            helperText={errors.parking?.message}
+          /> */}
+          <FormControl fullWidth error={!!errors.parking} required>
+            <InputLabel>Parkings</InputLabel>
+            <Controller
+              name="parking"
+              control={control}
+              rules={{ required: 'Parkings are required' }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  value={field.value !== undefined ? field.value : ''}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                >
+                  {PARKING_OPTIONS.map((n) => (
+                    <MenuItem key={n} value={n}>{n}</MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </FormControl>
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Area (sq ft)"
+            type="number"
+            required
+            {...register('area', { required: 'Area is required', min: { value: 0, message: 'Cannot be negative' } })}
+            error={!!errors.area}
+            helperText={errors.area?.message}
+          />
+        </Grid>
+
+
+
+        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
           <Controller
             name="availableFromDate"
             control={control}
@@ -445,33 +482,97 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
         </Grid>
 
         <Grid size={{ xs: 12, md: 6, sm: 12 }}>
-          <FormControl fullWidth error={!!errors.propertyTypeID} required>
-            <InputLabel>Property Type</InputLabel>
-            <Controller
-              name="propertyType.propertyTypeID"
-              control={control}
-              rules={{ required: 'Property Type is required', validate: value => value !== 0 || 'Please select a property type' }}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  value={field.value || 0}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                >
-                  <MenuItem value={0} disabled>Select Property Type</MenuItem>
-                  {propertyTypes.map((type) => (
-                    <MenuItem key={type.propertyTypeID} value={type.propertyTypeID}>
-                      {type.description}
-                    </MenuItem>
-                  ))}
-                </Select>
-              )}
-            />
-          </FormControl>
+          <Controller
+            name="location"
+            control={control}
+            rules={{ required: 'Location is required' }}
+            render={({ field }) => (
+              <GoogleAutocomplete
+                value={field.value || ''}
+                onChange={field.onChange}
+                label="Location"
+                required
+                error={!!errors.location}
+                helperText={errors.location?.message}
+              />
+            )}
+          />
+          {watch('location') && (
+            <LocationMapPreview address={watch('location')} />
+          )}
         </Grid>
+
+
+        <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+          <Box display="flex" alignItems="center" gap={2}>
+            <Typography variant="subtitle2" color="text.secondary">
+              Property Images:
+            </Typography>
+            <Button variant="contained" component="label" size='small'>
+              Select Images
+              <input
+                type="file"
+                hidden
+                multiple
+                accept="image/*"
+                onChange={handleImageSelect}
+              />
+            </Button>
+          </Box>
+
+          {images.length > 0 && (
+            <Box sx={{ overflowY: 'auto', maxHeight: 400, mt: 2 }}>
+              <ImageList cols={3} rowHeight={100}>
+                {images.map((img, index) => (
+                  <ImageListItem key={index} >
+                    <img
+                      src={img.url}
+                      alt={`image-${index}`}
+                      loading="lazy"
+                      onClick={() => setLightboxIndex(index)}
+                      style={{
+                        cursor: 'pointer', objectFit: 'cover',
+                        borderRadius: 8
+                      }}
+                    />
+                    <IconButton
+                      sx={{ position: 'absolute', right: 5, top: 5 }}
+                      color="primary"
+                      size="small"
+                      onClick={() => {
+                        if (img.isUploaded && img.id) {
+                          setRemovedImageIDs(prev => [...prev, img.id!]);
+                        }
+                        setImages(prev => prev.filter((_, i) => i !== index));
+                      }}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </ImageListItem>
+                ))}
+
+                {lightboxIndex !== null && (
+                  <Lightbox
+                    open={lightboxIndex !== null}
+                    index={lightboxIndex}
+                    close={() => setLightboxIndex(null)}
+                    slides={images.map((img) => ({ src: img.url }))}
+                  />
+                )}
+
+              </ImageList>
+            </Box>
+          )}
+        </Grid>
+
 
         <Grid size={{ xs: 12, md: 12, sm: 12 }}>
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-            <Button type="submit" variant="contained" color="primary" size="small" disabled={isSubmitting || isLoading}>
+            <Button
+              type="submit"
+              variant="outlined"
+              color="primary"
+              disabled={isSubmitting || isLoading}>
               {isSubmitting ? 'Submitting...' : (mode === 'edit' ? 'Update Property' : 'Register Property')}
             </Button>
           </Box>

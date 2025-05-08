@@ -103,6 +103,10 @@ export const dataDisplayCustomizations: Components<Theme> = {
               color: 'default',
             },
             style: {
+              paddingTop: 15,
+              paddingBottom: 15,
+              paddingLeft: 10,
+              paddingRight: 10,
               borderColor: gray[200],
               backgroundColor: gray[100],
               [`& .${chipClasses.label}`]: {
