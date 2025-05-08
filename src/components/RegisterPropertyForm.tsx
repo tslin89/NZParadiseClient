@@ -31,6 +31,7 @@ import LocationMapPreview from './LocationMapPreview';
 //import { uploadPropertyImages } from '../services/api';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Lightbox from 'yet-another-react-lightbox';
+import { BEDROOM_OPTIONS, BATHROOM_OPTIONS, PARKING_OPTIONS } from '../config/propertyOptions';
 
 interface RegisterPropertyFormProps {
   onSubmitSuccess: () => void;
@@ -355,7 +356,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
 
 
         <Grid size={{ xs: 12, md: 6, sm: 12 }}>
-          <TextField
+          {/* <TextField
             fullWidth
             variant="outlined"
             label="Bedrooms"
@@ -364,11 +365,30 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             {...register('bedroom', { required: 'Bedrooms are required', min: { value: 0, message: 'Cannot be negative' } })}
             error={!!errors.bedroom}
             helperText={errors.bedroom?.message}
-          />
+          /> */}
+          <FormControl fullWidth error={!!errors.bedroom} required>
+            <InputLabel>Bedrooms</InputLabel>
+            <Controller
+              name="bedroom"
+              control={control}
+              rules={{ required: 'Bedrooms are required' }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  value={field.value || ''}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                >
+                  {BEDROOM_OPTIONS.map((n) => (
+                    <MenuItem key={n} value={n}>{n}</MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </FormControl>
         </Grid>
 
         <Grid size={{ xs: 12, md: 6, sm: 12 }}>
-          <TextField
+          {/* <TextField
             fullWidth
             variant="outlined"
             label="Bathrooms"
@@ -377,11 +397,30 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             {...register('bathroom', { required: 'Bathrooms are required', min: { value: 0, message: 'Cannot be negative' } })}
             error={!!errors.bathroom}
             helperText={errors.bathroom?.message}
-          />
+          /> */}
+          <FormControl fullWidth error={!!errors.bathroom} required>
+            <InputLabel>Bathrooms</InputLabel>
+            <Controller
+              name="bathroom"
+              control={control}
+              rules={{ required: 'Bathrooms are required' }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  value={field.value || ''}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                >
+                  {BATHROOM_OPTIONS.map((n) => (
+                    <MenuItem key={n} value={n}>{n}</MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </FormControl>
         </Grid>
 
         <Grid size={{ xs: 12, md: 6, sm: 12 }}>
-          <TextField
+          {/* <TextField
             fullWidth
             variant="outlined"
             label="Parking Spaces"
@@ -390,7 +429,26 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             {...register('parking', { required: 'Parking spaces are required', min: { value: 0, message: 'Cannot be negative' } })}
             error={!!errors.parking}
             helperText={errors.parking?.message}
-          />
+          /> */}
+          <FormControl fullWidth error={!!errors.parking} required>
+            <InputLabel>Parkings</InputLabel>
+            <Controller
+              name="parking"
+              control={control}
+              rules={{ required: 'Parkings are required' }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  value={field.value !== undefined ? field.value : ''}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                >
+                  {PARKING_OPTIONS.map((n) => (
+                    <MenuItem key={n} value={n}>{n}</MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </FormControl>
         </Grid>
 
         <Grid size={{ xs: 12, md: 6, sm: 12 }}>
@@ -472,9 +530,10 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
                       alt={`image-${index}`}
                       loading="lazy"
                       onClick={() => setLightboxIndex(index)}
-                      style={{ cursor: 'pointer', objectFit: 'cover',
+                      style={{
+                        cursor: 'pointer', objectFit: 'cover',
                         borderRadius: 8
-                       }}
+                      }}
                     />
                     <IconButton
                       sx={{ position: 'absolute', right: 5, top: 5 }}
@@ -487,7 +546,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
                         setImages(prev => prev.filter((_, i) => i !== index));
                       }}
                     >
-                      <DeleteIcon fontSize="small"/>
+                      <DeleteIcon fontSize="small" />
                     </IconButton>
                   </ImageListItem>
                 ))}
