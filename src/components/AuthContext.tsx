@@ -5,6 +5,11 @@ interface User {
   lastName: string;
   userID: number;
   userType: number;
+  email: string;
+  gender: number;
+  phoneNo: string;
+  createdDate: string;
+  agencyName: string;
 }
 
 interface AuthContextType {
