@@ -259,9 +259,9 @@ const PropertyDetails: React.FC = () => {
                 <Typography variant="h6" gutterBottom mt={4}>
                     {property.propertyType?.description || "Property"} Details
                 </Typography>
-                <Grid container spacing={4}>
+                <Grid container>
                     <Grid size={{ xs: 12, md: 6 }}>
-                        <List>
+                        <List sx={{ p:0, m:0 }}>
                             <ListItem disableGutters>
                                 <ListItemIcon sx={{ mr: 2 }}>
                                     <BedIcon />
@@ -304,7 +304,7 @@ const PropertyDetails: React.FC = () => {
                         </List>
                     </Grid>
                     <Grid size={{ xs: 12, md: 6 }}>
-                        <List dense disablePadding>
+                        <List sx={{ p: 0, m:0 }}>
                             <ListItem disableGutters>
                                 <ListItemIcon sx={{ mr: 2 }}>
                                     <AttachMoneyIcon />
@@ -352,10 +352,10 @@ const PropertyDetails: React.FC = () => {
 
                 <Box sx={{ mt: 4 }}>
                     <Typography variant="h6" gutterBottom>Features</Typography>
-                    <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                         {featureDescriptions.length > 0 ? (
                             featureDescriptions.map((description: number, idx: number) => (
-                                <Chip key={idx} label={description} />
+                                <Chip key={idx} label={description}  />
                             ))
                         ) : (
                             <Typography variant="body2" color="text.secondary">
