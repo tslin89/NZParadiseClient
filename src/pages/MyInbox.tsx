@@ -5,10 +5,10 @@ import MessageList from '../components/MessageList';
 const MyInbox = () => {
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
-        Message Center
+      <Typography variant="h3" gutterBottom>
+        My Inbox
       </Typography>
-      <Typography gutterBottom>View property enquiry messages</Typography>
+      <Typography gutterBottom>View enquiry messages sent to my properties.</Typography>
       <MessageList />
     </Box>
   );

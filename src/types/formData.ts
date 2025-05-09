@@ -57,4 +57,6 @@ export interface PropertyFilterData {
   area: number | null;
   parking: number | null;
   mode: PropertyListModeEnum;
+  minPrice: number | null;
+  maxPrice: number | null;
 }

@@ -11,7 +11,7 @@ const MyListings = () => {
 
   return (
     <div>
-      <Typography variant="h1" gutterBottom>
+      <Typography variant="h3" gutterBottom>
         My Listings
       </Typography>
       <Button

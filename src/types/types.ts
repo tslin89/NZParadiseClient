@@ -14,8 +14,8 @@ export interface Property {
   description: string;
   price: number; // Decimal
   location: string;
-  bedRoom: number;
-  bathRoom: number;
+  bedroom: number;
+  bathroom: number;
   parking: number;
   area: number; // Decimal
   propertyFeatureIDs: string; // Comma-separated string, e.g., "1,2,3"
