@@ -85,7 +85,7 @@ export const PropertyFilter: React.FC = () => {
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 4, mt: 4, mb: 4 }}>
+    <Paper elevation={3} sx={{ p: 3, mt: 2, mb: 2 }}>
       {/* <Typography variant="h1" gutterBottom sx={{ pb: 1 }}>
         Property Filter
       </Typography> */}
@@ -213,6 +213,7 @@ export const PropertyFilter: React.FC = () => {
               <TextField
                 {...field}
                 fullWidth
+                type="number"
                 variant="outlined"
                 label="Min Price"
                 value={field.value || ''}
@@ -230,6 +231,7 @@ export const PropertyFilter: React.FC = () => {
               <TextField
                 {...field}
                 fullWidth
+                type="number"
                 variant="outlined"
                 label="Max Price"
                 value={field.value || ''}
@@ -244,7 +246,6 @@ export const PropertyFilter: React.FC = () => {
             variant="outlined"
             color="primary"
             onClick={handleReset}
-            sx={{ mt: 2 }}
           >
             Reset Filters
           </Button>

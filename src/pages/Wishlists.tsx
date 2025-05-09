@@ -4,10 +4,11 @@ import PropertyList from "../components/PropertyList";
 import { PropertyListModeEnum } from "../types/enums";
 
 const Wishlists = () => <div>
-  <Typography variant="h1" gutterBottom>
+  <Typography variant="h3" gutterBottom>
     My Wishlist
   </Typography>
-  <Typography>Properties that I have added into my wishlist</Typography>
+  <Typography sx={{ mb: 2}}>View properties in my wishlist</Typography>
+
   <PropertyList mode={PropertyListModeEnum.Wishlist} useContextFilter={false} />
 </div>;
 

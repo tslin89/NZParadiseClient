@@ -1,6 +1,6 @@
 // src/context/SnackbarContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Snackbar, Alert, SnackbarOrigin } from '@mui/material';
+import { Snackbar, Alert, SnackbarOrigin, Slide } from '@mui/material';
 
 // Define types for Snackbar messages
 interface SnackbarMessage {
@@ -68,6 +68,10 @@ export const SnackbarProvider: React.FC<SnackbarProviderProps> = ({ children }) 
     });
   };
 
+  const SlideTransition = (props: any) => {
+    return <Slide {...props} direction="down" />;
+  };
+
   return (
     <SnackbarContext.Provider value={{ showMessage }}>
       {children}
@@ -75,10 +79,18 @@ export const SnackbarProvider: React.FC<SnackbarProviderProps> = ({ children }) 
         <Snackbar
           key={currentMessage.key}
           open={open}
-          autoHideDuration={6000}
+          autoHideDuration={3000}
           onClose={handleClose}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           TransitionProps={{ onExited: handleExited }}
+          TransitionComponent={SlideTransition}
+          slotProps={{
+            root: {
+              sx: {
+                top: '100px !important', // required to override default
+              },
+            },
+          }}
         >
           <Alert
             onClose={handleClose}
