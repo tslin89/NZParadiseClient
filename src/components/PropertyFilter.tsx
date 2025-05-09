@@ -16,6 +16,7 @@ import { PropertyFilterData } from '../types/formData';
 import { PropertyContext } from '../components/PropertyContext';
 import { getPropertyList } from '../services/api';
 import { Property } from '../types/types';
+import { BEDROOM_OPTIONS, BATHROOM_OPTIONS, PARKING_OPTIONS } from '../config/propertyOptions';
 
 const useDebounce = <T,>(value: T, delay: number): T => {
   const [debouncedValue, setDebouncedValue] = React.useState<T>(value);
@@ -40,6 +41,8 @@ export const PropertyFilter: React.FC = () => {
       bedRoom: undefined,
       bathRoom: undefined,
       parking: undefined,
+      minPrice: undefined,
+      maxPrice: undefined
     },
   });
 
@@ -92,7 +95,7 @@ export const PropertyFilter: React.FC = () => {
         </Alert>
       )}
       <Grid container spacing={2}>
-      <Grid size={{ xs: 12, sm: 3, md: 3}}>
+        <Grid size={{ xs: 12, sm: 3, md: 3 }}>
           <FormControl fullWidth>
             <InputLabel>Property Type</InputLabel>
             <Controller
@@ -115,76 +118,76 @@ export const PropertyFilter: React.FC = () => {
             />
           </FormControl>
         </Grid>
-        <Grid size={{ xs: 12, sm: 3, md: 3}}>
-          <Controller
-            name="bedRoom"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                variant="outlined"
-                label="Bedroom"
-                type="number"
-                value={field.value ?? ''}
-                onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
-                inputProps={{ min: 0 }}
-              />
-            )}
-          />
+        <Grid size={{ xs: 12, sm: 3, md: 3 }}>
+          <FormControl fullWidth>
+            <InputLabel>Bedroom</InputLabel>
+            <Controller
+              name="bedRoom"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  value={field.value ?? ''}
+                  onChange={(e) =>
+                    field.onChange(e.target.value === '' ? undefined : Number(e.target.value))
+                  }
+                >
+                  <MenuItem value="">All</MenuItem>
+                  {BEDROOM_OPTIONS.map((n) => (
+                    <MenuItem key={n} value={n}>{n}</MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </FormControl>
         </Grid>
-        <Grid size={{ xs: 12, sm: 3, md: 3}}>
-          <Controller
-            name="bathRoom"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                variant="outlined"
-                label="Bathroom"
-                type="number"
-                value={field.value ?? ''}
-                onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
-                inputProps={{ min: 0 }}
-              />
-            )}
-          />
+        <Grid size={{ xs: 12, sm: 3, md: 3 }}>
+          <FormControl fullWidth>
+            <InputLabel>Bathroom</InputLabel>
+            <Controller
+              name="bathRoom"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  value={field.value ?? ''}
+                  onChange={(e) =>
+                    field.onChange(e.target.value === '' ? undefined : Number(e.target.value))
+                  }
+                >
+                  <MenuItem value="">All</MenuItem>
+                  {BATHROOM_OPTIONS.map((n) => (
+                    <MenuItem key={n} value={n}>{n}</MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </FormControl>
         </Grid>
-        <Grid size={{ xs: 12, sm: 3, md: 3}}>
-          <Controller
-            name="parking"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                variant="outlined"
-                label="Parking"
-                type="number"
-                value={field.value ?? ''}
-                onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
-                inputProps={{ min: 0 }}
-              />
-            )}
-          />
+        <Grid size={{ xs: 12, sm: 3, md: 3 }}>
+          <FormControl fullWidth>
+            <InputLabel>Parking</InputLabel>
+            <Controller
+              name="parking"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  value={field.value ?? ''}
+                  onChange={(e) =>
+                    field.onChange(e.target.value === '' ? undefined : Number(e.target.value))
+                  }
+                >
+                  <MenuItem value="">All</MenuItem>
+                  {PARKING_OPTIONS.map((n) => (
+                    <MenuItem key={n} value={n}>{n}</MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </FormControl>
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 6 }}>
-          <Controller
-            name="description"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                variant="outlined"
-                label="Description"
-                value={field.value || ''}
-                onChange={(e) => field.onChange(e.target.value || '')}
-              />
-            )}
-          />
-        </Grid>
+        
         <Grid size={{ xs: 12, sm: 6, md: 6 }}>
           <Controller
             name="location"
@@ -201,8 +204,42 @@ export const PropertyFilter: React.FC = () => {
             )}
           />
         </Grid>
-        
-        <Grid size={{ xs: 12}}>
+
+        <Grid size={{ xs: 12, sm: 3, md: 3 }}>
+          <Controller
+            name="minPrice"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                variant="outlined"
+                label="Min Price"
+                value={field.value || ''}
+                onChange={(e) => field.onChange(e.target.value || '')}
+              />
+            )}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 3, md: 3 }}>
+          <Controller
+            name="maxPrice"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                variant="outlined"
+                label="Max Price"
+                value={field.value || ''}
+                onChange={(e) => field.onChange(e.target.value || '')}
+              />
+            )}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12 }}>
           <Button
             variant="outlined"
             color="primary"

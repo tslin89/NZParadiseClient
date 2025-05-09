@@ -190,7 +190,12 @@ export const getPropertyList = async (data: PropertyFilterData) => {
     if (data.parking) {
       queryParams.append('Parking', data.parking.toString());
     }
-
+    if (data.minPrice && data.minPrice > 0) {
+      queryParams.append("MinPrice", data.minPrice.toString());
+    }
+    if(data.maxPrice && data.maxPrice > 0){
+      queryParams.append("MaxPrice", data.maxPrice.toString())
+    }
 
     const url = `${API_BASE_URL}/property/getlist${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
     console.log('Fetching:', url);

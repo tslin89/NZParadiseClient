@@ -24,6 +24,11 @@ import { useSnackbar } from '../components/SnackbarContext';
 import { useAuth } from './AuthContext';
 import { PropertyListModeEnum } from '../types/enums';
 import emptyImage from '../assets/empty-image.png';
+import { format } from 'date-fns';
+import LocalParkingIcon from '@mui/icons-material/LocalParking';
+import SquareFootIcon from '@mui/icons-material/SquareFoot';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import { Divider } from '@mui/material';
 
 interface DisplayProperty extends Property {
   img: string;
@@ -86,20 +91,23 @@ function Features({ property }: { property: Property }) {
     >
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }}>
         <Typography variant="caption">
-          <BedIcon /> {property.bedRoom}
+          <BedIcon /> {property.bedroom}
         </Typography>
         <Typography variant="caption">
-          <BathtubIcon /> {property.bathRoom}
+          <BathtubIcon /> {property.bathroom}
         </Typography>
         <Typography variant="caption">
-          <DirectionsCarIcon /> {property.parking}
+          <LocalParkingIcon /> {property.parking}
+        </Typography>
+        <Typography variant="caption">
+          <SquareFootIcon /> {property.area} sqft
         </Typography>
       </Box>
     </Box>
   );
 }
 
-function Author({ property }: { property: Property }) {
+function FooterSection({ property }: { property: Property }) {
   return (
     <Box
       sx={{
@@ -108,19 +116,20 @@ function Author({ property }: { property: Property }) {
         gap: 2,
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '16px',
+        padding: '0 10px',
+        mb: 2
       }}
     >
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }}>
-        <Typography variant="caption">
+        {/* <Typography variant="caption">
           <b>S$ {property.price.toLocaleString()}</b>
-        </Typography>
+        </Typography> */}
         <Typography variant="caption">
           Listed by {property.user.firstName} {property.user.lastName}
         </Typography>
       </Box>
       <Typography variant="caption">
-        {new Date(property.createdDate).toLocaleDateString()}
+        {format(property.createdDate, "dd MMM yyyy")}
       </Typography>
     </Box>
   );
@@ -152,7 +161,9 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
             parking: 0,
             userID,
             area: 0,
-            mode: mode
+            mode: mode,
+            minPrice: null,
+            maxPrice: null
           };
           const response = await getPropertyList(filterData);
           setLocalProperties(response.data || []);
@@ -183,10 +194,10 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
   const handleToggleWishlist = async (e: React.MouseEvent, property: Property) => {
     e.stopPropagation();
     const newState = !property.isInWishlist;
-  
+
     try {
       const success = await toggleWishlist(property.propertyID, user?.userID || -1, newState);
-  
+
       let updatedList: Property[];
       if (mode === PropertyListModeEnum.Wishlist && !newState) {
         // In Wishlist view, remove the property from the list if it was removed from the wishlist
@@ -199,7 +210,7 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
             : p
         );
       }
-  
+
       if (useContextFilter) {
         // Update the context properties
         setContextProperties(updatedList);
@@ -207,7 +218,7 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
         // Update local properties
         setLocalProperties(updatedList);
       }
-  
+
       showMessage(
         newState ? 'Added to wishlist' : 'Removed from wishlist',
         'success'
@@ -244,7 +255,7 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
   const displayProperties: DisplayProperty[] = properties.map((item: Property) => ({
     ...item,
     //img: `https://picsum.photos/800/450?random=${item.propertyID}`,
-    img: item.attachments && item.attachments.length > 0? item.attachments[0].filePath: emptyImage//'https://www.lexus.co.nz/content/dam/lexus-v3-new-zealand/discover-lexus/future-concept-cars/lf-zc-concept.jpg'
+    img: item.attachments && item.attachments.length > 0 ? item.attachments[0].filePath : emptyImage//'https://www.lexus.co.nz/content/dam/lexus-v3-new-zealand/discover-lexus/future-concept-cars/lf-zc-concept.jpg'
   }));
 
   return (
@@ -298,9 +309,14 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
                 }}
               />
               <SyledCardContent>
-                <Typography gutterBottom variant="caption" component="div">
-                  {property.propertyType?.description || 'Unknown'}
-                </Typography>
+                <Box sx={{ display: 'flex' }}>
+                  <Typography gutterBottom variant="h4" color="text.secondary" component="div" sx={{ flex: 1 }}>
+                    {property.propertyType?.description || 'Unknown'}
+                  </Typography>
+                  <Typography gutterBottom variant="h4" component="div">
+                    <b>NZ$ {property.price.toLocaleString()}</b>
+                  </Typography>
+                </Box>
                 <Typography gutterBottom variant="h6" component="div">
                   {property.description}
                 </Typography>
@@ -309,7 +325,8 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
                 </StyledTypography>
               </SyledCardContent>
               <Features property={property} />
-              <Author property={property} />
+              <Divider sx={{ my: 2, m: 0 }} />
+              <FooterSection property={property} />
             </SyledCard>
           </Grid>
         ))}
