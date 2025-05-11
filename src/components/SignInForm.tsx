@@ -93,7 +93,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSubmitSuccess }) => {
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
             <Button
               type="submit"
-              variant="contained"
+              variant="outlined"
               color="primary"
               size="small"
               disabled={isSubmitting}

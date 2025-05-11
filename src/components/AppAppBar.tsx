@@ -138,7 +138,7 @@ export default function AppAppBar() {
                     sx={{ width: 32, height: 32, mr: 1 }}
                     alt={`${user?.firstName} ${user?.lastName}`}
                   >
-                    {user?.firstName?.[0]}
+                    {user?user.firstName[0]:""}{user?user.lastName[0]:""}
                   </Avatar>
                   <Typography variant="body2" sx={{ color: 'text.primary'}}>{`${user?.firstName} ${user?.lastName}`}</Typography>
                 </Box>
