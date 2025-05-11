@@ -195,6 +195,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
     try {
       const payload = {
         ...data,
+        propertyTypeID: data.propertyType.propertyTypeID,
         userID: user.userID,
         userType: user.userType,
         PropertyFeatureIDs: data.propertyFeatureIDs,
@@ -202,7 +203,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
       };
 
       const formData = new FormData();
-      for (const [key, value] of Object.entries(data)) {
+      for (const [key, value] of Object.entries(payload)) {
         formData.append(key, value?.toString() ?? '');
       }
 
