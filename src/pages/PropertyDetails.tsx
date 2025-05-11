@@ -137,7 +137,7 @@ const PropertyDetails: React.FC = () => {
     return (
         <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
             <style>{thumbnailStyles}</style>
-            <Button variant="text" size="small" onClick={() => navigate(-1)}>
+            <Button variant="text" size="small" sx={{mb: 2}} onClick={() => navigate(-1)}>
                 ⬅️ Back
             </Button>
             <Paper elevation={3} sx={{ p: 4 }}>

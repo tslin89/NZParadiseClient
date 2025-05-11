@@ -27,23 +27,23 @@ function Copyright() {
   );
 }
 
-function Authors(){
+function Authors() {
   return <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-  Authors: Thant Sin Lin, Khine Zar Thwe, Khin Kin Maw, Myo Soe Kyi
-</Typography>
+    Authors: Thant Sin Lin, Khine Zar Thwe, Khin Kin Maw, Myo Soe Kyi
+  </Typography>
 }
 
 export default function Footer() {
   return (
     <React.Fragment>
-      <Divider />
+
       <Container
         sx={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           gap: { xs: 4, sm: 8 },
-          py: { xs: 8, sm: 10 },
+          // py: { xs: 8, sm: 10 },
           textAlign: { sm: 'center', md: 'left' },
         }}
       >
@@ -52,10 +52,8 @@ export default function Footer() {
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
-            pt: { xs: 4, sm: 8 },
+            //pt: { xs: 4, sm: 8 },
             width: '100%',
-            borderTop: '1px solid',
-            borderColor: 'divider',
           }}
         >
           <img src={logo} alt="Logo" className="logo" style={{ height: 100, marginRight: 20 }} />
@@ -77,7 +75,7 @@ export default function Footer() {
             direction="row"
             spacing={1}
             useFlexGap
-            sx={{ justifyContent: 'left', color: 'text.secondary'}}
+            sx={{ justifyContent: 'left', color: 'text.secondary' }}
           >
             <IconButton
               color="inherit"

@@ -15,7 +15,7 @@ const RegisterProperty: React.FC = () => {
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-      <Button variant="text" size="small" onClick={() => navigate('/mylistings')}>
+      <Button variant="text" size="small" sx={{mb: 2}} onClick={() => navigate('/mylistings')}>
         ⬅️ Back to My Listings
       </Button>
       <Paper elevation={3} sx={{ p: 4 }}>
