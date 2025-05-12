@@ -5,7 +5,7 @@ import { PropertyListModeEnum } from '../types/enums';
 import { PropertyMessage } from '../types/types';
 
 //const API_BASE_URL = 'https://0.0.0.0:88/api';
-const API_BASE_URL = process.env.REACT_APP_API_URL; //'http://0.0.0.0:99/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL+ '/api'; //'http://0.0.0.0:99/api';
 
 export const getAuthHeaders = (): HeadersInit => {
   const token = localStorage.getItem('token');
