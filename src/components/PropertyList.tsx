@@ -9,7 +9,6 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import BedIcon from '@mui/icons-material/Bed';
 import BathtubIcon from '@mui/icons-material/Bathtub';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import EditIcon from '@mui/icons-material/Edit';
@@ -19,7 +18,7 @@ import { getPropertyList, toggleWishlist } from '../services/api';
 import { PropertyFilterData } from '../types/formData';
 import { PropertyContext } from '../components/PropertyContext';
 import { useNavigate } from 'react-router-dom';
-import { Favorite, FavoriteBorder, StarBorder, StarRate } from '@mui/icons-material';
+import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import { useSnackbar } from '../components/SnackbarContext';
 import { useAuth } from './AuthContext';
 import { PropertyListModeEnum } from '../types/enums';
@@ -27,7 +26,6 @@ import emptyImage from '../assets/empty-image.png';
 import { format } from 'date-fns';
 import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { Divider } from '@mui/material';
 
 interface DisplayProperty extends Property {
@@ -179,7 +177,7 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
       setLoading(false);
       setError(null);
     }
-  }, [userID, useContextFilter]);
+  }, [userID, useContextFilter, mode]);
 
   const properties = useContextFilter ? contextProperties : localProperties;
 
@@ -196,7 +194,7 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
     const newState = !property.isInWishlist;
 
     try {
-      const success = await toggleWishlist(property.propertyID, user?.userID || -1, newState);
+      await toggleWishlist(property.propertyID, user?.userID || -1, newState);
 
       let updatedList: Property[];
       if (mode === PropertyListModeEnum.Wishlist && !newState) {

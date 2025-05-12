@@ -30,7 +30,6 @@ import { format } from 'date-fns';
 
 import BathtubIcon from '@mui/icons-material/Bathtub';
 import BedIcon from '@mui/icons-material/Bed';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
@@ -152,7 +151,7 @@ const PropertyDetails: React.FC = () => {
                     {property.attachments.length > 0 && (
                         <ImageList variant="standard" cols={1}>
                             <ImageListItem key={property.attachments[0].attachmentID}>
-                                <img
+                                <img alt=""
                                     srcSet={`${property.attachments[0].filePath}?w=248&fit=crop&auto=format&dpr=2 2x`}
                                     src={`${property.attachments[0].filePath}?w=248&fit=crop&auto=format`}
                                     style={{ width: '100%', borderRadius: 8, cursor: 'pointer' }}
@@ -196,7 +195,7 @@ const PropertyDetails: React.FC = () => {
                                             overflow: 'hidden', // Ensure image doesn't overflow
                                         }}
                                     >
-                                        <img
+                                        <img alt=""
                                             srcSet={`${img.filePath}?w=100&fit=crop&auto=format&dpr=2 2x`}
                                             src={`${img.filePath}?w=100&fit=crop&auto=format`}
                                             style={{

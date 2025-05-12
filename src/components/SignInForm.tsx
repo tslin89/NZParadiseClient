@@ -5,7 +5,7 @@ import {
   Button,
   Box,
 } from '@mui/material';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { signIn } from '../services/api';
 import { UserData } from '../types/formData';
 import { useNavigate } from 'react-router-dom';

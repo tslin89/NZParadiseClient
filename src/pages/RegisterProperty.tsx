@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Container, Typography, Paper, TextField, Button, Grid, Box } from '@mui/material';
-import { useForm } from 'react-hook-form';
+import React from 'react';
+import { Container, Typography, Paper, Button } from '@mui/material';
+// import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { useSnackbar } from '../components/SnackbarContext';
-import { useAuth } from '../components/AuthContext';
-import { registerProperty } from '../services/api'; // Assume this API function exists
+// import { useSnackbar } from '../components/SnackbarContext';
+// import { useAuth } from '../components/AuthContext';
+// import { registerProperty } from '../services/api'; // Assume this API function exists
 import RegisterPropertyForm from '../components/RegisterPropertyForm';
 
 const RegisterProperty: React.FC = () => {

@@ -10,7 +10,6 @@ import {
   InputLabel,
   FormControl,
   Chip,
-  SelectChangeEvent,
   CircularProgress,
   Typography,
   ImageList,
@@ -25,7 +24,7 @@ import { RegisterPropertyFormData, PropertyType, PropertyFeature } from '../type
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from '../components/SnackbarContext';
 import { useAuth } from '../components/AuthContext';
-import { format, max } from 'date-fns';
+import { format } from 'date-fns';
 import GoogleAutocomplete from './GoogleAutocomplete';
 import LocationMapPreview from './LocationMapPreview';
 //import { uploadPropertyImages } from '../services/api';
@@ -56,10 +55,10 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
   const [propertyFeatures, setPropertyFeatures] = useState<PropertyFeature[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isFetchingProperty, setIsFetchingProperty] = useState(mode === 'edit');
-  const [selectedImages, setSelectedImages] = useState<File[]>([]);
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-  const [existingAttachments, setExistingAttachments] = useState<{ attachmentID: number; filePath: string }[]>([]);
-  const [removedAttachmentIDs, setRemovedAttachmentIDs] = useState<number[]>([]);
+  // const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  // const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  // const [existingAttachments, setExistingAttachments] = useState<{ attachmentID: number; filePath: string }[]>([]);
+  // const [removedAttachmentIDs, setRemovedAttachmentIDs] = useState<number[]>([]);
   const [images, setImages] = useState<DisplayImage[]>([]);
   const [removedImageIDs, setRemovedImageIDs] = useState<number[]>([]);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -69,7 +68,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
     handleSubmit,
     control,
     formState: { errors },
-    setError,
+    //setError,
     reset,
     watch,
   } = useForm<RegisterPropertyFormData>({
@@ -128,23 +127,23 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
   //   setImages(updated);
   // };
 
-  const removeExistingAttachment = (attachmentID: number) => {
-    setExistingAttachments(prev => prev.filter(att => att.attachmentID !== attachmentID));
-    setRemovedAttachmentIDs(prev => [...prev, attachmentID]);
-  };
+  // const removeExistingAttachment = (attachmentID: number) => {
+  //   setExistingAttachments(prev => prev.filter(att => att.attachmentID !== attachmentID));
+  //   setRemovedAttachmentIDs(prev => [...prev, attachmentID]);
+  // };
 
-  const removeImage = (index: number) => {
-    const image = images[index];
+  // const removeImage = (index: number) => {
+  //   const image = images[index];
 
-    // Check that ID is a number before adding to removedImageIDs
-    if (image.isUploaded && typeof image.id === 'number') {
-      setRemovedImageIDs((prev) => [...prev, image.id as number]);
-    }
+  //   // Check that ID is a number before adding to removedImageIDs
+  //   if (image.isUploaded && typeof image.id === 'number') {
+  //     setRemovedImageIDs((prev) => [...prev, image.id as number]);
+  //   }
 
-    const updated = [...images];
-    updated.splice(index, 1);
-    setImages(updated);
-  };
+  //   const updated = [...images];
+  //   updated.splice(index, 1);
+  //   setImages(updated);
+  // };
 
   useEffect(() => {
     const fetchPropertyDetails = async () => {

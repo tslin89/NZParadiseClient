@@ -8,14 +8,12 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Typography,
   Alert,
   Button,
 } from '@mui/material';
 import { PropertyFilterData } from '../types/formData';
 import { PropertyContext } from '../components/PropertyContext';
 import { getPropertyList } from '../services/api';
-import { Property } from '../types/types';
 import { BEDROOM_OPTIONS, BATHROOM_OPTIONS, PARKING_OPTIONS } from '../config/propertyOptions';
 
 const useDebounce = <T,>(value: T, delay: number): T => {
@@ -25,7 +23,7 @@ const useDebounce = <T,>(value: T, delay: number): T => {
       setDebouncedValue(value);
     }, delay);
     return () => clearTimeout(handler);
-  }, [JSON.stringify(value), delay]);
+  }, [value, delay]);
   return debouncedValue;
 };
 
