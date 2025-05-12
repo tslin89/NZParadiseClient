@@ -1,0 +1,15 @@
+import { Typography } from "@mui/material";
+import React from "react";
+import PropertyList from "../components/PropertyList";
+import { PropertyListModeEnum } from "../types/enums";
+
+const Wishlists = () => <div>
+  <Typography variant="h3" gutterBottom>
+    My Wishlist
+  </Typography>
+  <Typography sx={{ mb: 2}}>View properties in my wishlist</Typography>
+
+  <PropertyList mode={PropertyListModeEnum.Wishlist} useContextFilter={false} />
+</div>;
+
+export default Wishlists;
