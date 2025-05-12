@@ -1,6 +1,6 @@
 // src/context/SnackbarContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Snackbar, Alert, SnackbarOrigin, Slide } from '@mui/material';
+import { Snackbar, Alert, Slide } from '@mui/material';
 
 // Define types for Snackbar messages
 interface SnackbarMessage {
@@ -30,7 +30,7 @@ interface SnackbarProviderProps {
 }
 
 export const SnackbarProvider: React.FC<SnackbarProviderProps> = ({ children }) => {
-  const [snackbars, setSnackbars] = useState<SnackbarMessage[]>([]);
+  const [, setSnackbars] = useState<SnackbarMessage[]>([]);
   const [open, setOpen] = useState(false);
   const [currentMessage, setCurrentMessage] = useState<SnackbarMessage | null>(null);
 

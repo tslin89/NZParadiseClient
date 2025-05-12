@@ -1,4 +1,4 @@
-import { UserData, RegisterPropertyFormData, PropertyFilterData } from '../types/formData';
+import { UserData, PropertyFilterData } from '../types/formData';
 import SHA256 from 'crypto-js/sha256';
 //import { MessageGroup } from '../types/types';
 import { PropertyListModeEnum } from '../types/enums';
@@ -344,7 +344,7 @@ export const submitMessage = async (userID: number, propertyID: number, messageD
     console.error('Message submission error:', err);
     throw err;
   }
-  return true;
+  //return true;
 }
 
 export const getMessageList = async (userID: number): Promise<{ data: PropertyMessage[] }> => {

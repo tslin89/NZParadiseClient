@@ -61,7 +61,7 @@ const Profile: React.FC = () => {
               primary={
                 <>
                   <Typography component="span" variant="body2" color="text.secondary">Gender:&nbsp;</Typography>
-                  <Typography component="span" variant="body1" fontWeight="bold">{user?.gender == 1 ? "Male" : user?.gender == 2 ? "Female" : "Other"}</Typography>
+                  <Typography component="span" variant="body1" fontWeight="bold">{user?.gender === 1 ? "Male" : user?.gender === 2 ? "Female" : "Other"}</Typography>
                 </>
               }
             />

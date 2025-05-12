@@ -6,14 +6,13 @@ import {
   Card,
   CardContent,
   Divider,
-  Link,
   CircularProgress,
   Alert,
   Button,
   CardMedia,
   Avatar,
 } from '@mui/material';
-import { PropertyMessage, PropertyType } from '../types/types';
+import { PropertyMessage } from '../types/types';
 import { useAuth } from './AuthContext';
 import { getMessageList } from '../services/api';
 import { useNavigate } from 'react-router-dom';

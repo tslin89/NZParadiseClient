@@ -57,7 +57,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmitSuccess }) => {
       const { confirmPassword, ...apiData } = data;
       const resultObj = await registerUser(apiData);
 
-      if (resultObj.status == -1) {
+      if (resultObj.status === -1) {
         //alert(resultObj.message); // i don't like this one.
         showMessage(resultObj.message || 'An error occurred', 'error');
       }

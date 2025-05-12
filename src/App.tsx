@@ -23,7 +23,6 @@ import { LoadScript } from '@react-google-maps/api';
 import EditProperty from './pages/EditProperty';
 import PropertyDetails from './pages/PropertyDetails';
 import { Divider } from '@mui/material';
-import { mt } from 'date-fns/locale';
 
 const libraries: ("places")[] = ["places"];
 const google_map_api_key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '';
