@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
   Paper,
@@ -15,7 +15,7 @@ import {
 import { PropertyFilterData } from '../types/formData';
 import { PropertyContext } from '../components/PropertyContext';
 import { getPropertyList } from '../services/api';
-import { BEDROOM_OPTIONS, BATHROOM_OPTIONS, PARKING_OPTIONS, PARKING_OPTIONS_FILTER } from '../config/propertyOptions';
+import { BEDROOM_OPTIONS, BATHROOM_OPTIONS, PARKING_OPTIONS_FILTER } from '../config/propertyOptions';
 
 
 // const useDebounce = <T,>(value: T, delay: number): T => {
@@ -74,23 +74,22 @@ export const PropertyFilter: React.FC = () => {
   }, [debouncedValues, setProperties]);
   */
 
-  useEffect(() => {
-    fetchPropertyTypes();
-    handleSearch();
-  }, []);
-
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     try {
       setError(null);
       const values = getValues();
-      console.log('Fetching properties with:', values);
       const response = await getPropertyList({ ...values, userID: null });
       setProperties(response.data || []);
     } catch (error: any) {
-      console.error('Error fetching properties:', error);
       setError(error.message || 'Failed to load properties');
     }
-  };
+  }, [getValues, setProperties]);
+
+  useEffect(() => {
+    fetchPropertyTypes();
+    handleSearch();
+  }, [fetchPropertyTypes, handleSearch]);
+
 
   // Reset form to default values
   const handleReset = () => {
