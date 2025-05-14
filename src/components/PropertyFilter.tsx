@@ -284,7 +284,7 @@ export const PropertyFilter: React.FC = () => {
                   sx={{ mr: 1 }}
                   onClick={handleSearch}
                 >
-                  Search Properties
+                  Search
                 </Button>
                 <Button
                   variant="text"
