@@ -95,7 +95,7 @@ export default function AppAppBar() {
             </Link>
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               <Button variant="text" color="info" size="small" component={Link} to="/">
-                Search Properties
+                Search Properties to Rent
               </Button>
               {isAuthenticated && (
                 <>
