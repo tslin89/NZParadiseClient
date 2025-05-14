@@ -157,13 +157,14 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
             bedRoom: 0,
             bathRoom: 0,
             parking: 0,
-            userID,
+            userID: userID,
             area: 0,
             mode: mode,
             minPrice: null,
             maxPrice: null
           };
           const response = await getPropertyList(filterData);
+          console.log('new data', response)
           setLocalProperties(response.data || []);
         } catch (error: any) {
           console.error('Error fetching properties:', error);
@@ -278,7 +279,7 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
                     size="small"
                     onClick={(e) => handleToggleWishlist(e, property)}
                   >
-                    {property.isInWishlist ? <Favorite color="primary" /> : <FavoriteBorder />}
+                    {property.isInWishlist === true ? <Favorite color="primary" /> : <FavoriteBorder />}
                   </IconButton>
                 )}
 
@@ -312,10 +313,10 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
                     {property.propertyTypeName || 'Unknown'}
                   </Typography>
                   <Typography gutterBottom variant="h5" component="div">
+                    /week
                     <b>NZ$ {property.price.toLocaleString()}</b>
                   </Typography>
                   <Typography sx={{mt:0.5}} color="text.secondary">
-                    /week
                   </Typography>
                 </Box>
                 <Typography gutterBottom variant="h6" component="div">

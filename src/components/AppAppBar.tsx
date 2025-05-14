@@ -124,7 +124,7 @@ export default function AppAppBar() {
                 <Button color="primary" variant="text" size="small" component={Link} to="/signin">
                   Sign in
                 </Button>
-                <Button color="primary" variant="contained" size="small" component={Link} to="/signup">
+                <Button color="secondary" variant="contained" size="small" component={Link} to="/signup">
                   Sign up
                 </Button>
               </>
