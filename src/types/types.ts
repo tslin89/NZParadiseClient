@@ -11,6 +11,7 @@ export interface Property {
   propertyID: number;
   userID: number;
   propertyTypeID: number;
+  propertyTypeName: string;
   description: string;
   price: number; // Decimal
   location: string;
@@ -24,7 +25,7 @@ export interface Property {
   createdDate: string; // Datetime as ISO string
   modifiedDate: string | null; // Nullable datetime
   user: User; // Nested object
-  propertyType: PropertyType | null; // Nested object
+  //propertyType: PropertyType | null; // Nested object
   isInWishlist: boolean | null;
   attachments: Attachment[] | null;
 }
