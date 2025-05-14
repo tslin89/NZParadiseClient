@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Container, Paper, Typography, CircularProgress, Box, Button } from '@mui/material';
 import RegisterPropertyForm from '../components/RegisterPropertyForm';
 import { getPropertyDetails } from '../services/api';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const EditProperty: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -53,7 +54,7 @@ const EditProperty: React.FC = () => {
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
         <Button variant="text" size="small" sx={{mb: 2}} onClick={() => navigate('/mylistings')}>
-        ⬅️ Back to My Listings
+        <ArrowBackIcon sx={{ mr: 1 }} /> Back to My Listings
       </Button>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h1" gutterBottom sx={{ pb: 1 }}>

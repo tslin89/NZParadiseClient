@@ -194,7 +194,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
     try {
       const payload = {
         ...data,
-        propertyTypeID: data.propertyType.propertyTypeID,
+        propertyTypeID: data.propertyTypeID,
         userID: user.userID,
         userType: user.userType,
         PropertyFeatureIDs: data.propertyFeatureIDs,
@@ -277,12 +277,16 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
         </Grid>
 
         <Grid size={{ xs: 12, md: 6, sm: 12 }}>
+
           <FormControl fullWidth error={!!errors.propertyTypeID} required>
             <InputLabel>Property Type</InputLabel>
             <Controller
-              name="propertyType.propertyTypeID"
+              name="propertyTypeID"
               control={control}
-              rules={{ required: 'Property Type is required', validate: value => value !== 0 || 'Please select a property type' }}
+              rules={{
+                required: 'Property Type is required',
+                validate: (value) => value !== 0 || 'Please select a valid property type',
+              }}
               render={({ field }) => (
                 <Select
                   {...field}
@@ -298,6 +302,9 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
                 </Select>
               )}
             />
+            {errors.propertyTypeID && (
+              <FormHelperText>{errors.propertyTypeID.message}</FormHelperText>
+            )}
           </FormControl>
         </Grid>
 
@@ -344,10 +351,10 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
           <TextField
             fullWidth
             variant="outlined"
-            label="Price"
+            label="Price (Weekly)"
             type="number"
             required
-            {...register('price', { required: 'Price is required', min: { value: 0, message: 'Price cannot be negative' } })}
+            {...register('price', { required: 'Price is required', min: { value: 1, message: 'Price must be more than NZ$ 0' } })}
             error={!!errors.price}
             helperText={errors.price?.message}
           />
@@ -371,7 +378,10 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             <Controller
               name="bedroom"
               control={control}
-              rules={{ required: 'Bedrooms are required' }}
+              rules={{
+                required: 'Bedrooms are required',
+                validate: (value) => value !== 0 || 'Please select number of bedrooms',
+              }}
               render={({ field }) => (
                 <Select
                   {...field}
@@ -403,19 +413,28 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             <Controller
               name="bathroom"
               control={control}
-              rules={{ required: 'Bathrooms are required' }}
+              rules={{
+                required: 'Bathrooms are required',
+                validate: (value) => value !== 0 || 'Please select number of bathrooms',
+              }}
               render={({ field }) => (
                 <Select
                   {...field}
                   value={field.value || ''}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
+                  onChange={(e) => field.onChange(e.target.value)}
                 >
+                  <MenuItem value="" disabled>
+                    Select Bathrooms
+                  </MenuItem>
                   {BATHROOM_OPTIONS.map((n) => (
-                    <MenuItem key={n} value={n}>{n}</MenuItem>
+                    <MenuItem key={n} value={n.toString()}>
+                      {n}
+                    </MenuItem>
                   ))}
                 </Select>
               )}
             />
+            <FormHelperText>{errors.bathroom?.message}</FormHelperText>
           </FormControl>
         </Grid>
 
@@ -430,12 +449,12 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             error={!!errors.parking}
             helperText={errors.parking?.message}
           /> */}
-          <FormControl fullWidth error={!!errors.parking} required>
+          <FormControl fullWidth error={!!errors.parking}>
             <InputLabel>Parkings</InputLabel>
             <Controller
               name="parking"
               control={control}
-              rules={{ required: 'Parkings are required' }}
+              //rules={{ required: 'Parkings are required' }}
               render={({ field }) => (
                 <Select
                   {...field}
@@ -455,16 +474,14 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
           <TextField
             fullWidth
             variant="outlined"
-            label="Area (sq ft)"
+            label="Area (sqft)"
             type="number"
             required
-            {...register('area', { required: 'Area is required', min: { value: 0, message: 'Cannot be negative' } })}
+            {...register('area', { required: 'Area is required', min: { value: 1, message: 'Area must be greater than 0 sqft' } })}
             error={!!errors.area}
             helperText={errors.area?.message}
           />
         </Grid>
-
-
 
         <Grid size={{ xs: 12, md: 6, sm: 12 }}>
           <Controller

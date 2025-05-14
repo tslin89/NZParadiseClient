@@ -34,7 +34,7 @@ import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 // Add this CSS to your stylesheet or a <style> tag in the component
 const thumbnailStyles = `
@@ -136,8 +136,8 @@ const PropertyDetails: React.FC = () => {
     return (
         <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
             <style>{thumbnailStyles}</style>
-            <Button variant="text" size="small" sx={{mb: 2}} onClick={() => navigate(-1)}>
-                ⬅️ Back
+            <Button variant="text" size="small" sx={{ mb: 2 }} onClick={() => navigate(-1)}>
+                <ArrowBackIcon sx={{ mr: 1 }} /> Back
             </Button>
             <Paper elevation={3} sx={{ p: 4 }}>
                 <Typography variant="h3" gutterBottom>
@@ -256,11 +256,11 @@ const PropertyDetails: React.FC = () => {
                 </Box>
 
                 <Typography variant="h6" gutterBottom mt={4}>
-                    {property.propertyType?.description || "Property"} Details
+                    {property.propertyTypeName || "Property"} Details
                 </Typography>
                 <Grid container>
                     <Grid size={{ xs: 12, md: 6 }}>
-                        <List sx={{ p:0, m:0 }}>
+                        <List sx={{ p: 0, m: 0 }}>
                             <ListItem disableGutters>
                                 <ListItemIcon sx={{ mr: 2 }}>
                                     <BedIcon />
@@ -303,7 +303,7 @@ const PropertyDetails: React.FC = () => {
                         </List>
                     </Grid>
                     <Grid size={{ xs: 12, md: 6 }}>
-                        <List sx={{ p: 0, m:0 }}>
+                        <List sx={{ p: 0, m: 0 }}>
                             <ListItem disableGutters>
                                 <ListItemIcon sx={{ mr: 2 }}>
                                     <AttachMoneyIcon />
@@ -312,7 +312,7 @@ const PropertyDetails: React.FC = () => {
                                     primary={
                                         <>
                                             <Typography component="span" variant="body2" color="text.secondary">Price:&nbsp;</Typography>
-                                            <Typography component="span" variant="body1" fontWeight="bold">NZ$ {property.price.toLocaleString()}</Typography>
+                                            <Typography component="span" variant="body1" fontWeight="bold">NZ$ {property.price.toLocaleString()} (per week)</Typography>
                                         </>
                                     }
                                 />
@@ -354,7 +354,7 @@ const PropertyDetails: React.FC = () => {
                     <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                         {featureDescriptions.length > 0 ? (
                             featureDescriptions.map((description: number, idx: number) => (
-                                <Chip key={idx} label={description}  />
+                                <Chip key={idx} label={description} />
                             ))
                         ) : (
                             <Typography variant="body2" color="text.secondary">

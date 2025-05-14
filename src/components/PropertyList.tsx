@@ -309,10 +309,13 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
               <SyledCardContent>
                 <Box sx={{ display: 'flex' }}>
                   <Typography gutterBottom variant="h4" color="text.secondary" component="div" sx={{ flex: 1 }}>
-                    {property.propertyType?.description || 'Unknown'}
+                    {property.propertyTypeName || 'Unknown'}
                   </Typography>
-                  <Typography gutterBottom variant="h4" component="div">
+                  <Typography gutterBottom variant="h5" component="div">
                     <b>NZ$ {property.price.toLocaleString()}</b>
+                  </Typography>
+                  <Typography sx={{mt:0.5}} color="text.secondary">
+                    /week
                   </Typography>
                 </Box>
                 <Typography gutterBottom variant="h6" component="div">
