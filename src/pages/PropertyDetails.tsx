@@ -312,7 +312,12 @@ const PropertyDetails: React.FC = () => {
                                     primary={
                                         <>
                                             <Typography component="span" variant="body2" color="text.secondary">Price:&nbsp;</Typography>
-                                            <Typography component="span" variant="body1" fontWeight="bold">NZ$ {property.price.toLocaleString()} (per week)</Typography>
+                                            <Typography component="span" variant="body1" fontWeight="bold">
+                                                NZ$ {property.price.toLocaleString()}
+                                                <Typography component="span" variant="body1" color="text.secondary">
+                                                    /week
+                                                </Typography>
+                                            </Typography>
                                         </>
                                     }
                                 />
@@ -388,9 +393,10 @@ const PropertyDetails: React.FC = () => {
                             multiline
                             rows={3}
                             value={message}
+                            placeholder='Send enquiry message to property owner'
                             onChange={(e) => setMessage(e.target.value)}
                         />
-                        <Button variant="outlined" sx={{ mt: 2 }} onClick={handleSendMessage}>
+                        <Button variant="contained" color="secondary" sx={{ mt: 2, pl: 3, pr: 3 }} onClick={handleSendMessage}>
                             Send
                         </Button>
                     </Paper>

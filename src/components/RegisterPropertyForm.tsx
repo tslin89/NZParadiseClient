@@ -525,7 +525,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
             <Typography variant="subtitle2" color="text.secondary">
               Property Images:
             </Typography>
-            <Button variant="contained" component="label" size='small'>
+            <Button variant="outlined" component="label" size='small'>
               Select Images
               <input
                 type="file"
@@ -587,8 +587,8 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
             <Button
               type="submit"
-              variant="outlined"
-              color="primary"
+              variant="contained"
+              color="secondary"
               disabled={isSubmitting || isLoading}>
               {isSubmitting ? 'Submitting...' : (mode === 'edit' ? 'Update Property' : 'Register Property')}
             </Button>
