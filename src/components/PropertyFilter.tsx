@@ -14,25 +14,25 @@ import {
 import { PropertyFilterData } from '../types/formData';
 import { PropertyContext } from '../components/PropertyContext';
 import { getPropertyList } from '../services/api';
-import { BEDROOM_OPTIONS, BATHROOM_OPTIONS, PARKING_OPTIONS } from '../config/propertyOptions';
+import { BEDROOM_OPTIONS, BATHROOM_OPTIONS, PARKING_OPTIONS, PARKING_OPTIONS_FILTER } from '../config/propertyOptions';
 
 
-const useDebounce = <T,>(value: T, delay: number): T => {
-  const [debouncedValue, setDebouncedValue] = React.useState<T>(value);
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-    return () => clearTimeout(handler);
-  }, [value, delay]);
-  return debouncedValue;
-};
+// const useDebounce = <T,>(value: T, delay: number): T => {
+//   const [debouncedValue, setDebouncedValue] = React.useState<T>(value);
+//   useEffect(() => {
+//     const handler = setTimeout(() => {
+//       setDebouncedValue(value);
+//     }, delay);
+//     return () => clearTimeout(handler);
+//   }, [value, delay]);
+//   return debouncedValue;
+// };
 
 export const PropertyFilter: React.FC = () => {
   const { propertyTypes, fetchPropertyTypes, setProperties } = useContext(PropertyContext);
   const [error, setError] = useState<string | null>(null);
 
-  const { control, watch, reset, getValues } = useForm<PropertyFilterData>({
+  const { control, reset, getValues } = useForm<PropertyFilterData>({
     defaultValues: {
       description: '',
       propertyTypeID: 0,
@@ -199,7 +199,7 @@ export const PropertyFilter: React.FC = () => {
                   }
                 >
                   <MenuItem value="">All</MenuItem>
-                  {PARKING_OPTIONS.map((n) => (
+                  { PARKING_OPTIONS_FILTER.map((n) => (
                     <MenuItem key={n} value={n}>{n}</MenuItem>
                   ))}
                 </Select>
