@@ -8,7 +8,7 @@ const SearchProperty = () => {
   return (
     <div>
       <Typography variant="h3" gutterBottom>
-        Search Properties
+        Search Properties to Rent
       </Typography>
       <PropertyFilter />
       <PropertyList mode={PropertyListModeEnum.Search} useContextFilter={true} />

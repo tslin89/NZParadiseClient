@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 // import { useAuth } from '../components/AuthContext';
 // import { registerProperty } from '../services/api'; // Assume this API function exists
 import RegisterPropertyForm from '../components/RegisterPropertyForm';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const RegisterProperty: React.FC = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const RegisterProperty: React.FC = () => {
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
       <Button variant="text" size="small" sx={{mb: 2}} onClick={() => navigate('/mylistings')}>
-        ⬅️ Back to My Listings
+        <ArrowBackIcon sx={{ mr: 1 }} />Back to My Listings
       </Button>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h1" gutterBottom sx={{ pb: 1 }}>
