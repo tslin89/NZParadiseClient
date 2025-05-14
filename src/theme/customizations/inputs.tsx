@@ -42,7 +42,7 @@ export const inputsCustomizations: Components<Theme> = {
             },
             style: {
               height: '2.25rem',
-              padding: '8px 12px',
+              padding: '10px 15px',
             },
           },
           {

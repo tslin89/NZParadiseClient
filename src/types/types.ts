@@ -26,7 +26,7 @@ export interface Property {
   modifiedDate: string | null; // Nullable datetime
   user: User; // Nested object
   //propertyType: PropertyType | null; // Nested object
-  isInWishlist: boolean | null;
+  isInWishlist: boolean | false;
   attachments: Attachment[] | null;
 }
 

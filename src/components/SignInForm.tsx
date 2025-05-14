@@ -60,7 +60,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSubmitSuccess }) => {
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
+    <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ pb: 3 }}>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 12 }}>
           <TextField
@@ -90,12 +90,17 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSubmitSuccess }) => {
           />
         </Grid>
         <Grid size={{ xs: 12 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Button
               type="submit"
-              variant="outlined"
-              color="primary"
-              size="small"
+              variant="contained"
+              color="secondary"
+              size="large"
+              sx={{
+                
+                width: { xs: '100%', md: 'auto' }
+              }}
+
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Signing In...' : 'Sign In'}

@@ -164,8 +164,6 @@ export const updateProperty = async (data: FormData) => {
 };
 
 export const getPropertyList = async (data: PropertyFilterData) => {
-
-  console.log('getPropertyList', data)
   try {
     const queryParams = new URLSearchParams();
     queryParams.append("mode", data.mode || PropertyListModeEnum.Search);

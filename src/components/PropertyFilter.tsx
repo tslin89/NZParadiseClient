@@ -11,12 +11,16 @@ import {
   Alert,
   Button,
   Box,
+  Typography,
 } from '@mui/material';
 import { PropertyFilterData } from '../types/formData';
 import { PropertyContext } from '../components/PropertyContext';
 import { getPropertyList } from '../services/api';
 import { BEDROOM_OPTIONS, BATHROOM_OPTIONS, PARKING_OPTIONS_FILTER } from '../config/propertyOptions';
-
+import { useAuth } from './AuthContext';
+import { PropertyListModeEnum } from '../types/enums';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 // const useDebounce = <T,>(value: T, delay: number): T => {
 //   const [debouncedValue, setDebouncedValue] = React.useState<T>(value);
@@ -33,6 +37,8 @@ export const PropertyFilter: React.FC = () => {
   const { propertyTypes, fetchPropertyTypes, setProperties } = useContext(PropertyContext);
   const [error, setError] = useState<string | null>(null);
   const [showFilter, setShowFilter] = useState(true);
+  const { user } = useAuth();
+  const userID = user?.userID || null;
 
   const { control, reset, getValues } = useForm<PropertyFilterData>({
     defaultValues: {
@@ -78,12 +84,12 @@ export const PropertyFilter: React.FC = () => {
     try {
       setError(null);
       const values = getValues();
-      const response = await getPropertyList({ ...values, userID: null });
+      const response = await getPropertyList({ ...values, userID: userID, mode: PropertyListModeEnum.Search });
       setProperties(response.data || []);
     } catch (error: any) {
       setError(error.message || 'Failed to load properties');
     }
-  }, [getValues, setProperties]);
+  }, [getValues, setProperties, userID]);
 
   useEffect(() => {
     fetchPropertyTypes();
@@ -106,7 +112,7 @@ export const PropertyFilter: React.FC = () => {
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 2, mt: 2, mb: 3 }}>
+    <Paper elevation={3} sx={{ p: 2.5, mt: 2, mb: 3 }}>
       {/* <Typography variant="h1" gutterBottom sx={{ pb: 1 }}>
         Property Filter
       </Typography> */}
@@ -274,7 +280,7 @@ export const PropertyFilter: React.FC = () => {
               <>
                 <Button
                   variant="contained"
-                  color="primary"
+                  color="secondary"
                   sx={{ mr: 1 }}
                   onClick={handleSearch}
                 >
@@ -295,7 +301,7 @@ export const PropertyFilter: React.FC = () => {
               onClick={() => setShowFilter((prev) => !prev)}
               sx={{ ml: 'auto' }} // Pushes this button to the right
             >
-              {showFilter ? 'Hide filter' : 'Show filter'}
+              {showFilter ? <><ExpandLessIcon fontSize='medium' /><Typography color="text.secondary">Hide Filter</Typography></>: <><ExpandMoreIcon fontSize='medium'/><Typography color="text.secondary">Show Filter</Typography></>}
             </Button>
           </Box>
         </Grid>
