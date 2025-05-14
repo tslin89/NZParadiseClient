@@ -313,10 +313,10 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
                     {property.propertyTypeName || 'Unknown'}
                   </Typography>
                   <Typography gutterBottom variant="h5" component="div">
-                    /week
                     <b>NZ$ {property.price.toLocaleString()}</b>
                   </Typography>
                   <Typography sx={{mt:0.5}} color="text.secondary">
+                    /week
                   </Typography>
                 </Box>
                 <Typography gutterBottom variant="h6" component="div">
