@@ -16,6 +16,7 @@ import { PropertyContext } from '../components/PropertyContext';
 import { getPropertyList } from '../services/api';
 import { BEDROOM_OPTIONS, BATHROOM_OPTIONS, PARKING_OPTIONS } from '../config/propertyOptions';
 
+
 const useDebounce = <T,>(value: T, delay: number): T => {
   const [debouncedValue, setDebouncedValue] = React.useState<T>(value);
   useEffect(() => {
@@ -31,7 +32,7 @@ export const PropertyFilter: React.FC = () => {
   const { propertyTypes, fetchPropertyTypes, setProperties } = useContext(PropertyContext);
   const [error, setError] = useState<string | null>(null);
 
-  const { control, watch, reset } = useForm<PropertyFilterData>({
+  const { control, watch, reset, getValues } = useForm<PropertyFilterData>({
     defaultValues: {
       description: '',
       propertyTypeID: 0,
@@ -44,10 +45,10 @@ export const PropertyFilter: React.FC = () => {
     },
   });
 
+  /*
   const formValues = watch();
   const debouncedValues = useDebounce(formValues, 500);
 
-  // Fetch property types if not loaded
   useEffect(() => {
     if (propertyTypes.length === 0) {
       fetchPropertyTypes();
@@ -69,6 +70,25 @@ export const PropertyFilter: React.FC = () => {
     };
     fetchProperties();
   }, [debouncedValues, setProperties]);
+  */
+
+  useEffect(() => {
+    fetchPropertyTypes();
+    handleSearch();
+  }, []);
+
+  const handleSearch = async () => {
+    try {
+      setError(null);
+      const values = getValues();
+      console.log('Fetching properties with:', values);
+      const response = await getPropertyList({ ...values, userID: null });
+      setProperties(response.data || []);
+    } catch (error: any) {
+      console.error('Error fetching properties:', error);
+      setError(error.message || 'Failed to load properties');
+    }
+  };
 
   // Reset form to default values
   const handleReset = () => {
@@ -80,6 +100,8 @@ export const PropertyFilter: React.FC = () => {
       bathRoom: undefined,
       parking: undefined,
     });
+
+    handleSearch();
   };
 
   return (
@@ -185,7 +207,7 @@ export const PropertyFilter: React.FC = () => {
             />
           </FormControl>
         </Grid>
-        
+
         <Grid size={{ xs: 12, sm: 6, md: 6 }}>
           <Controller
             name="location"
@@ -241,11 +263,19 @@ export const PropertyFilter: React.FC = () => {
 
         <Grid size={{ xs: 12 }}>
           <Button
-            variant="outlined"
+            variant="contained"
+            color="primary"
+            sx={{ mr: 1 }}
+            onClick={handleSearch}
+          >
+            Search Properties
+          </Button>
+          <Button
+            variant="text"
             color="primary"
             onClick={handleReset}
           >
-            Reset Filters
+            Reset
           </Button>
         </Grid>
       </Grid>
