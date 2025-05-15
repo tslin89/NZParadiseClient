@@ -48,7 +48,39 @@ export const registerUser = async (formData: Omit<UserData, 'confirmPassword'>) 
         phoneNo: formData.phoneNo,
         gender: formData.gender,
         email: formData.email,
-        password: SHA256(formData.password).toString(),
+        password: SHA256(formData.password || '').toString(),
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Registration failed');
+    }
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateUser = async (formData: Omit<UserData, 'confirmPassword'>) => {
+  try {
+    const response = await fetch(API_BASE_URL + '/user/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userID: formData.userID,
+        UserTypeID: 1,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        agencyName: formData.agencyName,
+        phoneNo: formData.phoneNo,
+        gender: formData.gender,
+        email: formData.email,
+        password: formData.password? SHA256(formData.password).toString(): 'qm6K0DKJqgKcac4P42flvijZ5I7wFe',
+        currentPassword: formData.currentPassword? SHA256(formData.currentPassword).toString(): 'NA',
+        //password: formData.password,
+        //currentPassword: formData.currentPassword
       }),
     });
 
@@ -70,7 +102,8 @@ export const signIn = async (formData: UserData) => {
       },
       body: JSON.stringify({
         email: formData.email,
-        password: SHA256(formData.password).toString(),
+        password: formData.password? SHA256(formData.password).toString(): ''
+        //password: formData.password
       }),
     });
 
