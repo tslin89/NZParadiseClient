@@ -20,6 +20,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import bannerLogo from '../assets/banner-logo.png';
 import { useColorScheme } from '@mui/material/styles';
 import { useAuth } from '../components/AuthContext';
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -67,8 +69,8 @@ export default function AppAppBar() {
     handleMenuClose();
   };
 
-  const handleProfile = () => {
-    navigate('/profile');
+  const handleEditProfile = () => {
+    navigate('/edit-profile');
     handleMenuClose();
   };
 
@@ -138,9 +140,9 @@ export default function AppAppBar() {
                     sx={{ width: 32, height: 32, mr: 1 }}
                     alt={`${user?.firstName} ${user?.lastName}`}
                   >
-                    {user?user.firstName[0]:""}{user?user.lastName[0]:""}
+                    {user ? user.firstName[0] : ""}{user ? user.lastName[0] : ""}
                   </Avatar>
-                  <Typography variant="body2" sx={{ color: 'text.primary'}}>{`${user?.firstName} ${user?.lastName}`}</Typography>
+                  <Typography variant="body2" sx={{ color: 'text.primary' }}>{`${user?.firstName} ${user?.lastName}`}</Typography>
                 </Box>
                 <Menu
                   anchorEl={anchorEl}
@@ -149,8 +151,8 @@ export default function AppAppBar() {
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                 >
-                  <MenuItem onClick={handleProfile}>Profile</MenuItem>
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  <MenuItem onClick={handleEditProfile}><PermIdentityIcon fontSize='small' sx={{mr: 2}}/>Edit Profile</MenuItem>
+                  <MenuItem onClick={handleLogout}><PowerSettingsNewIcon fontSize='small' sx={{mr: 2}} />Logout</MenuItem>
                 </Menu>
               </>
             )}
@@ -193,7 +195,7 @@ export default function AppAppBar() {
                     <MenuItem component={Link} to="/wishlist">Wishlists</MenuItem>
                     <MenuItem component={Link} to="/messages">Inbox</MenuItem>
                     <Divider sx={{ my: 1 }} />
-                    <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                    <MenuItem onClick={handleEditProfile}>Edit Profile</MenuItem>
                     <MenuItem onClick={handleLogout}>Logout</MenuItem>
                   </>
                 )}

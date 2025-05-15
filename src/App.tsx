@@ -23,6 +23,7 @@ import { LoadScript } from '@react-google-maps/api';
 import EditProperty from './pages/EditProperty';
 import PropertyDetails from './pages/PropertyDetails';
 import { Divider } from '@mui/material';
+import EditProfile from './pages/EditProfile';
 
 const libraries: ("places")[] = ["places"];
 const google_map_api_key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '';
@@ -61,10 +62,10 @@ export default function Blog(props: { disableCustomTheme?: boolean }) {
                         />
                         <Route path="/edit-property/:id" element={<PrivateRoute element={<EditProperty />} />} />
                         <Route path="/property/:id" element={<PropertyDetails />} />
-
+                        <Route path="/edit-profile" element={<PrivateRoute element={<EditProfile />} />} />
                       </Routes>
                     </main>
-                    <Divider sx={{mt: 10}}/>
+                    <Divider sx={{ mt: 10 }} />
                     <Footer />
                   </Container>
                 </Router>
