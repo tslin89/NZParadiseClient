@@ -6,7 +6,7 @@ import { useAuth } from '../components/AuthContext';
 
 const SignIn: React.FC = () => {
   if (useAuth().isAuthenticated) {
-    return <Navigate to="/" replace />; 
+    return <Navigate to="/dashboard" replace />; 
   }
   
   const handleSubmitSuccess = () => {

@@ -7,7 +7,7 @@ import { Navigate } from 'react-router-dom';
 const SignUp: React.FC = () => {
 
   if (useAuth().isAuthenticated) {
-    return <Navigate to="/" replace />; 
+    return <Navigate to="/dashboard" replace />; 
   }
   
   const handleSubmitSuccess = () => {

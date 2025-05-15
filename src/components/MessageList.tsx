@@ -117,7 +117,7 @@ const MessageList: React.FC = () => {
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <Avatar sx={{ width: 28, height: 28, fontSize: 14 }}>
-                              {msg.senderFirstName[0]}{msg.senderLastName[0]}
+                              {msg.senderFirstName[0]}
                             </Avatar>
                             <Typography>
                               <strong>{msg.senderFirstName} {msg.senderLastName}</strong>

@@ -96,7 +96,14 @@ export default function AppAppBar() {
               />
             </Link>
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Button variant="text" color="info" size="small" component={Link} to="/">
+              {isAuthenticated && (
+                <>
+                  <Button variant="text" color="info" size="small" component={Link} to="/dashboard">
+                    Dashboard
+                  </Button>
+                </>
+              )}
+              <Button variant="text" color="info" size="small" component={Link} to="/search">
                 Search Properties to Rent
               </Button>
               {isAuthenticated && (
@@ -140,7 +147,7 @@ export default function AppAppBar() {
                     sx={{ width: 32, height: 32, mr: 1 }}
                     alt={`${user?.firstName} ${user?.lastName}`}
                   >
-                    {user ? user.firstName[0] : ""}{user ? user.lastName[0] : ""}
+                    {user ? user.firstName[0] : ""}
                   </Avatar>
                   <Typography variant="body2" sx={{ color: 'text.primary' }}>{`${user?.firstName} ${user?.lastName}`}</Typography>
                 </Box>
@@ -151,8 +158,8 @@ export default function AppAppBar() {
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                 >
-                  <MenuItem onClick={handleEditProfile}><PermIdentityIcon fontSize='small' sx={{mr: 2}}/>Edit Profile</MenuItem>
-                  <MenuItem onClick={handleLogout}><PowerSettingsNewIcon fontSize='small' sx={{mr: 2}} />Logout</MenuItem>
+                  <MenuItem onClick={handleEditProfile}><PermIdentityIcon fontSize='small' sx={{ mr: 2 }} />Edit Profile</MenuItem>
+                  <MenuItem onClick={handleLogout}><PowerSettingsNewIcon fontSize='small' sx={{ mr: 2 }} />Logout</MenuItem>
                 </Menu>
               </>
             )}
@@ -188,7 +195,11 @@ export default function AppAppBar() {
                     <CloseRoundedIcon />
                   </IconButton>
                 </Box>
-                <MenuItem component={Link} to="/">Search Properties</MenuItem>
+                {isAuthenticated && (
+                  <>
+                    <MenuItem component={Link} to="/dashboard">Dashboard</MenuItem>
+                  </>)}
+                <MenuItem component={Link} to="/search">Search Properties to Rent</MenuItem>
                 {isAuthenticated && (
                   <>
                     <MenuItem component={Link} to="/mylistings">My Listings</MenuItem>
