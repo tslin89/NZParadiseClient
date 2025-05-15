@@ -29,7 +29,7 @@ const GoogleAutocomplete: React.FC<GoogleAutocompleteProps> = ({
   const handlePlaceChanged = () => {
     if (autocompleteRef.current) {
       const place = autocompleteRef.current.getPlace();
-      if (place.formatted_address) {
+      if (place && place.formatted_address) {
         onChange(place.formatted_address);
       }
     }

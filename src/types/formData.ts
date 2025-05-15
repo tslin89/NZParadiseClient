@@ -1,14 +1,16 @@
 import { PropertyListModeEnum } from "./enums";
 
 export interface UserData {
+  userID?: number;
   firstName: string;
   lastName: string;
   agencyName: string;
   phoneNo: string;
   gender: number;
   email: string;
-  password: string;
-  confirmPassword: string;
+  password?: string;
+  confirmPassword?: string;
+  currentPassword?: string;
 }
 
 export interface FormErrors {

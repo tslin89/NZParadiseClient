@@ -23,6 +23,8 @@ import { LoadScript } from '@react-google-maps/api';
 import EditProperty from './pages/EditProperty';
 import PropertyDetails from './pages/PropertyDetails';
 import { Divider } from '@mui/material';
+import EditProfile from './pages/EditProfile';
+import UserDashboard from './pages/UserDashboard';
 
 const libraries: ("places")[] = ["places"];
 const google_map_api_key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '';
@@ -45,26 +47,25 @@ export default function Blog(props: { disableCustomTheme?: boolean }) {
                   >
                     <main>
                       <Routes>
+                        {/* public routes */}
                         <Route path="/" element={<SearchProperty />} />
+                        <Route path="/search" element={<SearchProperty />} />
                         <Route path="/signup" element={<SignUp />} />
                         <Route path="/signin" element={<SignIn />} />
-                        <Route
-                          path="/mylistings"
-                          element={<PrivateRoute element={<MyListings />} />}
-                        />
-                        <Route path="/wishlist" element={<Wishlists />} />
-                        <Route path="/messages" element={<MessageCenter />} />
-                        <Route path="/register-property" element={<RegisterProperty />} />
-                        <Route
-                          path="/profile"
-                          element={<PrivateRoute element={<Profile />} />}
-                        />
-                        <Route path="/edit-property/:id" element={<PrivateRoute element={<EditProperty />} />} />
                         <Route path="/property/:id" element={<PropertyDetails />} />
+                        <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />
 
+                        {/* private routes */}
+                        <Route path="/mylistings" element={<PrivateRoute element={<MyListings />} />} />
+                        <Route path="/messages" element={<PrivateRoute element={<MessageCenter />} />} />
+                        <Route path="/wishlist" element={<PrivateRoute element={<Wishlists />} />} />
+                        <Route path="/register-property" element={<PrivateRoute element={<RegisterProperty />} />} />
+                        <Route path="/edit-property/:id" element={<PrivateRoute element={<EditProperty />} />} />
+                        <Route path="/edit-profile" element={<PrivateRoute element={<EditProfile />} />} />
+                        <Route path="/dashboard" element={<PrivateRoute element={<UserDashboard />} />} />
                       </Routes>
                     </main>
-                    <Divider sx={{mt: 10}}/>
+                    <Divider sx={{ mt: 10 }} />
                     <Footer />
                   </Container>
                 </Router>
