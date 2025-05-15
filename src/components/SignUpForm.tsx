@@ -304,7 +304,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmitSuccess, initialValues,
             <Button
               type="submit"
               variant="contained"
-              color="primary"
+              color="secondary"
               size="large"
               disabled={isSubmitting}
             >

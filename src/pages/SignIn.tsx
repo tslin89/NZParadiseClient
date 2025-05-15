@@ -1,9 +1,14 @@
 import { Container, Typography, Paper } from '@mui/material';
 import React from "react";
 import SignInForm from "../components/SignInForm";
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../components/AuthContext';
 
 const SignIn: React.FC = () => {
-
+  if (useAuth().isAuthenticated) {
+    return <Navigate to="/" replace />; 
+  }
+  
   const handleSubmitSuccess = () => {
     console.log('Registration successful');
   };
