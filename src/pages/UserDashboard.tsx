@@ -107,7 +107,7 @@ const Dashboard = () => {
                                     <Typography variant="body2">Total Listings</Typography>
                                 </Stack>
                                 <Stack alignItems="center">
-                                    <Favorite color="primary" fontSize='large'/>
+                                    <Favorite color="primary" fontSize='large' />
                                     <Typography variant="h5">{totalWishlsit}</Typography>
                                     <Typography variant="body2">Total Wishlsits</Typography>
                                 </Stack>
@@ -160,11 +160,12 @@ const Dashboard = () => {
 
 
                 {/* Wishlisted Properties Pie Chart */}
-                {wishlistedData && wishlistedData.length > 0 ? (
-                    <Grid size={{ xs: 12, md: 6 }}>
-                        <Card sx={{ minHeight: 320 }} >
-                            <CardContent>
-                                <Typography variant="h6" onClick={() => navigate('/wishlist')} sx={{ cursor: 'pointer', textAlign: 'center' }}>Your Wishlisted Property Types</Typography>
+
+                <Grid size={{ xs: 12, md: 6 }}>
+                    <Card sx={{ minHeight: 320 }} >
+                        <CardContent>
+                            <Typography variant="h6" onClick={() => navigate('/wishlist')} sx={{ cursor: 'pointer', textAlign: 'center' }}>Your Wishlisted Property Types</Typography>
+                            {wishlistedData && wishlistedData.length > 0 ? (
                                 <ResponsiveContainer width="100%" height={250}>
                                     <PieChart>
                                         <Pie
@@ -184,21 +185,22 @@ const Dashboard = () => {
                                         <Legend />
                                     </PieChart>
                                 </ResponsiveContainer>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ) : (
-                    <Box
-                        sx={{
-                            height: 250,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: 'text.secondary',
-                        }}
-                    >
-                        No data available
-                    </Box>)}
+                            ) : (
+                                <Box
+                                    sx={{
+                                        height: 250,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: 'text.secondary',
+                                    }}
+                                >
+                                    No data available
+                                </Box>)}
+                        </CardContent>
+                    </Card>
+                </Grid>
+
 
                 {/* Wishlist Trend Bar Chart */}
                 <Grid size={{ xs: 12, md: 6 }}>
