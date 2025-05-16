@@ -17,7 +17,7 @@ import {
     ImageListItem,
     Divider,
     TextField,
-    ListItemIcon,
+    ListItemIcon
 } from '@mui/material';
 import { getPropertyDetails, getPropertyMetadata, submitMessage } from '../services/api';
 import LocationMapPreview from '../components/LocationMapPreview';
@@ -27,7 +27,6 @@ import Lightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
 import { useAuth } from '../components/AuthContext';
 import { format } from 'date-fns';
-
 import BathtubIcon from '@mui/icons-material/Bathtub';
 import BedIcon from '@mui/icons-material/Bed';
 import LocalParkingIcon from '@mui/icons-material/LocalParking';
@@ -69,6 +68,9 @@ const PropertyDetails: React.FC = () => {
     const { user } = useAuth();
     const [message, setMessage] = useState('');
     const { showMessage } = useSnackbar();
+   
+
+    
 
     const handleSendMessage = async () => {
         if (!user || !property) return;
@@ -480,7 +482,6 @@ const PropertyDetails: React.FC = () => {
                 )}
             </Paper>
 
-
             {
                 lightboxIndex !== null && (
                     <Lightbox
@@ -491,6 +492,8 @@ const PropertyDetails: React.FC = () => {
                     />
                 )
             }
+
+            
         </Container >
     );
 };

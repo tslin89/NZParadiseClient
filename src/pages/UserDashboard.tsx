@@ -11,7 +11,8 @@ import {
     List,
     ListItem,
     IconButton,
-    Avatar
+    Avatar,
+    useTheme
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import HomeIcon from '@mui/icons-material/Home';
@@ -33,10 +34,18 @@ import { useAuth } from '../components/AuthContext';
 import { format } from 'date-fns';
 import { Favorite } from '@mui/icons-material';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#ab47bc', '#ff7043', '#26c6da'];
+
 
 const Dashboard = () => {
     const { user } = useAuth();
+    const theme = useTheme();
+    const isDarkMode = theme.palette.mode === 'dark';
+    
+    //const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#ab47bc', '#ff7043', '#26c6da'];
+    const COLORS = isDarkMode
+        ? ['#90caf9', '#4db6ac', '#ffcc80', '#ce93d8', '#a1887f', '#80cbc4', '#ef9a9a']
+        : ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#ab47bc', '#ff7043', '#26c6da'];
+
 
     type ChartData = { type: string; count: number };
     type Message = { id: number; sender: string; preview: string, createdDate: string };
@@ -98,7 +107,7 @@ const Dashboard = () => {
 
                 {/* Total Stats */}
                 <Grid size={{ xs: 12, md: 6 }}>
-                    <Card sx={{ minHeight: 120 }}>
+                    <Card sx={{ minHeight: 120 }} >
                         <CardContent>
                             <Stack direction="row" spacing={4} justifyContent="center">
                                 <Stack alignItems="center">
@@ -120,7 +129,7 @@ const Dashboard = () => {
 
                 <Grid size={{ xs: 12, md: 6 }}>
                     <Card sx={{ minHeight: 320 }} >
-                        <CardContent>
+                        <CardContent >
                             <Typography variant="h6" sx={{ cursor: 'pointer', textAlign: 'center' }} onClick={() => navigate('/mylistings')}>Your Listed Properties</Typography>
                             {listedData && listedData.length > 0 ? (
                                 <ResponsiveContainer width="100%" height={250}>

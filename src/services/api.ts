@@ -1,11 +1,9 @@
 import { UserData, PropertyFilterData } from '../types/formData';
 import SHA256 from 'crypto-js/sha256';
-//import { MessageGroup } from '../types/types';
 import { PropertyListModeEnum } from '../types/enums';
 import { PropertyMessage } from '../types/types';
 
-//const API_BASE_URL = 'https://0.0.0.0:88/api';
-const API_BASE_URL = process.env.REACT_APP_API_URL + '/api'; //'http://0.0.0.0:99/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL + '/api';
 
 export const getAuthHeaders = (): HeadersInit => {
   const token = localStorage.getItem('token');
@@ -79,8 +77,6 @@ export const updateUser = async (formData: Omit<UserData, 'confirmPassword'>) =>
         email: formData.email,
         password: formData.password ? SHA256(formData.password).toString() : 'qm6K0DKJqgKcac4P42flvijZ5I7wFe',
         currentPassword: formData.currentPassword ? SHA256(formData.currentPassword).toString() : 'NA',
-        //password: formData.password,
-        //currentPassword: formData.currentPassword
       }),
     });
 
@@ -103,7 +99,6 @@ export const signIn = async (formData: UserData) => {
       body: JSON.stringify({
         email: formData.email,
         password: formData.password ? SHA256(formData.password).toString() : ''
-        //password: formData.password
       }),
     });
 
@@ -115,29 +110,6 @@ export const signIn = async (formData: UserData) => {
     throw error;
   }
 };
-
-
-// export const uploadPropertyImages = async (propertyID: number, files: File[]) => {
-//   const formData = new FormData();
-//   files.forEach(file => formData.append('files', file));
-//   formData.append('parentID', propertyID.toString());
-//   formData.append('parentType', 'Property');
-
-//   const response = await fetch(`${API_BASE_URL}/attachment/upload-multiple`, {
-//     method: 'POST',
-//     headers: {
-//       ...getAuthHeaders(),
-//     },
-//     body: formData,
-//   });
-
-//   if (!response.ok) {
-//     throw new Error('Image upload failed');
-//   }
-
-//   return await response.json();
-//   return true;
-// };
 
 export const registerProperty = async (data: FormData) => {
   try {
@@ -262,10 +234,6 @@ export const toggleWishlist = async (propertyID: number, userID: number, addToWi
   try {
     const response = await fetch(`${API_BASE_URL}/property/toggleWishlist`, {
       method: 'POST',
-      // headers: {
-      //   'Content-Type': 'application/json',
-      //   Authorization: `Bearer ${localStorage.getItem('token')}`,
-      // },
       headers: {
         'Content-Type': 'application/json',
         ...getAuthHeaders(),
@@ -408,13 +376,28 @@ export const getMessageList = async (userID: number): Promise<{ data: PropertyMe
     throw error;
   }
 };
-// src/api/dashboard.ts
 
-// src/api/dashboard.ts
-// src/services/api.ts
+export const deleteProperty = async (propertyID: number, userID: number) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/property/${propertyID}/user/${userID}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      }
+    });
+    if (!response.ok) {
+      throw new Error(await response.text());
+    }
+    return await response.json()
+
+  } catch (err) {
+    console.error('Message submission error:', err);
+    throw err;
+  }
+}
 
 export const fetchDashboardSummary = async (userID: number) => {
-
   try {
     const url = `${API_BASE_URL}/property/summary/${userID}`;
     console.log('Fetching:', url);
@@ -446,219 +429,4 @@ export const fetchDashboardSummary = async (userID: number) => {
     console.error('getPropertyList error:', error);
     throw error;
   }
-
-  // return {
-  //   listedPropertiesByType: [
-  //     { type: 'Apartment', count: 4 },
-  //     { type: 'Condominium', count: 3 },
-  //     { type: 'Mansions', count: 2 },
-  //     { type: 'Room', count: 1 },
-  //     { type: 'Landed House', count: 2 },
-  //     { type: 'Townhouse', count: 1 },
-  //     { type: 'Other', count: 1 }
-  //   ],
-  //   wishlistedPropertiesByType: [
-  //     { type: 'Apartment', count: 3 },
-  //     { type: 'Room', count: 2 },
-  //     { type: 'Townhouse', count: 1 }
-  //   ],
-  //   recentMessages: [
-  //     { id: 1, sender: 'Alice', preview: 'Hi, is the condo still available?' },
-  //     { id: 2, sender: 'Bob', preview: 'Thanks for the update on pricing.' },
-  //     { id: 3, sender: 'Charlie', preview: 'Interested in scheduling a visit.' }
-  //   ],
-  //   wishlistTrend: [
-  //     { month: 'Jan', count: 2 },
-  //     { month: 'Feb', count: 5 },
-  //     { month: 'Mar', count: 3 },
-  //     { month: 'Apr', count: 0 },
-  //     { month: 'May', count: 4 }
-  //   ],
-  //   totalProperties: 14,
-  //   totalWishlist: 26
-  // };
 };
-
-
-
-
-
-// return {
-//   data: [
-//     {
-//       property: {
-//         propertyID: 18,
-//         userID: 14,
-//         propertyTypeID: 1,
-//         description: "Modern Apartment in Auckland",
-//         price: 4200,
-//         location: "123 Queen Street, Auckland, NZ",
-//         bedRoom: 2,
-//         bathRoom: 1,
-//         parking: 1,
-//         area: 75.0,
-//         propertyFeatureIDs: "1,2,5",
-//         availableFromDate: "2025-05-10T00:00:00Z",
-//         status: 1,
-//         createdDate: "2025-05-01T12:00:00Z",
-//         modifiedDate: null,
-//         attachments: null,
-//         user: {
-//           userID: 14,
-//           userTypeID: 1,
-//           firstName: "Robin",
-//           lastName: "Hood",
-//           agencyName: "NZ Property Co.",
-//           phoneNo: "0987654321",
-//           password: "",
-//           gender: 1,
-//           email: "robin@example.com",
-//           createdDate: "2025-04-01T09:00:00Z",
-//           modifiedDate: null,
-//         },
-//         propertyType: {
-//           propertyTypeID: 1,
-//           description: "Apartment",
-//         },
-//         isInWishlist: null
-//       },
-//       messages: [
-//         {
-//           user: {
-//             firstName: "Alice",
-//             lastName: "Ng",
-//             email: "alice@example.com",
-//           },
-//           messageDetails: "'The quick brown fox jumps over the lazy dog' is an English-language pangram – a sentence that contains all the letters of the alphabet. The phrase is commonly used for touch-typing practice, testing typewriters and computer keyboards, displaying examples of fonts, and other applications involving text where the use of all letters in the alphabet is desired.",
-//           date: "2025-05-04T10:23:00Z",
-//         },
-//         {
-//           user: {
-//             firstName: "John",
-//             lastName: "Doe",
-//             email: "john@example.com",
-//           },
-//           messageDetails: "Can I visit next weekend?",
-//           date: "2025-05-05T11:12:00Z",
-//         },
-//       ],
-//     },
-//     {
-//       property: {
-//         propertyID: 24,
-//         userID: 14,
-//         propertyTypeID: 2,
-//         description: "Spacious Condo in Mount Eden",
-//         price: 5200,
-//         location: "88 Dominion Road, Mount Eden, Auckland",
-//         bedRoom: 3,
-//         bathRoom: 2,
-//         parking: 2,
-//         area: 110.0,
-//         propertyFeatureIDs: "3,4,6",
-//         availableFromDate: "2025-06-01T00:00:00Z",
-//         status: 1,
-//         createdDate: "2025-04-20T15:30:00Z",
-//         modifiedDate: null,
-//         attachments: null,
-//         user: {
-//           userID: 14,
-//           userTypeID: 1,
-//           firstName: "Robin",
-//           lastName: "Hood",
-//           agencyName: "NZ Property Co.",
-//           phoneNo: "0987654321",
-//           password: "",
-//           gender: 1,
-//           email: "robin@example.com",
-//           createdDate: "2025-04-01T09:00:00Z",
-//           modifiedDate: null,
-//         },
-//         propertyType: {
-//           propertyTypeID: 2,
-//           description: "Condominium",
-//         },
-//         isInWishlist: null
-//       },
-//       messages: [
-//         {
-//           user: {
-//             firstName: "Emily",
-//             lastName: "Tan",
-//             email: "emily@example.com",
-//           },
-//           messageDetails: "Can I bring a pet? I have a small dog.",
-//           date: "2025-05-06T08:45:00Z",
-//         },
-//         {
-//           user: {
-//             firstName: "Mark",
-//             lastName: "Lee",
-//             email: "mark@example.com",
-//           },
-//           messageDetails: "Is the rent negotiable for long-term stay?",
-//           date: "2025-05-07T14:10:00Z",
-//         },
-//         {
-//           user: {
-//             firstName: "Sophia",
-//             lastName: "Kaur",
-//             email: "sophia@example.com",
-//           },
-//           messageDetails: "Can I schedule a virtual tour?",
-//           date: "2025-05-08T17:55:00Z",
-//         },
-//       ],
-//     },
-//     {
-//       property: {
-//         propertyID: 23,
-//         userID: 14,
-//         propertyTypeID: 3,
-//         description: "Cozy Studio in Wellington CBD",
-//         price: 3000,
-//         location: "456 Lambton Quay, Wellington",
-//         bedRoom: 1,
-//         bathRoom: 1,
-//         parking: 0,
-//         area: 50.0,
-//         propertyFeatureIDs: "1,7",
-//         availableFromDate: "2025-05-15T00:00:00Z",
-//         status: 1,
-//         createdDate: "2025-04-25T09:00:00Z",
-//         modifiedDate: null,
-//         attachments: null,
-//         user: {
-//           userID: 14,
-//           userTypeID: 1,
-//           firstName: "Robin",
-//           lastName: "Hood",
-//           agencyName: "NZ Property Co.",
-//           phoneNo: "0987654321",
-//           password: "",
-//           gender: 1,
-//           email: "robin@example.com",
-//           createdDate: "2025-04-01T09:00:00Z",
-//           modifiedDate: null,
-//         },
-//         propertyType: {
-//           propertyTypeID: 3,
-//           description: "Studio",
-//         },
-//         isInWishlist: null
-//       },
-//       messages: [
-//         {
-//           user: {
-//             firstName: "David",
-//             lastName: "Chen",
-//             email: "david@example.com",
-//           },
-//           messageDetails: "I'm a student—any discount for 6-month lease?",
-//           date: "2025-05-09T12:30:00Z",
-//         },
-//       ],
-//     },
-//   ],
-// };
-

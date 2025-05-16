@@ -53,7 +53,7 @@ export default function Footer() {
           <img src={logo} alt="Logo" className="logo" style={{ height: 100, marginRight: 20 }} />
 
           <div style={{ flex: 1, alignContent: 'center' }}>
-            <Link color="text.secondary" variant="body2" href="#">
+            {/* <Link color="text.secondary" variant="body2" href="#">
               Privacy Policy
             </Link>
             <Typography sx={{ display: 'inline', mx: 0.5, opacity: 0.5 }}>
@@ -61,7 +61,7 @@ export default function Footer() {
             </Typography>
             <Link color="text.secondary" variant="body2" href="#">
               Terms of Service
-            </Link>
+            </Link> */}
             <Copyright />
             <Authors />
           </div>
@@ -74,6 +74,7 @@ export default function Footer() {
             <IconButton
               color="inherit"
               size="small"
+              target='blank'
               href="https://github.com/tslin89/NZParadiseClient"
               aria-label="GitHub"
               sx={{ alignSelf: 'center' }}

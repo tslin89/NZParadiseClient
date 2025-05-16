@@ -22,7 +22,7 @@ import { PropertyProvider } from './components/PropertyContext';
 import { LoadScript } from '@react-google-maps/api';
 import EditProperty from './pages/EditProperty';
 import PropertyDetails from './pages/PropertyDetails';
-import { Divider } from '@mui/material';
+import { CssVarsProvider, Divider, useColorScheme } from '@mui/material';
 import EditProfile from './pages/EditProfile';
 import UserDashboard from './pages/UserDashboard';
 
@@ -30,50 +30,58 @@ const libraries: ("places")[] = ["places"];
 const google_map_api_key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '';
 
 export default function Blog(props: { disableCustomTheme?: boolean }) {
-  return (
-    <AppTheme {...props}>
-      <SnackbarProvider>
-        <AuthProvider>
-          <PropertyProvider>
-            <LoadScript googleMapsApiKey={google_map_api_key} libraries={libraries}>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <CssBaseline enableColorScheme />
-                <Router>
-                  <AppAppBar />
-                  <Container
-                    maxWidth="lg"
-                    component="main"
-                    sx={{ display: 'flex', flexDirection: 'column', my: 16, gap: 4 }}
-                  >
-                    <main>
-                      <Routes>
-                        {/* public routes */}
-                        <Route path="/" element={<SearchProperty />} />
-                        <Route path="/search" element={<SearchProperty />} />
-                        <Route path="/signup" element={<SignUp />} />
-                        <Route path="/signin" element={<SignIn />} />
-                        <Route path="/property/:id" element={<PropertyDetails />} />
-                        <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />
+  const { setMode } = useColorScheme();
 
-                        {/* private routes */}
-                        <Route path="/mylistings" element={<PrivateRoute element={<MyListings />} />} />
-                        <Route path="/messages" element={<PrivateRoute element={<MessageCenter />} />} />
-                        <Route path="/wishlist" element={<PrivateRoute element={<Wishlists />} />} />
-                        <Route path="/register-property" element={<PrivateRoute element={<RegisterProperty />} />} />
-                        <Route path="/edit-property/:id" element={<PrivateRoute element={<EditProperty />} />} />
-                        <Route path="/edit-profile" element={<PrivateRoute element={<EditProfile />} />} />
-                        <Route path="/dashboard" element={<PrivateRoute element={<UserDashboard />} />} />
-                      </Routes>
-                    </main>
-                    <Divider sx={{ mt: 10 }} />
-                    <Footer />
-                  </Container>
-                </Router>
-              </LocalizationProvider>
-            </LoadScript>
-          </PropertyProvider>
-        </AuthProvider>
-      </SnackbarProvider>
-    </AppTheme>
+  React.useEffect(() => {
+    setMode('light');
+  },);
+
+  return (
+    <CssVarsProvider defaultMode="light">
+      <AppTheme {...props}>
+        <SnackbarProvider>
+          <AuthProvider>
+            <PropertyProvider>
+              <LoadScript googleMapsApiKey={google_map_api_key} libraries={libraries}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <CssBaseline enableColorScheme />
+                  <Router>
+                    <AppAppBar />
+                    <Container
+                      maxWidth="lg"
+                      component="main"
+                      sx={{ display: 'flex', flexDirection: 'column', my: 7, gap: 4 }}
+                    >
+                      <main>
+                        <Routes>
+                          {/* public routes */}
+                          <Route path="/" element={<SearchProperty />} />
+                          <Route path="/search" element={<SearchProperty />} />
+                          <Route path="/signup" element={<SignUp />} />
+                          <Route path="/signin" element={<SignIn />} />
+                          <Route path="/property/:id" element={<PropertyDetails />} />
+                          <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />
+
+                          {/* private routes */}
+                          <Route path="/mylistings" element={<PrivateRoute element={<MyListings />} />} />
+                          <Route path="/messages" element={<PrivateRoute element={<MessageCenter />} />} />
+                          <Route path="/wishlist" element={<PrivateRoute element={<Wishlists />} />} />
+                          <Route path="/register-property" element={<PrivateRoute element={<RegisterProperty />} />} />
+                          <Route path="/edit-property/:id" element={<PrivateRoute element={<EditProperty />} />} />
+                          <Route path="/edit-profile" element={<PrivateRoute element={<EditProfile />} />} />
+                          <Route path="/dashboard" element={<PrivateRoute element={<UserDashboard />} />} />
+                        </Routes>
+                      </main>
+                      <Divider sx={{ mt: 10 }} />
+                      <Footer />
+                    </Container>
+                  </Router>
+                </LocalizationProvider>
+              </LoadScript>
+            </PropertyProvider>
+          </AuthProvider>
+        </SnackbarProvider>
+      </AppTheme>
+    </CssVarsProvider>
   );
 }
