@@ -50,7 +50,7 @@ export default function Blog(props: { disableCustomTheme?: boolean }) {
                     <Container
                       maxWidth="lg"
                       component="main"
-                      sx={{ display: 'flex', flexDirection: 'column', my: 7, gap: 4 }}
+                      sx={{ display: 'flex', flexDirection: 'column', pt: 12, pb: 3, gap: 4 }}
                     >
                       <main>
                         <Routes>
