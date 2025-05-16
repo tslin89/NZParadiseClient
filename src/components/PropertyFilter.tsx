@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, useState, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
-  Paper,
   Grid,
   TextField,
   FormControl,
@@ -12,6 +11,7 @@ import {
   Button,
   Box,
   Typography,
+  Divider,
 } from '@mui/material';
 import { PropertyFilterData } from '../types/formData';
 import { PropertyContext } from '../components/PropertyContext';
@@ -112,7 +112,8 @@ export const PropertyFilter: React.FC = () => {
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 2.5, mt: 2, mb: 3 }}>
+    // <Paper elevation={3} sx={{ p: 2.5, mt: 2, mb: 3 }}>
+    <Box marginBottom={3} marginTop={3}>
       {/* <Typography variant="h1" gutterBottom sx={{ pb: 1 }}>
         Property Filter
       </Typography> */}
@@ -301,13 +302,12 @@ export const PropertyFilter: React.FC = () => {
               onClick={() => setShowFilter((prev) => !prev)}
               sx={{ ml: 'auto' }} // Pushes this button to the right
             >
-              {showFilter ? <><ExpandLessIcon fontSize='medium' /><Typography color="text.secondary">Hide Filter</Typography></>: <><ExpandMoreIcon fontSize='medium'/><Typography color="text.secondary">Show Filter</Typography></>}
+              {showFilter ? <><ExpandLessIcon fontSize='medium' /><Typography color="text.secondary">Hide Filter</Typography></> : <><ExpandMoreIcon fontSize='medium' /><Typography color="text.secondary">Show Filter</Typography></>}
             </Button>
           </Box>
         </Grid>
       </Grid>
-
-
-    </Paper>
+      <Divider sx={{ mt: 2}}/>
+    </Box>
   );
 };

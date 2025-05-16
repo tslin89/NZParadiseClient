@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Grid,
   TextField,
@@ -17,6 +17,12 @@ interface SignInFormProps {
 }
 
 const SignInForm: React.FC<SignInFormProps> = ({ onSubmitSuccess }) => {
+  const emailRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    emailRef.current?.focus();
+  }, []);
+
   const navigate = useNavigate();
   const { showMessage } = useSnackbar();
   const { login } = useAuth();
@@ -65,6 +71,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSubmitSuccess }) => {
         <Grid size={{ xs: 12, md: 12 }}>
           <TextField
             fullWidth
+            inputRef={emailRef}
             variant="outlined"
             label="Email"
             type="email"
@@ -97,7 +104,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSubmitSuccess }) => {
               color="secondary"
               size="large"
               sx={{
-                
+
                 width: { xs: '100%', md: 'auto' }
               }}
 
