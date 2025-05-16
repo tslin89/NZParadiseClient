@@ -31,6 +31,9 @@ export default function AppTheme(props: AppThemeProps) {
           typography,
           shadows,
           shape,
+          palette: {
+            mode: 'light'
+          },
           components: {
             ...inputsCustomizations,
             ...dataDisplayCustomizations,
