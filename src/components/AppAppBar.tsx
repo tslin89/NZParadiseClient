@@ -164,12 +164,12 @@ export default function AppAppBar() {
               </>
             )}
             <IconButton onClick={toggleTheme} size="small" aria-label="Toggle theme">
-              {mode === 'light' ? <LightModeIcon /> : <DarkModeIcon />}
+              {mode !== 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
             <IconButton onClick={toggleTheme} size="small" aria-label="Toggle theme">
-              {mode === 'light' ? <LightModeIcon /> : <DarkModeIcon />}
+              {mode !== 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
             <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
               <MenuIcon />
