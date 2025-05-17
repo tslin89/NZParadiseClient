@@ -168,7 +168,7 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
           setLocalProperties(response.data || []);
         } catch (error: any) {
           console.error('Error fetching properties:', error);
-          setError(error.message || 'Failed to load properties');
+          setError("We're unable to load property list at the moment. Please try again later.");
         } finally {
           setLoading(false);
         }

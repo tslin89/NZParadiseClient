@@ -61,8 +61,8 @@ export const registerUser = async (formData: Omit<UserData, 'confirmPassword'>) 
 
 export const updateUser = async (formData: Omit<UserData, 'confirmPassword'>) => {
   try {
-    const response = await fetch(API_BASE_URL + '/user/update', {
-      method: 'POST',
+    const response = await fetch(API_BASE_URL + `/user/${formData.userID}`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -139,11 +139,11 @@ export const registerProperty = async (data: FormData) => {
   }
 };
 
-export const updateProperty = async (data: FormData) => {
+export const updateProperty = async (propertyID: number, data: FormData) => {
   try {
 
-    const response = await fetch(API_BASE_URL + '/property/update', {
-      method: 'POST',
+    const response = await fetch(API_BASE_URL + `/property/${propertyID}`, {
+      method: 'PUT',
       headers: {
         ...getAuthHeaders(),
       },
@@ -261,7 +261,7 @@ export const toggleWishlist = async (propertyID: number, userID: number, addToWi
 export const getPropertyDetails = async (propertyID: number) => {
 
   try {
-    const response = await fetch(`${API_BASE_URL}/property/get/${propertyID}`, {
+    const response = await fetch(`${API_BASE_URL}/property/${propertyID}`, {
       method: 'GET',
       headers: {
         ...getAuthHeaders()
@@ -456,7 +456,7 @@ export const fetchDashboardSummary = async (userID: number) => {
     return result.data;
 
   } catch (error) {
-    console.error('getPropertyList error:', error);
-    throw error;
+    //console.error('getPropertyList error:', error);
+    //throw error;
   }
 };

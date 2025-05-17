@@ -206,7 +206,7 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
         formData.append('removedFileIDs', id.toString());
       });
 
-      const resultObj = mode === 'edit' ? await updateProperty(formData) : await registerProperty(formData);
+      const resultObj = mode === 'edit' ? await updateProperty(propertyID!, formData) : await registerProperty(formData);
 
       if (resultObj.status === -1) {
         showMessage(resultObj.message || 'An error occurred', 'error');

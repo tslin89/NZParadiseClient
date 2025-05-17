@@ -8,7 +8,7 @@ const MyInbox = () => {
       <Typography variant="h2" gutterBottom sx={{ pb: 1 }}>
         My Inbox
       </Typography>
-      <Typography gutterBottom>View enquiry messages sent to my properties.</Typography>
+      <Typography gutterBottom sx={{mb: 0}}>View enquiry messages sent to my properties.</Typography>
       <MessageList />
     </Box>
   );

@@ -7,7 +7,7 @@ const Wishlists = () => <div>
   <Typography variant="h2" gutterBottom sx={{ pb: 1 }}>
     My Wishlist
   </Typography>
-  <Typography sx={{ mb: 2}}>View properties in my wishlist</Typography>
+  <Typography>View properties in my wishlist</Typography>
 
   <PropertyList mode={PropertyListModeEnum.Wishlist} useContextFilter={false} />
 </div>;
