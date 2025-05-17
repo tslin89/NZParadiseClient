@@ -17,7 +17,7 @@ const SignUp: React.FC = () => {
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
-        <Typography variant="h4" gutterBottom align="center">
+        <Typography variant="h2" gutterBottom sx={{ pb: 1 }}>
           User Registration
         </Typography>
         <SignUpForm onSubmitSuccess={handleSubmitSuccess} />

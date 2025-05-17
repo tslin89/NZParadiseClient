@@ -5,7 +5,7 @@ import MessageList from '../components/MessageList';
 const MyInbox = () => {
   return (
     <Box>
-      <Typography variant="h3" gutterBottom>
+      <Typography variant="h2" gutterBottom sx={{ pb: 1 }}>
         My Inbox
       </Typography>
       <Typography gutterBottom>View enquiry messages sent to my properties.</Typography>
