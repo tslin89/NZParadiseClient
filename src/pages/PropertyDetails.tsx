@@ -472,6 +472,9 @@ const PropertyDetails: React.FC = () => {
                             multiline
                             rows={3}
                             value={message}
+                            slotProps={{
+                                htmlInput: { maxLength: 300 },
+                            }}
                             placeholder='Send enquiry message to property manager \ owner'
                             onChange={(e) => setMessage(e.target.value)}
                         />
