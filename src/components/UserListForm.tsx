@@ -8,7 +8,7 @@ import {
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useAuth } from './AuthContext';
 import { getUserList } from '../services/api';
-import { UserData, UserDataDisplay } from '../types/formData';
+import { UserDataDisplay } from '../types/formData';
 import { format } from 'date-fns';
 
 const UserListForm: React.FC = () => {
@@ -52,7 +52,7 @@ const UserListForm: React.FC = () => {
       headerName: 'Type',
       width: 90,
       valueFormatter: (value: any) => {
-        return value == 9 ? 'Admin' : value == 1 ? 'Member' : 'Unknown'
+        return value === 9 ? 'Admin' : value === 1 ? 'Member' : 'Unknown'
       },
     },
     { field: 'email', headerName: 'Email', width: 220 },

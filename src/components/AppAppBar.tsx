@@ -157,7 +157,7 @@ export default function AppAppBar() {
                   </Avatar>
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     <Typography variant="body2" sx={{ color: 'text.primary' }}>{`${user?.firstName} ${user?.lastName}`}</Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }} fontSize="small">{`${user?.userTypeID == 9 ? 'Admin' : 'Member'}`}</Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }} fontSize="small">{`${user?.userTypeID === 9 ? 'Admin' : 'Member'}`}</Typography>
                   </Box>
                 </Box>
                 <Menu
