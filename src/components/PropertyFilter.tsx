@@ -55,33 +55,6 @@ export const PropertyFilter: React.FC = () => {
     },
   });
 
-  /*
-  const formValues = watch();
-  const debouncedValues = useDebounce(formValues, 500);
-
-  useEffect(() => {
-    if (propertyTypes.length === 0) {
-      fetchPropertyTypes();
-    }
-  }, [propertyTypes, fetchPropertyTypes]);
-
-  // Fetch properties on filter change
-  useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        console.log('Fetching properties with:', { ...debouncedValues, userID: null });
-        setError(null);
-        const response = await getPropertyList({ ...debouncedValues, userID: null });
-        setProperties(response.data || []);
-      } catch (error: any) {
-        console.error('Error fetching properties:', error);
-        setError(error.message || 'Failed to load properties');
-      }
-    };
-    fetchProperties();
-  }, [debouncedValues, setProperties]);
-  */
-
   const handleSearch = useCallback(async () => {
     try {
       setError(null);

@@ -4,14 +4,13 @@ import SignUpForm from '../components/SignUpForm';
 import { useAuth } from '../components/AuthContext';
 
 const EditProfile: React.FC = () => {
-  const { user } = useAuth(); // Reuse logged-in user
+  const { user } = useAuth();
 
   const handleSubmitSuccess = () => {
-    console.log('Profile updated');
-    // Optionally: trigger a re-fetch or context update here
+    
   };
 
-  if (!user) return <div>Loading...</div>; // Or redirect to login
+  if (!user) return <div>Loading...</div>; 
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
@@ -21,7 +20,7 @@ const EditProfile: React.FC = () => {
         </Typography>
         <SignUpForm
           onSubmitSuccess={handleSubmitSuccess}
-          initialValues={user} // ⚠️ ensure shape matches UserData
+          initialValues={user} 
           mode="edit"
         />
       </Paper>

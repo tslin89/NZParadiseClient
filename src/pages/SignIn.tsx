@@ -10,7 +10,6 @@ const SignIn: React.FC = () => {
   }
   
   const handleSubmitSuccess = () => {
-    console.log('Registration successful');
   };
 
   return (

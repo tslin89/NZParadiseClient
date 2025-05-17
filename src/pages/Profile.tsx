@@ -6,8 +6,6 @@ import { format } from 'date-fns';
 const Profile: React.FC = () => {
   const { user } = useAuth();
 
-  console.log('Profile', user)
-
   return (
     <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
       <Paper elevation={3} sx={{ p: 4 }}>

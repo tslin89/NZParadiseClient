@@ -201,7 +201,6 @@ export const getPropertyList = async (data: PropertyFilterData) => {
     }
 
     const url = `${API_BASE_URL}/property/getlist${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
-    console.log('Fetching:', url);
 
     const response = await fetch(url, {
       method: 'GET',
@@ -370,7 +369,6 @@ export const getMessageList = async (userID: number): Promise<{ data: PropertyMe
     if (result.status === -1) {
       throw new Error(result.message || 'Failed to fetch property metadata');
     }
-    console.log('property-messages', result.data)
     return result;
   } catch (error) {
     throw error;
@@ -430,7 +428,6 @@ export const deleteProperty = async (propertyID: number, userID: number) => {
 export const fetchDashboardSummary = async (userID: number) => {
   try {
     const url = `${API_BASE_URL}/property/summary/${userID}`;
-    console.log('Fetching:', url);
 
     const response = await fetch(url, {
       method: 'GET',

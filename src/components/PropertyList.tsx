@@ -164,7 +164,6 @@ export default function PropertyList({ mode, useContextFilter = true }: Property
             maxPrice: null
           };
           const response = await getPropertyList(filterData);
-          console.log('new data', response)
           setLocalProperties(response.data || []);
         } catch (error: any) {
           console.error('Error fetching properties:', error);
