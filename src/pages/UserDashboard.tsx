@@ -87,15 +87,15 @@ const Dashboard = () => {
                                     <Box>
                                         <Typography variant="h5">Hello {userName},</Typography>
                                         <Typography variant="body2">
-                                            Welcome to NZParadise – your trusted online property rental platform to{' '}
+                                            Welcome to NZParadise – your trusted online platform to{' '}
                                             <Link to="/register-property" style={{ textDecoration: 'none', color: '#1976d2' }}>
-                                                list
+                                                list your property
                                             </Link>
-                                            {' and '}
+                                            {' or '}
                                             <Link to="/search" style={{ textDecoration: 'none', color: '#1976d2' }}>
                                                 discover
                                             </Link>{' '}
-                                            properties across New Zealand.
+                                            your next rental home across New Zealand.
                                         </Typography>
                                     </Box>
                                 </Stack>

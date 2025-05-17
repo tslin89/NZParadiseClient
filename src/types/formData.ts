@@ -13,6 +13,19 @@ export interface UserData {
   currentPassword?: string;
 }
 
+export interface UserDataDisplay {
+  userID: number;
+  firstName: string;
+  lastName: string;
+  agencyName: string;
+  phoneNo: string;
+  gender: number;
+  email: string;
+  userTypeID: number;
+  createdDate: string;
+  propertyCount: number;
+}
+
 export interface FormErrors {
   firstName?: string;
   lastName?: string;

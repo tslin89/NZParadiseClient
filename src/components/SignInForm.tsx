@@ -51,7 +51,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSubmitSuccess }) => {
       } else {
         // Store the JWT and user info
         login(resultObj.data.token, resultObj.data.user);
-        showMessage('Login successful', 'success');
+        //showMessage('Login successful', 'success');
         navigate('/dashboard');
         onSubmitSuccess();
       }

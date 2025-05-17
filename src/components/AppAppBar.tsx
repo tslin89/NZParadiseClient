@@ -46,6 +46,9 @@ export default function AppAppBar() {
   const { mode, setMode } = useColorScheme();
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
+  const userTypeID = user?.userTypeID;
+
+  console.log('AppBar User', user)
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -117,6 +120,9 @@ export default function AppAppBar() {
                   <Button variant="text" color="info" size="small" component={Link} to="/messages">
                     Inbox
                   </Button>
+                  {userTypeID === 9 && (<Button variant="text" color="info" size="small" component={Link} to="/userList">
+                    Users
+                  </Button>)}
                 </>
               )}
             </Box>
@@ -149,7 +155,10 @@ export default function AppAppBar() {
                   >
                     {user ? user.firstName[0] : ""}
                   </Avatar>
-                  <Typography variant="body2" sx={{ color: 'text.primary' }}>{`${user?.firstName} ${user?.lastName}`}</Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography variant="body2" sx={{ color: 'text.primary' }}>{`${user?.firstName} ${user?.lastName}`}</Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }} fontSize="small">{`${user?.userTypeID == 9 ? 'Admin' : 'Member'}`}</Typography>
+                  </Box>
                 </Box>
                 <Menu
                   anchorEl={anchorEl}
@@ -184,7 +193,7 @@ export default function AppAppBar() {
                 },
               }}
             >
-              <Box sx={{ p: 2, backgroundColor: 'background.default' }}>
+              <Box sx={{ p: 2, backgroundColor: 'background.default' }} onClick={toggleDrawer(false)}>
                 <Box
                   sx={{
                     display: 'flex',
@@ -205,6 +214,9 @@ export default function AppAppBar() {
                     <MenuItem component={Link} to="/mylistings">My Listings</MenuItem>
                     <MenuItem component={Link} to="/wishlist">Wishlists</MenuItem>
                     <MenuItem component={Link} to="/messages">Inbox</MenuItem>
+                    {userTypeID === 9 && (
+                      <MenuItem component={Link} to="/userList">Users</MenuItem>
+                    )}
                     <Divider sx={{ my: 1 }} />
                     <MenuItem onClick={handleEditProfile}>Edit Profile</MenuItem>
                     <MenuItem onClick={handleLogout}>Logout</MenuItem>
