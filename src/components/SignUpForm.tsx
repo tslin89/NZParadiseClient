@@ -156,6 +156,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmitSuccess, initialValues,
           <TextField
             fullWidth
             label="First Name"
+            slotProps={{
+              htmlInput: { maxLength: 100 },
+            }}
             required
             {...register('firstName', { required: 'First Name is required' })}
             error={!!errors.firstName}
@@ -168,6 +171,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmitSuccess, initialValues,
             fullWidth
             label="Last Name"
             required
+            slotProps={{
+              htmlInput: { maxLength: 100 },
+            }}
             {...register('lastName', { required: 'Last Name is required' })}
             error={!!errors.lastName}
             helperText={errors.lastName?.message}
@@ -175,7 +181,11 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmitSuccess, initialValues,
         </Grid>
 
         <Grid size={{ xs: 12, md: 6 }}>
-          <TextField fullWidth label="Agency Name" {...register('agencyName')} />
+          <TextField fullWidth label="Agency Name" 
+          {...register('agencyName')}
+            slotProps={{
+              htmlInput: { maxLength: 120 },
+            }} />
         </Grid>
 
         <Grid size={{ xs: 12, md: 6 }}>
@@ -208,6 +218,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmitSuccess, initialValues,
             fullWidth
             label="Email"
             type="email"
+            slotProps={{
+              htmlInput: { maxLength: 50 },
+            }}
             required
             {...register('email', {
               required: 'Email is required',
