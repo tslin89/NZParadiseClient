@@ -145,7 +145,7 @@ const Dashboard = () => {
                 <Grid size={{ xs: 12, md: 6 }}>
                     <Card sx={{ minHeight: 320 }} >
                         <CardContent >
-                            <Typography variant="h6" sx={{ cursor: 'pointer', textAlign: 'center' }} onClick={() => navigate('/mylistings')}>Your Listed Properties</Typography>
+                            <Typography variant="h6" sx={{ cursor: 'pointer', textAlign: 'center' }} onClick={() => navigate('/mylistings')}>My Listed Properties</Typography>
                             {listedData && listedData.length > 0 ? (
                                 <ResponsiveContainer width="100%" height={250}>
                                     <PieChart>
@@ -188,7 +188,7 @@ const Dashboard = () => {
                 <Grid size={{ xs: 12, md: 6 }}>
                     <Card sx={{ minHeight: 320 }} >
                         <CardContent>
-                            <Typography variant="h6" onClick={() => navigate('/wishlist')} sx={{ cursor: 'pointer', textAlign: 'center' }}>Your Wishlisted Property Types</Typography>
+                            <Typography variant="h6" onClick={() => navigate('/wishlist')} sx={{ cursor: 'pointer', textAlign: 'center' }}>My Favourite Properties</Typography>
                             {wishlistedData && wishlistedData.length > 0 ? (
                                 <ResponsiveContainer width="100%" height={250}>
                                     <PieChart>
@@ -230,7 +230,7 @@ const Dashboard = () => {
                 <Grid size={{ xs: 12, md: 6 }}>
                     <Card sx={{ minHeight: 320 }} >
                         <CardContent>
-                            <Typography variant="h6" sx={{ cursor: 'pointer', textAlign: 'center' }} onClick={() => navigate('/wishlist')} >Wishlist Trend on Your Properties</Typography>
+                            <Typography variant="h6" sx={{ cursor: 'pointer', textAlign: 'center' }} onClick={() => navigate('/wishlist')} >My Properties in Wishlists</Typography>
                             {wishlistTrend && wishlistTrend.length > 0 ? (
                                 <ResponsiveContainer width="100%" height={250}>
                                     <BarChart data={wishlistTrend}>
