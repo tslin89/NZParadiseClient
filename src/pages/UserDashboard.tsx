@@ -12,7 +12,8 @@ import {
     ListItem,
     IconButton,
     Avatar,
-    useTheme
+    useTheme,
+    Alert
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import HomeIcon from '@mui/icons-material/Home';
@@ -40,7 +41,7 @@ const Dashboard = () => {
     const { user } = useAuth();
     const theme = useTheme();
     const isDarkMode = theme.palette.mode === 'dark';
-    
+
     //const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#ab47bc', '#ff7043', '#26c6da'];
     const COLORS = isDarkMode
         ? ['#90caf9', '#4db6ac', '#ffcc80', '#ce93d8', '#a1887f', '#80cbc4', '#ef9a9a']
@@ -59,9 +60,14 @@ const Dashboard = () => {
     const [totalWishlsit, setTotalWishlist] = useState<number>(0);
     const navigate = useNavigate();
     const userName = user?.firstName
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         fetchDashboardSummary(Number(user?.userID)).then((data) => {
+            if (!data) {
+                setError("We're' unable to load your dashboard at the moment. Please try again later.");
+                return;
+            }
             setListedData(data.listedPropertiesByType);
             setWishlistedData(data.wishlistedPropertiesByType);
             setMessages(data.recentMessages);
@@ -73,6 +79,15 @@ const Dashboard = () => {
 
     return (
         <Box p={2}>
+            {error && (
+                // <Alert severity="error" onClose={() => setError(null)} sx={{ mb: 2 }}>
+                //     {error}
+                // </Alert>
+                <Alert severity="error" sx={{ mb: 2 }}>
+                    {error}
+                </Alert>
+            )}
+            
             <Grid container gap={2} spacing={2}>
                 {/* Welcome Message */}
                 <Grid size={{ xs: 12, md: 6 }}>

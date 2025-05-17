@@ -96,7 +96,7 @@ export const PropertyFilter: React.FC = () => {
       }
 
     } catch (error: any) {
-      setError(error.message || 'Failed to load properties');
+      setError("We're unable to load property list at the moment. Please try again later.");
     }
   }, [getValues, setProperties, userID, showMessage]);
 
@@ -123,14 +123,20 @@ export const PropertyFilter: React.FC = () => {
   return (
     // <Paper elevation={3} sx={{ p: 2.5, mt: 2, mb: 3 }}>
     <Box marginBottom={3} marginTop={3}>
-      {/* <Typography variant="h1" gutterBottom sx={{ pb: 1 }}>
-        Property Filter
-      </Typography> */}
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
+
+      {/* <Typography variant="h1" gutterBottom sx={{ pb: 1 }}>
+        Property Filter
+      </Typography> */}
+      {/* {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )} */}
       {/* <Grid container spacing={2}> */}
 
       {showFilter && (
