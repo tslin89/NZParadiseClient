@@ -4,7 +4,7 @@ import PropertyList from "../components/PropertyList";
 import { PropertyListModeEnum } from "../types/enums";
 
 const Wishlists = () => <div>
-  <Typography variant="h3" gutterBottom>
+  <Typography variant="h2" gutterBottom sx={{ pb: 1 }}>
     My Wishlist
   </Typography>
   <Typography sx={{ mb: 2}}>View properties in my wishlist</Typography>

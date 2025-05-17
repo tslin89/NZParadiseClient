@@ -16,7 +16,7 @@ const SignIn: React.FC = () => {
   return (
     <Container maxWidth="sm" >
       <Paper elevation={3} sx={{ p: 4 }}>
-        <Typography variant="h1" gutterBottom sx={{ pb: 1 }}>
+        <Typography variant="h2" gutterBottom sx={{ pb: 1 }}>
           Sign In
         </Typography>
         <SignInForm onSubmitSuccess={handleSubmitSuccess} />

@@ -1,4 +1,4 @@
-import { UserData, PropertyFilterData } from '../types/formData';
+import { UserData, PropertyFilterData, UserDataDisplay } from '../types/formData';
 import SHA256 from 'crypto-js/sha256';
 import { PropertyListModeEnum } from '../types/enums';
 import { PropertyMessage } from '../types/types';
@@ -39,7 +39,7 @@ export const registerUser = async (formData: Omit<UserData, 'confirmPassword'>) 
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        UserTypeID: 1,
+        UserTypeID: 1, // Default to Member
         firstName: formData.firstName,
         lastName: formData.lastName,
         agencyName: formData.agencyName,
@@ -371,6 +371,36 @@ export const getMessageList = async (userID: number): Promise<{ data: PropertyMe
       throw new Error(result.message || 'Failed to fetch property metadata');
     }
     console.log('property-messages', result.data)
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getUserList = async (adminUserID: number): Promise<{ data: UserDataDisplay[] }> => {
+
+  try {
+    const response = await fetch(API_BASE_URL + `/user/getList/${adminUserID}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      } as HeadersInit,
+    });
+
+    if (response.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/signin';
+      throw new Error('Session expired. Redirecting...');
+    }
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user list');
+    }
+    const result = await response.json();
+    if (result.status === -1) {
+      throw new Error(result.message || 'Failed to fetch user list');
+    }
     return result;
   } catch (error) {
     throw error;

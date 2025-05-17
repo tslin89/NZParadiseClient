@@ -25,6 +25,7 @@ import PropertyDetails from './pages/PropertyDetails';
 import { CssVarsProvider, Divider, useColorScheme } from '@mui/material';
 import EditProfile from './pages/EditProfile';
 import UserDashboard from './pages/UserDashboard';
+import UserList from './pages/UserList';
 
 const libraries: ("places")[] = ["places"];
 const google_map_api_key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '';
@@ -70,6 +71,7 @@ export default function Blog(props: { disableCustomTheme?: boolean }) {
                           <Route path="/edit-property/:id" element={<PrivateRoute element={<EditProperty />} />} />
                           <Route path="/edit-profile" element={<PrivateRoute element={<EditProfile />} />} />
                           <Route path="/dashboard" element={<PrivateRoute element={<UserDashboard />} />} />
+                          <Route path="/userlist" element={<PrivateRoute element={<UserList />} />} />
                         </Routes>
                       </main>
                       <Divider sx={{ mt: 10 }} />

@@ -10,6 +10,7 @@ interface User {
   phoneNo: string;
   createdDate: string;
   agencyName: string;
+  userTypeID: number;
 }
 
 interface AuthContextType {

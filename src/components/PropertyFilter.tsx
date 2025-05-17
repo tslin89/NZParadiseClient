@@ -21,6 +21,7 @@ import { useAuth } from './AuthContext';
 import { PropertyListModeEnum } from '../types/enums';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import { useSnackbar } from './SnackbarContext';
 
 // const useDebounce = <T,>(value: T, delay: number): T => {
 //   const [debouncedValue, setDebouncedValue] = React.useState<T>(value);
@@ -39,6 +40,7 @@ export const PropertyFilter: React.FC = () => {
   const [showFilter, setShowFilter] = useState(true);
   const { user } = useAuth();
   const userID = user?.userID || null;
+  const { showMessage } = useSnackbar();
 
   const { control, reset, getValues } = useForm<PropertyFilterData>({
     defaultValues: {
@@ -84,8 +86,15 @@ export const PropertyFilter: React.FC = () => {
     try {
       setError(null);
       const values = getValues();
-      const response = await getPropertyList({ ...values, userID: userID, mode: PropertyListModeEnum.Search });
-      setProperties(response.data || []);
+
+      if (values.minPrice && values.maxPrice && values.minPrice > 0 && values.maxPrice > 0 && values.minPrice > values.maxPrice) {
+        showMessage("Invalid price range. Minimum price must be smaller than maximum price!", 'error');
+      }
+      else {
+        const response = await getPropertyList({ ...values, userID: userID, mode: PropertyListModeEnum.Search });
+        setProperties(response.data || []);
+      }
+
     } catch (error: any) {
       setError(error.message || 'Failed to load properties');
     }
@@ -237,18 +246,35 @@ export const PropertyFilter: React.FC = () => {
           </Grid>
 
           <Grid size={{ xs: 12, sm: 3, md: 3 }}>
+
             <Controller
               name="minPrice"
               control={control}
-              render={({ field }) => (
+              rules={{
+                pattern: {
+                  value: /^[1-9]\d*$/,
+                  message: 'Price must be a positive integer without leading zeros',
+                },
+              }}
+              render={({ field, fieldState: { error } }) => (
                 <TextField
                   {...field}
                   fullWidth
-                  type="number"
                   variant="outlined"
                   label="Min Price"
-                  value={field.value || ''}
-                  onChange={(e) => field.onChange(e.target.value || '')}
+                  type="number"
+                  value={field.value ?? ''}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '') {
+                      field.onChange('');
+                    } else {
+                      const cleanedValue = value.replace(/^0+/, '').replace(/[^0-9]/g, '');
+                      field.onChange(cleanedValue);
+                    }
+                  }}
+                  error={!!error}
+                  helperText={error?.message}
                 />
               )}
             />
@@ -258,15 +284,31 @@ export const PropertyFilter: React.FC = () => {
             <Controller
               name="maxPrice"
               control={control}
-              render={({ field }) => (
+              rules={{
+                pattern: {
+                  value: /^[1-9]\d*$/,
+                  message: 'Price must be a positive integer without leading zeros',
+                },
+              }}
+              render={({ field, fieldState: { error } }) => (
                 <TextField
                   {...field}
                   fullWidth
-                  type="number"
                   variant="outlined"
-                  label="Max Price"
-                  value={field.value || ''}
-                  onChange={(e) => field.onChange(e.target.value || '')}
+                  label="Min Price"
+                  type="number"
+                  value={field.value ?? ''}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '') {
+                      field.onChange('');
+                    } else {
+                      const cleanedValue = value.replace(/^0+/, '').replace(/[^0-9]/g, '');
+                      field.onChange(cleanedValue);
+                    }
+                  }}
+                  error={!!error}
+                  helperText={error?.message}
                 />
               )}
             />
@@ -307,7 +349,7 @@ export const PropertyFilter: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <Divider sx={{ mt: 2}}/>
+      <Divider sx={{ mt: 2 }} />
     </Box>
   );
 };
