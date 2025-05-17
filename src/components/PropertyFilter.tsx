@@ -98,7 +98,7 @@ export const PropertyFilter: React.FC = () => {
     } catch (error: any) {
       setError(error.message || 'Failed to load properties');
     }
-  }, [getValues, setProperties, userID]);
+  }, [getValues, setProperties, userID, showMessage]);
 
   useEffect(() => {
     fetchPropertyTypes();

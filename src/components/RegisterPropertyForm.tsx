@@ -66,7 +66,6 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
     formState: { errors },
     reset,
     watch,
-    setValue,
   } = useForm<RegisterPropertyFormData>({
     defaultValues: {
       description: '',
