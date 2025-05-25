@@ -152,7 +152,6 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
                 .join(','),
             };
 
-            console.log('Form data being reset:', propertyData);
             reset(propertyData);
 
             const existingImages: DisplayImage[] = (response.data.attachments || []).map((att: any) => ({
@@ -296,7 +295,6 @@ const RegisterPropertyForm: React.FC<RegisterPropertyFormProps> = ({ onSubmitSuc
                     onChange={(e) => {
                       const value = Array.isArray(e.target.value) ? e.target.value.join(',') : '';
                       field.onChange(value);
-                      console.log('Selected values:', e.target.value);
                     }}
                     renderValue={(selected) => (
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>

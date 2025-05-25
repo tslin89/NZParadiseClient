@@ -48,8 +48,6 @@ export default function AppAppBar() {
   const navigate = useNavigate();
   const userTypeID = user?.userTypeID;
 
-  console.log('AppBar User', user)
-
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
