@@ -274,7 +274,7 @@ export const PropertyFilter: React.FC = () => {
                   {...field}
                   fullWidth
                   variant="outlined"
-                  label="Min Price"
+                  label="Max Price"
                   type="number"
                   value={field.value ?? ''}
                   onChange={(e) => {
