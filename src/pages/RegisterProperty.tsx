@@ -16,8 +16,11 @@ const RegisterProperty: React.FC = () => {
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-      <Button variant="text" size="small" sx={{mb: 2}} onClick={() => navigate('/mylistings')}>
+      {/* <Button variant="text" size="small" sx={{mb: 2}} onClick={() => navigate('/mylistings')}>
         <ArrowBackIcon sx={{ mr: 1 }} />Back to My Listings
+      </Button> */}
+      <Button variant="text" size="small" sx={{ mb: 2 }} onClick={() => navigate(-1)}>
+        <ArrowBackIcon sx={{ mr: 1 }} /> Back
       </Button>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h1" gutterBottom sx={{ pb: 1 }}>

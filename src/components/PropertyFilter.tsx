@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, useState, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
-  Paper,
   Grid,
   TextField,
   FormControl,
@@ -11,12 +10,18 @@ import {
   Alert,
   Button,
   Box,
+  Typography,
+  Divider,
 } from '@mui/material';
 import { PropertyFilterData } from '../types/formData';
 import { PropertyContext } from '../components/PropertyContext';
 import { getPropertyList } from '../services/api';
 import { BEDROOM_OPTIONS, BATHROOM_OPTIONS, PARKING_OPTIONS_FILTER } from '../config/propertyOptions';
-
+import { useAuth } from './AuthContext';
+import { PropertyListModeEnum } from '../types/enums';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import { useSnackbar } from './SnackbarContext';
 
 // const useDebounce = <T,>(value: T, delay: number): T => {
 //   const [debouncedValue, setDebouncedValue] = React.useState<T>(value);
@@ -33,6 +38,9 @@ export const PropertyFilter: React.FC = () => {
   const { propertyTypes, fetchPropertyTypes, setProperties } = useContext(PropertyContext);
   const [error, setError] = useState<string | null>(null);
   const [showFilter, setShowFilter] = useState(true);
+  const { user } = useAuth();
+  const userID = user?.userID || null;
+  const { showMessage } = useSnackbar();
 
   const { control, reset, getValues } = useForm<PropertyFilterData>({
     defaultValues: {
@@ -47,43 +55,23 @@ export const PropertyFilter: React.FC = () => {
     },
   });
 
-  /*
-  const formValues = watch();
-  const debouncedValues = useDebounce(formValues, 500);
-
-  useEffect(() => {
-    if (propertyTypes.length === 0) {
-      fetchPropertyTypes();
-    }
-  }, [propertyTypes, fetchPropertyTypes]);
-
-  // Fetch properties on filter change
-  useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        console.log('Fetching properties with:', { ...debouncedValues, userID: null });
-        setError(null);
-        const response = await getPropertyList({ ...debouncedValues, userID: null });
-        setProperties(response.data || []);
-      } catch (error: any) {
-        console.error('Error fetching properties:', error);
-        setError(error.message || 'Failed to load properties');
-      }
-    };
-    fetchProperties();
-  }, [debouncedValues, setProperties]);
-  */
-
   const handleSearch = useCallback(async () => {
     try {
       setError(null);
       const values = getValues();
-      const response = await getPropertyList({ ...values, userID: null });
-      setProperties(response.data || []);
+
+      if (values.minPrice && values.maxPrice && values.minPrice > 0 && values.maxPrice > 0 && values.minPrice > values.maxPrice) {
+        showMessage("Invalid price range. Minimum price must be smaller than maximum price!", 'error');
+      }
+      else {
+        const response = await getPropertyList({ ...values, userID: userID, mode: PropertyListModeEnum.Search });
+        setProperties(response.data || []);
+      }
+
     } catch (error: any) {
-      setError(error.message || 'Failed to load properties');
+      setError("We're unable to load property list at the moment. Please try again later.");
     }
-  }, [getValues, setProperties]);
+  }, [getValues, setProperties, userID, showMessage]);
 
   useEffect(() => {
     fetchPropertyTypes();
@@ -106,15 +94,22 @@ export const PropertyFilter: React.FC = () => {
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 2, mt: 2, mb: 3 }}>
-      {/* <Typography variant="h1" gutterBottom sx={{ pb: 1 }}>
-        Property Filter
-      </Typography> */}
+    // <Paper elevation={3} sx={{ p: 2.5, mt: 2, mb: 3 }}>
+    <Box marginBottom={3} marginTop={3}>
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
+
+      {/* <Typography variant="h1" gutterBottom sx={{ pb: 1 }}>
+        Property Filter
+      </Typography> */}
+      {/* {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )} */}
       {/* <Grid container spacing={2}> */}
 
       {showFilter && (
@@ -230,18 +225,35 @@ export const PropertyFilter: React.FC = () => {
           </Grid>
 
           <Grid size={{ xs: 12, sm: 3, md: 3 }}>
+
             <Controller
               name="minPrice"
               control={control}
-              render={({ field }) => (
+              rules={{
+                pattern: {
+                  value: /^[1-9]\d*$/,
+                  message: 'Price must be a positive integer without leading zeros',
+                },
+              }}
+              render={({ field, fieldState: { error } }) => (
                 <TextField
                   {...field}
                   fullWidth
-                  type="number"
                   variant="outlined"
                   label="Min Price"
-                  value={field.value || ''}
-                  onChange={(e) => field.onChange(e.target.value || '')}
+                  type="number"
+                  value={field.value ?? ''}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '') {
+                      field.onChange('');
+                    } else {
+                      const cleanedValue = value.replace(/^0+/, '').replace(/[^0-9]/g, '');
+                      field.onChange(cleanedValue);
+                    }
+                  }}
+                  error={!!error}
+                  helperText={error?.message}
                 />
               )}
             />
@@ -251,15 +263,31 @@ export const PropertyFilter: React.FC = () => {
             <Controller
               name="maxPrice"
               control={control}
-              render={({ field }) => (
+              rules={{
+                pattern: {
+                  value: /^[1-9]\d*$/,
+                  message: 'Price must be a positive integer without leading zeros',
+                },
+              }}
+              render={({ field, fieldState: { error } }) => (
                 <TextField
                   {...field}
                   fullWidth
-                  type="number"
                   variant="outlined"
                   label="Max Price"
-                  value={field.value || ''}
-                  onChange={(e) => field.onChange(e.target.value || '')}
+                  type="number"
+                  value={field.value ?? ''}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '') {
+                      field.onChange('');
+                    } else {
+                      const cleanedValue = value.replace(/^0+/, '').replace(/[^0-9]/g, '');
+                      field.onChange(cleanedValue);
+                    }
+                  }}
+                  error={!!error}
+                  helperText={error?.message}
                 />
               )}
             />
@@ -274,11 +302,11 @@ export const PropertyFilter: React.FC = () => {
               <>
                 <Button
                   variant="contained"
-                  color="primary"
+                  color="secondary"
                   sx={{ mr: 1 }}
                   onClick={handleSearch}
                 >
-                  Search Properties
+                  Search
                 </Button>
                 <Button
                   variant="text"
@@ -295,13 +323,12 @@ export const PropertyFilter: React.FC = () => {
               onClick={() => setShowFilter((prev) => !prev)}
               sx={{ ml: 'auto' }} // Pushes this button to the right
             >
-              {showFilter ? 'Hide filter' : 'Show filter'}
+              {showFilter ? <><ExpandLessIcon fontSize='medium' /><Typography color="text.secondary">Hide Filter</Typography></> : <><ExpandMoreIcon fontSize='medium' /><Typography color="text.secondary">Show Filter</Typography></>}
             </Button>
           </Box>
         </Grid>
       </Grid>
-
-
-    </Paper>
+      <Divider sx={{ mt: 2 }} />
+    </Box>
   );
 };

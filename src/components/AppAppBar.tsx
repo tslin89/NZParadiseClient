@@ -20,6 +20,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import bannerLogo from '../assets/banner-logo.png';
 import { useColorScheme } from '@mui/material/styles';
 import { useAuth } from '../components/AuthContext';
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -44,6 +46,7 @@ export default function AppAppBar() {
   const { mode, setMode } = useColorScheme();
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
+  const userTypeID = user?.userTypeID;
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -67,8 +70,8 @@ export default function AppAppBar() {
     handleMenuClose();
   };
 
-  const handleProfile = () => {
-    navigate('/profile');
+  const handleEditProfile = () => {
+    navigate('/edit-profile');
     handleMenuClose();
   };
 
@@ -94,7 +97,14 @@ export default function AppAppBar() {
               />
             </Link>
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Button variant="text" color="info" size="small" component={Link} to="/">
+              {isAuthenticated && (
+                <>
+                  <Button variant="text" color="info" size="small" component={Link} to="/dashboard">
+                    Dashboard
+                  </Button>
+                </>
+              )}
+              <Button variant="text" color="info" size="small" component={Link} to="/search">
                 Search Properties to Rent
               </Button>
               {isAuthenticated && (
@@ -108,6 +118,9 @@ export default function AppAppBar() {
                   <Button variant="text" color="info" size="small" component={Link} to="/messages">
                     Inbox
                   </Button>
+                  {userTypeID === 9 && (<Button variant="text" color="info" size="small" component={Link} to="/userList">
+                    Users
+                  </Button>)}
                 </>
               )}
             </Box>
@@ -124,7 +137,7 @@ export default function AppAppBar() {
                 <Button color="primary" variant="text" size="small" component={Link} to="/signin">
                   Sign in
                 </Button>
-                <Button color="primary" variant="contained" size="small" component={Link} to="/signup">
+                <Button color="secondary" variant="contained" size="small" component={Link} to="/signup">
                   Sign up
                 </Button>
               </>
@@ -138,9 +151,12 @@ export default function AppAppBar() {
                     sx={{ width: 32, height: 32, mr: 1 }}
                     alt={`${user?.firstName} ${user?.lastName}`}
                   >
-                    {user?user.firstName[0]:""}{user?user.lastName[0]:""}
+                    {user ? user.firstName[0] : ""}
                   </Avatar>
-                  <Typography variant="body2" sx={{ color: 'text.primary'}}>{`${user?.firstName} ${user?.lastName}`}</Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography variant="body2" sx={{ color: 'text.primary' }}>{`${user?.firstName} ${user?.lastName}`}</Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }} fontSize="small">{`${user?.userTypeID === 9 ? 'Admin' : 'Member'}`}</Typography>
+                  </Box>
                 </Box>
                 <Menu
                   anchorEl={anchorEl}
@@ -149,18 +165,18 @@ export default function AppAppBar() {
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                 >
-                  <MenuItem onClick={handleProfile}>Profile</MenuItem>
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  <MenuItem onClick={handleEditProfile}><PermIdentityIcon fontSize='small' sx={{ mr: 2 }} />Edit Profile</MenuItem>
+                  <MenuItem onClick={handleLogout}><PowerSettingsNewIcon fontSize='small' sx={{ mr: 2 }} />Logout</MenuItem>
                 </Menu>
               </>
             )}
             <IconButton onClick={toggleTheme} size="small" aria-label="Toggle theme">
-              {mode === 'light' ? <LightModeIcon /> : <DarkModeIcon />}
+              {mode !== 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
             <IconButton onClick={toggleTheme} size="small" aria-label="Toggle theme">
-              {mode === 'light' ? <LightModeIcon /> : <DarkModeIcon />}
+              {mode !== 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
             <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
               <MenuIcon />
@@ -175,7 +191,7 @@ export default function AppAppBar() {
                 },
               }}
             >
-              <Box sx={{ p: 2, backgroundColor: 'background.default' }}>
+              <Box sx={{ p: 2, backgroundColor: 'background.default' }} onClick={toggleDrawer(false)}>
                 <Box
                   sx={{
                     display: 'flex',
@@ -186,14 +202,21 @@ export default function AppAppBar() {
                     <CloseRoundedIcon />
                   </IconButton>
                 </Box>
-                <MenuItem component={Link} to="/">Search Properties</MenuItem>
+                {isAuthenticated && (
+                  <>
+                    <MenuItem component={Link} to="/dashboard">Dashboard</MenuItem>
+                  </>)}
+                <MenuItem component={Link} to="/search">Search Properties to Rent</MenuItem>
                 {isAuthenticated && (
                   <>
                     <MenuItem component={Link} to="/mylistings">My Listings</MenuItem>
                     <MenuItem component={Link} to="/wishlist">Wishlists</MenuItem>
                     <MenuItem component={Link} to="/messages">Inbox</MenuItem>
+                    {userTypeID === 9 && (
+                      <MenuItem component={Link} to="/userList">Users</MenuItem>
+                    )}
                     <Divider sx={{ my: 1 }} />
-                    <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                    <MenuItem onClick={handleEditProfile}>Edit Profile</MenuItem>
                     <MenuItem onClick={handleLogout}>Logout</MenuItem>
                   </>
                 )}

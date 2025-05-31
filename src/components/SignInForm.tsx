@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Grid,
   TextField,
@@ -17,6 +17,12 @@ interface SignInFormProps {
 }
 
 const SignInForm: React.FC<SignInFormProps> = ({ onSubmitSuccess }) => {
+  const emailRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    emailRef.current?.focus();
+  }, []);
+
   const navigate = useNavigate();
   const { showMessage } = useSnackbar();
   const { login } = useAuth();
@@ -45,8 +51,8 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSubmitSuccess }) => {
       } else {
         // Store the JWT and user info
         login(resultObj.data.token, resultObj.data.user);
-        showMessage('Login successful', 'success');
-        navigate('/');
+        //showMessage('Login successful', 'success');
+        navigate('/dashboard');
         onSubmitSuccess();
       }
     } catch (error) {
@@ -60,11 +66,12 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSubmitSuccess }) => {
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
+    <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ pb: 3 }}>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 12 }}>
           <TextField
             fullWidth
+            inputRef={emailRef}
             variant="outlined"
             label="Email"
             type="email"
@@ -90,12 +97,17 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSubmitSuccess }) => {
           />
         </Grid>
         <Grid size={{ xs: 12 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Button
               type="submit"
-              variant="outlined"
-              color="primary"
-              size="small"
+              variant="contained"
+              color="secondary"
+              size="large"
+              sx={{
+
+                width: { xs: '100%', md: 'auto' }
+              }}
+
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Signing In...' : 'Sign In'}

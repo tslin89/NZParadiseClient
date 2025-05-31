@@ -17,7 +17,7 @@ import {
     ImageListItem,
     Divider,
     TextField,
-    ListItemIcon,
+    ListItemIcon
 } from '@mui/material';
 import { getPropertyDetails, getPropertyMetadata, submitMessage } from '../services/api';
 import LocationMapPreview from '../components/LocationMapPreview';
@@ -27,7 +27,6 @@ import Lightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
 import { useAuth } from '../components/AuthContext';
 import { format } from 'date-fns';
-
 import BathtubIcon from '@mui/icons-material/Bathtub';
 import BedIcon from '@mui/icons-material/Bed';
 import LocalParkingIcon from '@mui/icons-material/LocalParking';
@@ -35,6 +34,10 @@ import SquareFootIcon from '@mui/icons-material/SquareFoot';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import PhoneIcon from '@mui/icons-material/Phone';
+import EmailIcon from '@mui/icons-material/Email';
+import PersonIcon from '@mui/icons-material/Person';
+import BusinessIcon from '@mui/icons-material/Business';
 
 // Add this CSS to your stylesheet or a <style> tag in the component
 const thumbnailStyles = `
@@ -65,6 +68,9 @@ const PropertyDetails: React.FC = () => {
     const { user } = useAuth();
     const [message, setMessage] = useState('');
     const { showMessage } = useSnackbar();
+   
+
+    
 
     const handleSendMessage = async () => {
         if (!user || !property) return;
@@ -300,23 +306,6 @@ const PropertyDetails: React.FC = () => {
                                     }
                                 />
                             </ListItem>
-                        </List>
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                        <List sx={{ p: 0, m: 0 }}>
-                            <ListItem disableGutters>
-                                <ListItemIcon sx={{ mr: 2 }}>
-                                    <AttachMoneyIcon />
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={
-                                        <>
-                                            <Typography component="span" variant="body2" color="text.secondary">Price:&nbsp;</Typography>
-                                            <Typography component="span" variant="body1" fontWeight="bold">NZ$ {property.price.toLocaleString()} (per week)</Typography>
-                                        </>
-                                    }
-                                />
-                            </ListItem>
                             <ListItem disableGutters>
                                 <ListItemIcon sx={{ mr: 2 }}>
                                     <SquareFootIcon />
@@ -330,6 +319,42 @@ const PropertyDetails: React.FC = () => {
                                     }
                                 />
                             </ListItem>
+                        </List>
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 6 }}>
+                        <List sx={{ p: 0, m: 0 }}>
+                            <ListItem disableGutters>
+                                <ListItemIcon sx={{ mr: 2 }}>
+                                    <AttachMoneyIcon />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary={
+                                        <>
+                                            <Typography component="span" variant="body2" color="text.secondary">Price:&nbsp;</Typography>
+                                            <Typography component="span" variant="body1" fontWeight="bold">
+                                                NZ$ {property.price.toLocaleString()}
+                                                <Typography component="span" variant="body1" color="text.secondary">
+                                                    /week
+                                                </Typography>
+                                            </Typography>
+                                        </>
+                                    }
+                                />
+                            </ListItem>
+                            <ListItem disableGutters>
+                                <ListItemIcon sx={{ mr: 2 }}>
+                                    <CalendarMonthIcon />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary={
+                                        <>
+                                            <Typography component="span" variant="body2" color="text.secondary">Listing date:&nbsp;</Typography>
+                                            <Typography component="span" variant="body1" fontWeight="bold">{format(property.createdDate, "dd MMM yyyy")}</Typography>
+                                        </>
+                                    }
+                                />
+                            </ListItem>
+
                             {property.availableFromDate && (
                                 <ListItem disableGutters>
                                     <ListItemIcon sx={{ mr: 2 }}>
@@ -364,7 +389,6 @@ const PropertyDetails: React.FC = () => {
                     </Box>
                 </Box>
 
-
                 <Divider sx={{ my: 2 }} />
 
                 {property.location && (
@@ -375,12 +399,72 @@ const PropertyDetails: React.FC = () => {
                 )}
             </Paper>
 
-            {
-                user && user.userID !== property.user.userID && (
-                    <Paper elevation={3} sx={{ p: 4, mt: 2 }}>
-                        <Typography variant="h6" gutterBottom>
-                            Contact Property Manager\Owner
-                        </Typography>
+
+            <Paper elevation={3} sx={{ p: 4, mt: 2 }}>
+
+                <Typography variant="h6" gutterBottom>
+                    Property Manager \ Owner Details
+                </Typography>
+                <List sx={{ p: 0, m: 0 }}>
+                    <ListItem disableGutters>
+                        <ListItemIcon sx={{ mr: 2 }}>
+                            <PersonIcon />
+                        </ListItemIcon>
+                        <ListItemText
+                            primary={
+                                <>
+                                    <Typography component="span" variant="body2" color="text.secondary">Name:&nbsp;</Typography>
+                                    <Typography component="span" variant="body1" fontWeight="bold">{property.user.firstName}</Typography>
+                                </>
+                            }
+                        />
+                    </ListItem>
+
+                    {property.user.agencyName && (<ListItem disableGutters>
+                        <ListItemIcon sx={{ mr: 2 }}>
+                            <BusinessIcon />
+                        </ListItemIcon>
+                        <ListItemText
+                            primary={
+                                <>
+                                    <Typography component="span" variant="body2" color="text.secondary">Agency:&nbsp;</Typography>
+                                    <Typography component="span" variant="body1" fontWeight="bold">{property.user.agencyName}</Typography>
+                                </>
+                            }
+                        />
+                    </ListItem>)}
+
+
+                    <ListItem disableGutters>
+                        <ListItemIcon sx={{ mr: 2 }}>
+                            <PhoneIcon />
+                        </ListItemIcon>
+                        <ListItemText
+                            primary={
+                                <>
+                                    <Typography component="span" variant="body2" color="text.secondary">Phone:&nbsp;</Typography>
+                                    <Typography component="span" variant="body1" fontWeight="bold">{property.user.phoneNo}</Typography>
+                                </>
+                            }
+                        />
+                    </ListItem>
+                    <ListItem disableGutters>
+                        <ListItemIcon sx={{ mr: 2 }}>
+                            <EmailIcon />
+                        </ListItemIcon>
+                        <ListItemText
+                            primary={
+                                <>
+                                    <Typography component="span" variant="body2" color="text.secondary">Email:&nbsp;</Typography>
+                                    <Typography component="span" variant="body1" fontWeight="bold">{property.user.email}</Typography>
+                                </>
+                            }
+                        />
+                    </ListItem>
+                </List>
+
+                {user && user.userID !== property.user.userID && (
+                    <>
                         <TextField
                             id="outlined-basic"
                             variant="outlined"
@@ -388,14 +472,18 @@ const PropertyDetails: React.FC = () => {
                             multiline
                             rows={3}
                             value={message}
+                            slotProps={{
+                                htmlInput: { maxLength: 300 },
+                            }}
+                            placeholder='Send enquiry message to property manager \ owner'
                             onChange={(e) => setMessage(e.target.value)}
                         />
-                        <Button variant="outlined" sx={{ mt: 2 }} onClick={handleSendMessage}>
+                        <Button variant="contained" color="secondary" sx={{ mt: 2, pl: 3, pr: 3 }} onClick={handleSendMessage}>
                             Send
                         </Button>
-                    </Paper>
-                )
-            }
+                    </>
+                )}
+            </Paper>
 
             {
                 lightboxIndex !== null && (
@@ -407,6 +495,8 @@ const PropertyDetails: React.FC = () => {
                     />
                 )
             }
+
+            
         </Container >
     );
 };

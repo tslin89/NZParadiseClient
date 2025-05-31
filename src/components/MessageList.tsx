@@ -23,7 +23,7 @@ const MessageList: React.FC = () => {
   const userID = user?.userID || -1;
   const [messages, setMessages] = useState<PropertyMessage[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error,setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const MessageList: React.FC = () => {
         const result = await getMessageList(userID);
         setMessages(result.data || []);
       } catch (err: any) {
-        setError(err.message || 'Failed to load messages');
+        setError("We're unable to load your inbox at the moment. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -117,7 +117,7 @@ const MessageList: React.FC = () => {
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <Avatar sx={{ width: 28, height: 28, fontSize: 14 }}>
-                              {msg.senderFirstName[0]}{msg.senderLastName[0]}
+                              {msg.senderFirstName[0]}
                             </Avatar>
                             <Typography>
                               <strong>{msg.senderFirstName} {msg.senderLastName}</strong>

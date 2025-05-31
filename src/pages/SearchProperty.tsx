@@ -7,7 +7,7 @@ import { Typography } from '@mui/material';
 const SearchProperty = () => {
   return (
     <div>
-      <Typography variant="h3" gutterBottom>
+      <Typography variant="h2" gutterBottom sx={{ pb: 1 }}>
         Search Properties to Rent
       </Typography>
       <PropertyFilter />
