@@ -336,7 +336,7 @@ export const submitMessage = async (userID: number, propertyID: number, messageD
     }
 
     const result = await response.json();
-    return result.data;
+    return result;
 
   } catch (err) {
     console.error('Message submission error:', err);
