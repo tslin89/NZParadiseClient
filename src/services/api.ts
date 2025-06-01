@@ -65,6 +65,7 @@ export const updateUser = async (formData: Omit<UserData, 'confirmPassword'>) =>
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        ...getAuthHeaders(),
       },
       body: JSON.stringify({
         userID: formData.userID,
