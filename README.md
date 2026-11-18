@@ -1,46 +1,140 @@
-# Getting Started with Create React App
+# NZParadise Client
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+NZParadise is a property rental web application built to help users discover rental properties, manage listings, and communicate with property owners. This repository contains the **React frontend** for the NZParadise application.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Browse and search rental properties** with filters for location, price range, property type, bedrooms, bathrooms, parking, and description.
+- **Property details** with listing information, images, and location previews.
+- **User accounts** with registration, sign-in, and profile editing.
+- **Property management** to create, edit, and manage personal listings.
+- **Wishlist** to save properties for later.
+- **Messaging and enquiries** to contact property owners and view inbox messages.
+- **User dashboard** with listing summary information.
+- **User management** for administrator accounts.
+- **Location search and map previews** powered by Google Maps APIs.
+- **Responsive interface** built with Material UI.
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- React
+- TypeScript
+- React Router
+- Material UI (MUI)
+- React Hook Form
+- Google Maps JavaScript API / Places integration
+- Fetch API for backend communication
+- date-fns and MUI Date Pickers
+- Recharts
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Screenshots
 
-### `npm test`
+_Add screenshots to the repository and update the paths below._
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<!-- Example:
+![Property search](docs/images/property-search.png)
+![Property details](docs/images/property-details.png)
+-->
 
-### `npm run build`
+## Getting Started
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Prerequisites
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Node.js and npm
+- The NZParadise backend API running
+- A Google Maps API key with the required Maps/Places services enabled
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Installation
 
-### `npm run eject`
+Clone the repository and install dependencies:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```bash
+git clone <repository-url>
+cd NZParadiseClient
+npm install
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Environment Variables
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Create a `.env` file in the project root:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```env
+REACT_APP_API_URL=http://localhost:5000
+REACT_APP_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+```
 
-## Learn More
+`REACT_APP_API_URL` should point to the backend API base address. The frontend appends `/api` when making API requests.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+`REACT_APP_GOOGLE_MAPS_API_KEY` is used for Google Maps and Places functionality.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+> Do not commit real credentials or API keys. Configure appropriate API key restrictions for your deployment.
+
+### Run Locally
+
+Start the development server:
+
+```bash
+npm start
+```
+
+The app will be available at [http://localhost:3000](http://localhost:3000).
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+The optimized production build is generated in the `build` directory.
+
+### Tests
+
+```bash
+npm test
+```
+
+Runs the Create React App test runner.
+
+## Application Routes
+
+| Route | Description | Access |
+|---|---|---|
+| `/` | Property search and browsing | Public |
+| `/search` | Property search and browsing | Public |
+| `/property/:id` | Property details | Public |
+| `/signup` | User registration | Public |
+| `/signin` | User sign-in | Public |
+| `/profile` | View profile | Authenticated |
+| `/edit-profile` | Edit profile | Authenticated |
+| `/mylistings` | Manage own property listings | Authenticated |
+| `/register-property` | Create a property listing | Authenticated |
+| `/edit-property/:id` | Edit a property listing | Authenticated |
+| `/messages` | Inbox and enquiries | Authenticated |
+| `/wishlist` | Saved properties | Authenticated |
+| `/dashboard` | Dashboard summary | Authenticated |
+| `/userlist` | User management | Authenticated / administrator |
+
+## Project Structure
+
+```text
+src/
+├── components/       # Shared UI, forms, context providers, route protection
+├── config/          # Property-related configuration and options
+├── pages/           # Page-level views and routes
+├── services/        # API communication
+├── theme/           # Material UI theme and component customizations
+└── types/           # TypeScript types and enums
+```
+
+## Backend Integration
+
+The frontend communicates with the NZParadise backend through API endpoints under the `/api` path. The API service layer (`src/services/api.ts`) centralizes requests for user accounts, property listings, wishlists, messaging, metadata, and dashboard data.
+
+## Deployment
+
+This project includes Azure Static Web Apps workflow configuration under `.github/workflows/` for deployment through GitHub Actions. Configure the required environment variables in your deployment environment before publishing.
+
+## Team
+
+This project was developed as part of an AUT Cloud Computing team project.
+
