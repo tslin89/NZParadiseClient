@@ -29,12 +29,25 @@ NZParadise is a property rental web application built to help users discover ren
 
 ## Screenshots
 
-_Add screenshots to the repository and update the paths below._
+### Dashboard
+<p align="center">
+  <img src="screenshots/dashboard.png" alt="Dashboard" width="100%">
+</p>
 
-<!-- Example:
-![Property search](docs/images/property-search.png)
-![Property details](docs/images/property-details.png)
--->
+### Light Mode
+<p align="center">
+  <img src="screenshots/light_view.png" alt="Light View" width="100%">
+</p>
+
+### Dark Mode
+<p align="center">
+  <img src="screenshots/dark_view.png" alt="Dark View" width="100%">
+</p>
+
+### Deployment Model
+<p align="center">
+  <img src="screenshots/deployment.jpg" alt="Deployment" width="100%">
+</p>
 
 ## Getting Started
 
